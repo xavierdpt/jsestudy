@@ -30,5 +30,6 @@
 		<module>fiddle</module>
 		<module>tox</module>
 		<module>something</module>
+		<module>common</module>
 	</modules>
 </project>

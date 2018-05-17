@@ -1,23 +1,31 @@
 package example.company.jse.fiddle.java.security;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 
+import javax.xml.bind.JAXBException;
+
+import org.junit.Test;
+
 import example.company.jse.something.java.security.KeyPairGeneratorSomething;
+import example.company.tox.Tox;
+import example.company.tox.java.security.cert.CertificateDescription;
 
 public class KeyStoreFiddle {
 
+	@Test
 	public void fiddle1() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
 
 		KeyPair keyPair = KeyPairGeneratorSomething.createKeyPair();
@@ -61,5 +69,16 @@ public class KeyStoreFiddle {
 
 		ks.store(System.out, password2);
 
+	}
+
+	@Test
+	public void fiddle2() throws KeyStoreException, NoSuchAlgorithmException, CertificateException,
+			FileNotFoundException, IOException, JAXBException {
+		KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+		InputStream resourceAsStream = this.getClass().getResourceAsStream("/keystore.jks");
+		keystore.load(resourceAsStream, "password".toCharArray());
+		Certificate certificate = keystore.getCertificate("selfsigned");
+		System.out.println(certificate == null);
+		Tox.marshall(new CertificateDescription(certificate), System.out);
 	}
 }

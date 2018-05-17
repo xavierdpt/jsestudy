@@ -14,5 +14,20 @@
 			<artifactId>jaxb-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.brightsparklabs</groupId>
+			<artifactId>asanti</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>example.company.jse</groupId>
+			<artifactId>common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>
