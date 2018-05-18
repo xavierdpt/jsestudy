@@ -3,6 +3,7 @@ package example.company.tox.java.security.cert;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
 public class AsnSequence extends AsnElement {
@@ -12,9 +13,9 @@ public class AsnSequence extends AsnElement {
 	public AsnSequence(Bytes allBytes) {
 		super(allBytes);
 
-		Bytes nextElementBytes = getContentBytes();
+		Bytes nextElementBytes = contentBytes;
 		while (true) {
-			if(nextElementBytes.length()==0) {
+			if (nextElementBytes.length() == 0) {
 				break;
 			}
 			AsnElement element = AsnUtils.parse(nextElementBytes);
@@ -22,8 +23,9 @@ public class AsnSequence extends AsnElement {
 				break;
 			}
 			elements.add(element);
-			int elementSize = element.getIdentifierBytes().length() + element.getLengthBytes().length()
-					+ element.getContentBytes().length();
+
+			int elementSize = element.identifierBytes.length() + element.lengthBytes.length()
+					+ element.contentBytes.length();
 			if (elementSize >= allBytes.length()) {
 				break;
 			} else {
@@ -32,7 +34,8 @@ public class AsnSequence extends AsnElement {
 		}
 	}
 
-	@XmlElementWrapper
+//	@XmlElementWrapper
+	@XmlElement(name = "sequenceElement")
 	public List<AsnElement> getElements() {
 		return elements;
 	}
@@ -41,4 +44,8 @@ public class AsnSequence extends AsnElement {
 		this.elements = elements;
 	}
 
+	@Override
+	protected boolean isGood() {
+		return true;
+	}
 }

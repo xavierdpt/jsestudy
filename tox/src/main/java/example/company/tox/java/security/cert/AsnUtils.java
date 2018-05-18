@@ -73,8 +73,11 @@ public class AsnUtils {
 				return new AsnSequence(bytes);
 			} else if(tag == AsnTag.INTEGER.getTagNumber()) {
 				return new AsnInteger(bytes);
+			} else if(tag==AsnTag.OBJECT_IDENTIFIER.getTagNumber()) {
+				return new AsnObjectIdentifier(bytes);
 			} else {
 				System.out.println("Warning : unknown " + asnClass + " tag " + tag);
+				return new AsnElement(bytes);
 			}
 		} else if(asnClass==AsnClass.CONTEXT_SPECIFIC) {
 			return new AsnContextSpecific(bytes);

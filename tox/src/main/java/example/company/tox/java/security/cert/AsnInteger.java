@@ -23,4 +23,8 @@ public class AsnInteger extends AsnElement {
 		this.value = value;
 	}
 
+	@Override
+	protected boolean isGood() {
+		return true;
+	}
 }

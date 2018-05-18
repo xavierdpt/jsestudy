@@ -4,13 +4,13 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-@XmlSeeAlso({ AsnSequence.class, AsnContextSpecific.class, AsnInteger.class })
+@XmlSeeAlso({ AsnSequence.class, AsnContextSpecific.class, AsnInteger.class, AsnObjectIdentifier.class })
 public class AsnElement {
 
-	private int length;
-	private Bytes identifierBytes;
-	private Bytes lengthBytes;
-	private Bytes contentBytes;
+	protected Integer length;
+	protected Bytes identifierBytes;
+	protected Bytes lengthBytes;
+	protected Bytes contentBytes;
 
 	public AsnElement() {
 	}
@@ -23,16 +23,22 @@ public class AsnElement {
 	}
 
 	@XmlAttribute
-	public int getLength() {
+	public Integer getLength() {
+		if (isGood()) {
+			return null;
+		}
 		return length;
 	}
 
-	public void setLength(int length) {
+	public void setLength(Integer length) {
 		this.length = length;
 	}
 
 	@XmlJavaTypeAdapter(value = ByteAdapter.class)
 	public Bytes getIdentifierBytes() {
+		if (isGood()) {
+			return null;
+		}
 		return identifierBytes;
 	}
 
@@ -42,6 +48,9 @@ public class AsnElement {
 
 	@XmlJavaTypeAdapter(value = ByteAdapter.class)
 	public Bytes getLengthBytes() {
+		if (isGood()) {
+			return null;
+		}
 		return lengthBytes;
 	}
 
@@ -51,6 +60,9 @@ public class AsnElement {
 
 	@XmlJavaTypeAdapter(value = ByteAdapter.class)
 	public Bytes getContentBytes() {
+		if (isGood()) {
+			return null;
+		}
 		return contentBytes;
 	}
 
@@ -58,4 +70,7 @@ public class AsnElement {
 		this.contentBytes = contentBytes;
 	}
 
+	protected boolean isGood() {
+		return false;
+	}
 }
