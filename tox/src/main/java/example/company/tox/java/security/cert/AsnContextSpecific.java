@@ -2,7 +2,6 @@ package example.company.tox.java.security.cert;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElement;
 
 public class AsnContextSpecific extends AsnElement {
 

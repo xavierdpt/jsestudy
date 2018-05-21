@@ -2,9 +2,6 @@ package example.company.tox.java.security.cert;
 
 import java.nio.charset.Charset;
 
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlValue;
-
 public class AsnPrintableString extends AsnElement {
 
 	private String value;

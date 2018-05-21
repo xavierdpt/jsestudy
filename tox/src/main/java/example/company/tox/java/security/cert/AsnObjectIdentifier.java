@@ -1,6 +1,5 @@
 package example.company.tox.java.security.cert;
 
-<<<<<<< HEAD
 import javax.xml.bind.annotation.XmlAttribute;
 
 public class AsnObjectIdentifier extends AsnElement {
@@ -8,15 +7,11 @@ public class AsnObjectIdentifier extends AsnElement {
 	private String value;
 	private String name;
 
-=======
-public class AsnObjectIdentifier extends AsnElement {
->>>>>>> fe1eae2d66440c128e33f5ff7c639a9f9f10729a
 	public AsnObjectIdentifier() {
 	}
 
 	public AsnObjectIdentifier(Bytes bytes) {
 		super(bytes);
-<<<<<<< HEAD
 		this.value = AsnObjectIdentifierUtils.parsePayload(contentBytes);
 		this.name = AsnObjectIdentifierUtils.getLabel(value);
 
@@ -43,8 +38,6 @@ public class AsnObjectIdentifier extends AsnElement {
 	@Override
 	protected boolean isGood() {
 		return true;
-=======
->>>>>>> fe1eae2d66440c128e33f5ff7c639a9f9f10729a
 	}
 
 }

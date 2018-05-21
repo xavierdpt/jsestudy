@@ -17,8 +17,6 @@ import java.security.cert.PKIXBuilderParameters;
 import java.security.cert.PKIXParameters;
 import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
-import java.util.HashSet;
-
 import org.junit.Test;
 
 public class Fiddle {
