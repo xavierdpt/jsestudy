@@ -75,6 +75,12 @@ public class AsnUtils {
 				return new AsnInteger(bytes);
 			} else if(tag==AsnTag.OBJECT_IDENTIFIER.getTagNumber()) {
 				return new AsnObjectIdentifier(bytes);
+			} else if(tag==AsnTag.NULL.getTagNumber()) {
+				return new AsnNull(bytes);
+			} else if(tag==AsnTag.SET.getTagNumber()) {
+				return new AsnSet(bytes);
+			} else if(tag==AsnTag.PRINTABLE_STRING.getTagNumber()) {
+				return new AsnPrintableString(bytes);
 			} else {
 				System.out.println("Warning : unknown " + asnClass + " tag " + tag);
 				return new AsnElement(bytes);

@@ -4,7 +4,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-@XmlSeeAlso({ AsnSequence.class, AsnContextSpecific.class, AsnInteger.class, AsnObjectIdentifier.class })
+@XmlSeeAlso({ AsnSequence.class, AsnContextSpecific.class, AsnInteger.class, AsnObjectIdentifier.class, AsnNull.class,
+		AsnSet.class, AsnPrintableString.class })
 public class AsnElement {
 
 	protected Integer length;

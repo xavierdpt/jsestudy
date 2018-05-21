@@ -1,7 +1,7 @@
 package example.company.tox.java.security.cert;
 
 public enum AsnTag {
-	INTEGER(0x2), OBJECT_IDENTIFIER(0x6), SEQUENCE(0x10);
+	INTEGER(0x2), NULL(0x5), OBJECT_IDENTIFIER(0x6), SEQUENCE(0x10), SET(0x11), PRINTABLE_STRING(0x13);
 
 	private int tagNumber;
 
