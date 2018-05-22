@@ -3,6 +3,8 @@ package example.company.tox.java.security.cert;
 import org.junit.Assert;
 import org.junit.Test;
 
+import example.company.tox.common.Bytes;
+
 public class BytesTest {
 
 	@Test

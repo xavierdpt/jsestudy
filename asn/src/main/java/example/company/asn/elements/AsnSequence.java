@@ -1,21 +1,17 @@
-package example.company.tox.java.security.cert;
+package example.company.asn.elements;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-
+import example.company.asn.utils.AsnUtils;
 import example.company.tox.common.Bytes;
 
-public class AsnSet extends AsnElement {
+public class AsnSequence extends AsnElement {
 
 	List<AsnElement> elements = new ArrayList<>();
 
-	public AsnSet() {
-	}
-
-	public AsnSet(Bytes bytes) {
-		super(bytes);
+	public AsnSequence(Bytes allBytes) {
+		super(allBytes);
 
 		Bytes nextElementBytes = contentBytes;
 		while (true) {
@@ -30,7 +26,7 @@ public class AsnSet extends AsnElement {
 
 			int elementSize = element.identifierBytes.length() + element.lengthBytes.length()
 					+ element.contentBytes.length();
-			if (elementSize >= bytes.length()) {
+			if (elementSize >= allBytes.length()) {
 				break;
 			} else {
 				nextElementBytes = nextElementBytes.offset(elementSize);
@@ -38,7 +34,6 @@ public class AsnSet extends AsnElement {
 		}
 	}
 
-	@XmlElement(name = "setElement")
 	public List<AsnElement> getElements() {
 		return elements;
 	}
@@ -46,9 +41,5 @@ public class AsnSet extends AsnElement {
 	public void setElements(List<AsnElement> elements) {
 		this.elements = elements;
 	}
-	
-	@Override
-	protected boolean isGood() {
-		return true;
-	}
+
 }

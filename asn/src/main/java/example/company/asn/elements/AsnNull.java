@@ -1,4 +1,4 @@
-package example.company.tox.java.security.cert;
+package example.company.asn.elements;
 
 import example.company.tox.common.Bytes;
 
@@ -11,10 +11,4 @@ public class AsnNull extends AsnElement {
 		super(bytes);
 	}
 
-	@Override
-	protected boolean isGood() {
-		return true;
-	}
-	
-	
 }

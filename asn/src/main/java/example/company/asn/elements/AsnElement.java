@@ -1,14 +1,8 @@
-package example.company.tox.java.security.cert;
+package example.company.asn.elements;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
+import example.company.asn.utils.AsnUtils;
 import example.company.tox.common.Bytes;
 
-@XmlSeeAlso({ AsnSequence.class, AsnContextSpecific.class, AsnInteger.class, AsnObjectIdentifier.class, AsnNull.class,
-		AsnSet.class, AsnPrintableString.class, AsnUtcTime.class, AsnBitString.class, AsnOctetString.class,
-		AsnSubjectIdentifier.class })
 public class AsnElement {
 
 	protected Integer length;
@@ -26,11 +20,7 @@ public class AsnElement {
 		contentBytes = bytes.subStartLen(identifierBytes.length() + lengthBytes.length(), length);
 	}
 
-	@XmlAttribute
 	public Integer getLength() {
-		if (isGood()) {
-			return null;
-		}
 		return length;
 	}
 
@@ -38,11 +28,7 @@ public class AsnElement {
 		this.length = length;
 	}
 
-	@XmlJavaTypeAdapter(value = ByteAdapter.class)
 	public Bytes getIdentifierBytes() {
-		if (isGood()) {
-			return null;
-		}
 		return identifierBytes;
 	}
 
@@ -50,11 +36,7 @@ public class AsnElement {
 		this.identifierBytes = identifierBytes;
 	}
 
-	@XmlJavaTypeAdapter(value = ByteAdapter.class)
 	public Bytes getLengthBytes() {
-		if (isGood()) {
-			return null;
-		}
 		return lengthBytes;
 	}
 
@@ -62,11 +44,7 @@ public class AsnElement {
 		this.lengthBytes = lengthBytes;
 	}
 
-	@XmlJavaTypeAdapter(value = ByteAdapter.class)
 	public Bytes getContentBytes() {
-		if (isGood()) {
-			return null;
-		}
 		return contentBytes;
 	}
 
@@ -74,7 +52,4 @@ public class AsnElement {
 		this.contentBytes = contentBytes;
 	}
 
-	protected boolean isGood() {
-		return false;
-	}
 }

@@ -1,8 +1,6 @@
-package example.company.tox.java.security.cert;
+package example.company.asn.elements;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-
+import example.company.asn.utils.AsnUtils;
 import example.company.tox.common.Bytes;
 
 public class AsnContextSpecific extends AsnElement {
@@ -19,7 +17,6 @@ public class AsnContextSpecific extends AsnElement {
 		element = AsnUtils.parse(contentBytes);
 	}
 
-	@XmlAttribute
 	public long getTag() {
 		return tag;
 	}
@@ -28,7 +25,6 @@ public class AsnContextSpecific extends AsnElement {
 		this.tag = tag;
 	}
 
-	@XmlElement(name="contextSpecificContent")
 	public AsnElement getElement() {
 		return element;
 	}
@@ -37,10 +33,4 @@ public class AsnContextSpecific extends AsnElement {
 		this.element = element;
 	}
 
-	@Override
-	protected boolean isGood() {
-		return true;
-	}
-	
-	
 }

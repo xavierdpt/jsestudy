@@ -1,4 +1,4 @@
-package example.company.tox.java.security.cert;
+package example.company.asn;
 
 public enum AsnTag {
 	INTEGER(0x2), BIT_STRING(0x3), OCTET_STRING(0x4), NULL(0x5), OBJECT_IDENTIFIER(0x6), SEQUENCE(0x10), SET(

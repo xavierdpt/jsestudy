@@ -1,7 +1,6 @@
-package example.company.tox.java.security.cert;
+package example.company.asn.elements;
 
-import javax.xml.bind.annotation.XmlAttribute;
-
+import example.company.asn.utils.AsnObjectIdentifierUtils;
 import example.company.tox.common.Bytes;
 
 public class AsnObjectIdentifier extends AsnElement {
@@ -19,7 +18,6 @@ public class AsnObjectIdentifier extends AsnElement {
 
 	}
 
-	@XmlAttribute
 	public String getValue() {
 		return value;
 	}
@@ -28,18 +26,12 @@ public class AsnObjectIdentifier extends AsnElement {
 		this.value = value;
 	}
 
-	@XmlAttribute
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	@Override
-	protected boolean isGood() {
-		return true;
 	}
 
 }

@@ -1,4 +1,4 @@
-package example.company.tox.java.security.cert;
+package example.company.asn.elements;
 
 import java.nio.charset.Charset;
 
@@ -24,8 +24,4 @@ public class AsnPrintableString extends AsnElement {
 		this.value = value;
 	}
 
-	@Override
-	protected boolean isGood() {
-		return true;
-	}
 }

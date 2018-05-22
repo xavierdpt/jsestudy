@@ -2,6 +2,8 @@ package example.company.tox.java.security.cert;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
+import example.company.tox.common.Bytes;
+
 public class ByteAdapter extends XmlAdapter<String, Bytes> {
 
 	private static final char[] hexCode = "0123456789ABCDEF".toCharArray();

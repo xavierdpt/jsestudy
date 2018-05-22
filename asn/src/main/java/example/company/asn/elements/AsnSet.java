@@ -1,10 +1,9 @@
-package example.company.tox.java.security.cert;
+package example.company.asn.elements;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-
+import example.company.asn.utils.AsnUtils;
 import example.company.tox.common.Bytes;
 
 public class AsnSet extends AsnElement {
@@ -38,7 +37,6 @@ public class AsnSet extends AsnElement {
 		}
 	}
 
-	@XmlElement(name = "setElement")
 	public List<AsnElement> getElements() {
 		return elements;
 	}
@@ -46,9 +44,5 @@ public class AsnSet extends AsnElement {
 	public void setElements(List<AsnElement> elements) {
 		this.elements = elements;
 	}
-	
-	@Override
-	protected boolean isGood() {
-		return true;
-	}
+
 }

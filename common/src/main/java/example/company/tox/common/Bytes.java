@@ -1,4 +1,4 @@
-package example.company.tox.java.security.cert;
+package example.company.tox.common;
 
 public class Bytes {
 
@@ -59,8 +59,8 @@ public class Bytes {
 
 	public byte[] toByteArray() {
 		byte[] bytes = new byte[length()];
-		for(int i=0;i<length();++i) {
-			bytes[i]=at(i);
+		for (int i = 0; i < length(); ++i) {
+			bytes[i] = at(i);
 		}
 		return bytes;
 	}

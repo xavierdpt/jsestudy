@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import example.company.tox.common.Bytes;
+
 public class AsnSequence extends AsnElement {
 
 	List<AsnElement> elements = new ArrayList<>();

@@ -31,5 +31,7 @@
 		<module>tox</module>
 		<module>something</module>
 		<module>common</module>
+		<module>asn</module>
+		<module>tox-asn</module>
 	</modules>
 </project>

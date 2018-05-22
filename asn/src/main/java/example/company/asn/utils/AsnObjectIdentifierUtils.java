@@ -1,4 +1,4 @@
-package example.company.tox.java.security.cert;
+package example.company.asn.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -78,7 +78,6 @@ public class KeyStoreFiddle {
 		InputStream resourceAsStream = this.getClass().getResourceAsStream("/keystore.jks");
 		keystore.load(resourceAsStream, "password".toCharArray());
 		Certificate certificate = keystore.getCertificate("selfsigned");
-		System.out.println(certificate == null);
 		Tox.marshall(new CertificateDescription(certificate), System.out);
 	}
 }

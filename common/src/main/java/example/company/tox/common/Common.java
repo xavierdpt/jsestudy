@@ -14,4 +14,13 @@ public class Common {
 		return bytes;
 	}
 
+	public static String tos(Object o) {
+		if (o == null) {
+			return "n$";
+		} else if (o instanceof String) {
+			return "s$" + o.toString();
+		} else {
+			return "c$" + o.getClass().getName();
+		}
+	}
 }
