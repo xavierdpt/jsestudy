@@ -1,27 +1,26 @@
 package example.company.tox.java.security.cert;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import example.company.tox.common.Tox;
+
 public class AlternativeNamesDescription {
 
-	private Collection<AlternativeNamesListDescription> col = new ArrayList<>();
+	private AlternativeNamesDescription() {
 
-	public AlternativeNamesDescription(Collection<List<?>> issuerAlternativeNames) {
-		issuerAlternativeNames.forEach((l) -> {
-			col.add(new AlternativeNamesListDescription(l));
-		});
 	}
 
-	
-
-	public Collection<AlternativeNamesListDescription> getCol() {
-		return col;
+	public static void marshal(Document document, Element root, String name, Collection<List<?>> alternativeNames) {
+		if (alternativeNames != null) {
+			alternativeNames.forEach((alternatives) -> {
+				alternatives.forEach((o) -> {
+					Tox.appendChild(document, root, name, o);
+				});
+			});
+		}
 	}
-
-	public void setCol(Collection<AlternativeNamesListDescription> col) {
-		this.col = col;
-	}
-
 }

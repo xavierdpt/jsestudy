@@ -24,6 +24,11 @@
 				<version>4.12</version>
 				<scope>test</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.7</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<modules>
@@ -33,5 +38,6 @@
 		<module>common</module>
 		<module>asn</module>
 		<module>tox-asn</module>
+		<module>tox-common</module>
 	</modules>
 </project>

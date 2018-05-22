@@ -6,7 +6,7 @@ import javax.xml.bind.JAXBException;
 
 import org.junit.Test;
 
-import example.company.tox.Tox;
+import example.company.tox.common.Tox;
 import example.company.tox.java.security.ProvidersDescriptions;
 
 public class SecurityFiddle {
@@ -16,7 +16,7 @@ public class SecurityFiddle {
 
 		ProvidersDescriptions providers = new ProvidersDescriptions(Security.getProviders());
 
-		Tox.marshall(providers, System.out);
+		Tox.marshall_(providers, System.out);
 
 	}
 }

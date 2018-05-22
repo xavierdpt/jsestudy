@@ -1,58 +1,27 @@
 package example.company.tox.java.security.auth.x500;
 
 import javax.security.auth.x500.X500Principal;
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import example.company.tox.common.Bytes;
-import example.company.tox.java.security.cert.AsnElement;
-import example.company.tox.java.security.cert.AsnUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import example.company.tox.common.Tox;
+import example.company.tox.proxy.AsnElementMarshaller;
 
 public class X500PrincipalDescription {
 
-	private String className;
-	private String name;
-	private byte[] encoded;
-	private AsnElement element;
-
 	public X500PrincipalDescription(X500Principal principal) {
-		className = principal.getClass().getName();
-		name = principal.getName();
-		encoded = principal.getEncoded();
-		element = AsnUtils.parse(new Bytes(encoded));
 	}
 
-	public String getClassName() {
-		return className;
-	}
-
-	public void setClassName(String className) {
-		this.className = className;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@XmlJavaTypeAdapter(HexBinaryAdapter.class)
-	public byte[] getEncoded() {
-		return encoded;
-	}
-
-	public void setEncoded(byte[] encoded) {
-		this.encoded = encoded;
-	}
-
-	public AsnElement getElement() {
-		return element;
-	}
-
-	public void setElement(AsnElement element) {
-		this.element = element;
+	public static void marshal(Document document, Element root, String name, X500Principal principal) {
+		Element elementt = Tox.appendChild(document, root, name);
+		Tox.setAttribute(elementt, "name", principal.getName());
+		Tox.setAttribute(elementt, "className", principal.getClass().getName());
+		byte[] encoded = principal.getEncoded();
+		Tox.appendChild(document, elementt, "encoded", encoded);
+		if (encoded != null) {
+			AsnElementMarshaller.marshal(document, root, "asn", encoded);
+		}
 	}
 
 }

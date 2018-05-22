@@ -19,9 +19,10 @@
 			<artifactId>asanti</artifactId>
 			<version>1.2.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>example.company.jse</groupId>
-			<artifactId>common</artifactId>
+			<artifactId>tox-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -29,5 +30,6 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 </project>

@@ -1,5 +1,13 @@
 package example.company.tox.common;
 
+import java.io.StringWriter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
+import javax.xml.bind.DatatypeConverter;
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
+
 public class Common {
 
 	public static byte bit(int integer) {
@@ -22,5 +30,23 @@ public class Common {
 		} else {
 			return "c$" + o.getClass().getName();
 		}
+	}
+
+	public static String bytesToString(byte[] value) {
+		return new HexBinaryAdapter().marshal(value);
+	}
+
+	public static String booleansToString(boolean[] value) {
+		StringWriter sw = new StringWriter();
+		for (int i = 0; i < value.length; ++i) {
+			sw.append(value[i] ? "1" : "0");
+		}
+		return sw.toString();
+	}
+
+	public static String dateToString(Date value) {
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		cal.setTimeInMillis(value.getTime());
+		return DatatypeConverter.printDateTime(cal);
 	}
 }

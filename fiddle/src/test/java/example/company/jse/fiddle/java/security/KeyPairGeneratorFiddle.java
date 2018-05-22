@@ -10,7 +10,7 @@ import javax.xml.bind.JAXBException;
 
 import org.junit.Test;
 
-import example.company.tox.Tox;
+import example.company.tox.common.Tox;
 import example.company.tox.java.security.AnnotatedKeyPairDescription;
 import example.company.tox.java.security.AnnotatedKeyPairDescriptions;
 import example.company.tox.java.security.KeyPairDescription;
@@ -33,7 +33,7 @@ public class KeyPairGeneratorFiddle {
 
 		KeyPairDescription keyPairDescription = new KeyPairDescription(keypair);
 
-		Tox.marshall(keyPairDescription, System.out);
+		Tox.marshall_(keyPairDescription, System.out);
 	}
 
 	/**
@@ -64,6 +64,6 @@ public class KeyPairGeneratorFiddle {
 			});
 		}
 
-		Tox.marshall(keyPairs, System.out);
+		Tox.marshall_(keyPairs, System.out);
 	}
 }
