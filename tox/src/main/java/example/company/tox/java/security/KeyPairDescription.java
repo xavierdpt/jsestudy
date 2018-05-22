@@ -9,30 +9,30 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = { "privateKey", "publicKey" })
 public class KeyPairDescription {
 
-	private KeyDescription privateKey;
-	private KeyDescription publicKey;
+	private KeyMarshaller privateKey;
+	private KeyMarshaller publicKey;
 
 	public KeyPairDescription() {
 	}
 
 	public KeyPairDescription(KeyPair keypair) {
-		privateKey = new KeyDescription(keypair.getPrivate());
-		publicKey = new KeyDescription(keypair.getPublic());
+		privateKey = new KeyMarshaller(keypair.getPrivate());
+		publicKey = new KeyMarshaller(keypair.getPublic());
 	}
 
-	public KeyDescription getPrivateKey() {
+	public KeyMarshaller getPrivateKey() {
 		return privateKey;
 	}
 
-	public void setPrivateKey(KeyDescription privateKey) {
+	public void setPrivateKey(KeyMarshaller privateKey) {
 		this.privateKey = privateKey;
 	}
 
-	public KeyDescription getPublicKey() {
+	public KeyMarshaller getPublicKey() {
 		return publicKey;
 	}
 
-	public void setPublicKey(KeyDescription publicKey) {
+	public void setPublicKey(KeyMarshaller publicKey) {
 		this.publicKey = publicKey;
 	}
 

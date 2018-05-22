@@ -8,15 +8,15 @@ import org.w3c.dom.Element;
 
 import example.company.tox.common.Tox;
 
-public class ExceptionDescription {
+public class ExceptionMarshaller {
 
 	private String className;
 	private String message;
 
-	public ExceptionDescription() {
+	public ExceptionMarshaller() {
 	}
 
-	public ExceptionDescription(Exception e) {
+	public ExceptionMarshaller(Exception e) {
 		className = e.getClass().getName();
 		message = e.getMessage();
 	}

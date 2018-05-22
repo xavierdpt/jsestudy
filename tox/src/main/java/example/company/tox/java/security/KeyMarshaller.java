@@ -8,16 +8,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import example.company.tox.common.Tox;
-import example.company.tox.java.lang.ExceptionDescription;
 import example.company.tox.proxy.AsnElementMarshaller;
 
 @XmlType(propOrder = { "algorithm", "format", "encoded", "asnElement" })
-public class KeyDescription {
+public class KeyMarshaller {
 
-	public KeyDescription() {
+	public KeyMarshaller() {
 	}
 
-	public KeyDescription(Key key) {
+	public KeyMarshaller(Key key) {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -28,12 +27,7 @@ public class KeyDescription {
 		byte[] encoded = key.getEncoded();
 		Tox.appendChild(document, element, "encoded", encoded);
 		if (encoded != null) {
-			try {
-				AsnElementMarshaller.marshal(document, root, "asn", encoded);
-
-			} catch (Exception e) {
-				ExceptionDescription.marshal(document, root, "asnParseException", e);
-			}
+			AsnElementMarshaller.marshal(document, element, "asn", encoded);
 		}
 	}
 

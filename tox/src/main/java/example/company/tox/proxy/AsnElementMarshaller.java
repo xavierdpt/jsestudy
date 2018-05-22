@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import example.company.tox.java.lang.ExceptionDescription;
+import example.company.tox.java.lang.ExceptionMarshaller;
 
 public final class AsnElementMarshaller {
 
@@ -16,7 +16,7 @@ public final class AsnElementMarshaller {
 					byte[].class);
 			method.invoke(null, document, root, "asn", encoded);
 		} catch (Exception e) {
-			ExceptionDescription.marshal(document, root, "asnException", e);
+			ExceptionMarshaller.marshal(document, root, "asnException", e);
 		}
 	}
 

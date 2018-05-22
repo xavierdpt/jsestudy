@@ -7,8 +7,8 @@ public class AnnotatedKeyPairDescription {
 
 	private String provider;
 
-	private KeyDescription privateKey;
-	private KeyDescription publicKey;
+	private KeyMarshaller privateKey;
+	private KeyMarshaller publicKey;
 
 	public AnnotatedKeyPairDescription() {
 	}
@@ -29,20 +29,20 @@ public class AnnotatedKeyPairDescription {
 	}
 
 	@XmlElement(name = "privateKey")
-	public KeyDescription getPrivateKey() {
+	public KeyMarshaller getPrivateKey() {
 		return privateKey;
 	}
 
-	public void setPrivateKey(KeyDescription privateKey) {
+	public void setPrivateKey(KeyMarshaller privateKey) {
 		this.privateKey = privateKey;
 	}
 
 	@XmlElement(name = "publicKey")
-	public KeyDescription getPublicKey() {
+	public KeyMarshaller getPublicKey() {
 		return publicKey;
 	}
 
-	public void setPublicKey(KeyDescription publicKey) {
+	public void setPublicKey(KeyMarshaller publicKey) {
 		this.publicKey = publicKey;
 	}
 

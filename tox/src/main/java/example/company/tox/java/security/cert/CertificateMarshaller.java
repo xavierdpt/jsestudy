@@ -12,8 +12,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import example.company.tox.common.Tox;
-import example.company.tox.java.lang.ExceptionDescription;
-import example.company.tox.java.security.KeyDescription;
+import example.company.tox.java.lang.ExceptionMarshaller;
+import example.company.tox.java.security.KeyMarshaller;
 import example.company.tox.java.security.PrincipalDescription;
 import example.company.tox.java.security.auth.x500.X500PrincipalDescription;
 import example.company.tox.proxy.AsnElementMarshaller;
@@ -24,24 +24,20 @@ public class CertificateMarshaller {
 	private CertificateMarshaller() {
 	}
 
-	public CertificateMarshaller(Certificate certificate) {
-
-	}
-
 	public static void marshall(Document document, Element root2, String name, Certificate certificate) {
 
 		Element root = Tox.appendChild(document, root2, name);
 
 		Tox.setAttribute(root, "type", certificate.getType());
 
-		KeyDescription.marshal(document, root, "publicKey", certificate.getPublicKey());
+		KeyMarshaller.marshal(document, root, "publicKey", certificate.getPublicKey());
 
 		byte[] encoded = null;
 		try {
 			encoded = certificate.getEncoded();
 			Tox.appendChild(document, root, "encoded", encoded);
 		} catch (CertificateEncodingException e) {
-			ExceptionDescription.marshal(document, root, "encoded-exception", e);
+			ExceptionMarshaller.marshal(document, root, "encoded-exception", e);
 		}
 
 		if (certificate instanceof X509Certificate) {
@@ -66,24 +62,24 @@ public class CertificateMarshaller {
 					});
 				}
 			} catch (CertificateParsingException e) {
-				ExceptionDescription.marshal(document, root, "encoded-exception", e);
+				ExceptionMarshaller.marshal(document, root, "encoded-exception", e);
 			}
 			try {
 				Tox.appendChild(document, root, "tbs-certificate", xcertificate.getTBSCertificate());
 			} catch (CertificateEncodingException e) {
-				ExceptionDescription.marshal(document, root, "tbs-certificate-exception", e);
+				ExceptionMarshaller.marshal(document, root, "tbs-certificate-exception", e);
 			}
 			try {
 				AlternativeNamesDescription.marshal(document, root, "issuerAlternativeName",
 						xcertificate.getIssuerAlternativeNames());
 			} catch (CertificateParsingException e) {
-				ExceptionDescription.marshal(document, root, "issuer-alternative-name-exception", e);
+				ExceptionMarshaller.marshal(document, root, "issuer-alternative-name-exception", e);
 			}
 			try {
 				AlternativeNamesDescription.marshal(document, root, "subjectAlternativeName",
 						xcertificate.getSubjectAlternativeNames());
 			} catch (CertificateParsingException e) {
-				ExceptionDescription.marshal(document, root, "subject-alternative-name-exception", e);
+				ExceptionMarshaller.marshal(document, root, "subject-alternative-name-exception", e);
 			}
 			PrincipalDescription.marshal(document, root, "issuerDN", xcertificate.getIssuerDN());
 			PrincipalDescription.marshal(document, root, "subjectDN", xcertificate.getSubjectDN());
