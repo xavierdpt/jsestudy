@@ -159,13 +159,28 @@ public class Tox {
 		return null;
 	}
 
+	public static Element appendChild(Document document, Element root, String name, Long value) {
+		if (value != null) {
+
+			Text text = document.createTextNode(value.toString());
+
+			Element element = document.createElement(name);
+			element.appendChild(text);
+
+			root.appendChild(element);
+
+			return element;
+		}
+		return null;
+	}
+
 	public static void appendText(Document document, Element element, String value) {
 		Text text = document.createTextNode(value);
 		element.appendChild(text);
 	}
 
 	public static void setAttribute(Element element, String name, Long value) {
-		if(value!=null) {
+		if (value != null) {
 			element.setAttribute(name, value.toString());
 		}
 	}

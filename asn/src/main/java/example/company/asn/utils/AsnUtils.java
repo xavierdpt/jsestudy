@@ -111,12 +111,16 @@ public class AsnUtils {
 		} else if (asnClass == AsnClass.CONTEXT_SPECIFIC) {
 			return new AsnContextSpecific(bytes);
 		} else if (asnClass == AsnClass.APPLICATION) {
-			if(tag==AsnTag.SUBJECT_IDENTIFIER.getTagNumber()) {
+			if (tag == AsnTag.SUBJECT_IDENTIFIER.getTagNumber()) {
 				return new AsnSubjectIdentifier(bytes);
 			}
 		} else {
 			System.out.println("Warning : unknown " + asnClass + " tag " + tag);
 		}
 		return null;
+	}
+
+	public static byte[] encode(AsnElement asn) {
+		return new byte[] {};
 	}
 }

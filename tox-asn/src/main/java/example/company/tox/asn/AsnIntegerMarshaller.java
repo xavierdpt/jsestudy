@@ -9,7 +9,7 @@ import example.company.tox.common.Tox;
 public class AsnIntegerMarshaller {
 
 	public static void marshal(Document document, Element root, String name, AsnInteger integer) {
-		Tox.appendChild(document, root, name, integer.getValue());
+		Tox.appendChild(document, root, name, (Long)integer.getValue());
 	}
 
 }
