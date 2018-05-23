@@ -3,6 +3,7 @@ package example.company.tox.common;
 import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import javax.xml.bind.DatatypeConverter;
@@ -12,6 +13,10 @@ public class Common {
 
 	public static byte bit(int integer) {
 		return (byte) integer;
+	}
+
+	public static byte bit(long l) {
+		return (byte) l;
 	}
 
 	public static byte[] bytes(int... integers) {
@@ -49,4 +54,13 @@ public class Common {
 		cal.setTimeInMillis(value.getTime());
 		return DatatypeConverter.printDateTime(cal);
 	}
+
+	public static byte[] toArray(List<Byte> bytes) {
+		byte[] array = new byte[bytes.size()];
+		for (int i = 0; i < bytes.size(); ++i) {
+			array[i] = bytes.get(i);
+		}
+		return array;
+	}
+
 }

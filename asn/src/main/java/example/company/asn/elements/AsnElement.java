@@ -1,7 +1,10 @@
 package example.company.asn.elements;
 
+import java.util.List;
+
 import example.company.asn.utils.AsnUtils;
 import example.company.tox.common.Bytes;
+import example.company.tox.common.NotSupportedException;
 
 public class AsnElement {
 
@@ -50,6 +53,14 @@ public class AsnElement {
 
 	public void setContentBytes(Bytes contentBytes) {
 		this.contentBytes = contentBytes;
+	}
+
+	public void encode(List<Byte> bytes) {
+		throw new NotSupportedException();
+	}
+
+	public boolean debug() {
+		return false;
 	}
 
 }

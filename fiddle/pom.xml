@@ -29,7 +29,5 @@
 			<artifactId>tox-asn</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>com.brightsparklabs</groupId> <artifactId>asanti</artifactId> 
-			<version>1.2.0</version> </dependency> -->
 	</dependencies>
 </project>

@@ -1,5 +1,8 @@
 package example.company.asn.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import example.company.asn.AsnClass;
 import example.company.asn.AsnEncoding;
 import example.company.asn.AsnTag;
@@ -16,6 +19,7 @@ import example.company.asn.elements.AsnSet;
 import example.company.asn.elements.AsnSubjectIdentifier;
 import example.company.asn.elements.AsnUtcTime;
 import example.company.tox.common.Bytes;
+import example.company.tox.common.Common;
 
 public class AsnUtils {
 
@@ -120,7 +124,23 @@ public class AsnUtils {
 		return null;
 	}
 
-	public static byte[] encode(AsnElement asn) {
-		return new byte[] {};
+	public static byte[] encode(AsnElement element) {
+		List<Byte> bytes = new ArrayList<>();
+		element.encode(bytes);
+		return Common.toArray(bytes);
+	}
+
+	public static void addIdentifierBytes(List<Byte> bytes, AsnClass asnClass, AsnEncoding asnEncoding, AsnTag asnTag) {
+		bytes.add(Common.bit(asnClass.getMasked() + asnEncoding.getMasked() + asnTag.getTagNumber()));
+	}
+
+	public static void addLengthBytes(List<Byte> bytes, int length) {
+		bytes.add(Common.bit(length));
+	}
+
+	public static void addBytes(List<Byte> list, byte[] array) {
+		for (int i = 0; i < array.length; ++i) {
+			list.add(array[i]);
+		}
 	}
 }

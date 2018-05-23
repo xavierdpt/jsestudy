@@ -8,19 +8,16 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
 import example.company.tox.common.Tox;
 import example.company.tox.java.security.KeyMarshaller;
-import example.company.tox.java.security.cert.CertificateMarshaller;
 
 public class Fiddle2 {
 

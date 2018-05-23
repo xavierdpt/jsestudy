@@ -48,6 +48,12 @@ public class AsnElementMarshaller {
 			} else if (element instanceof AsnUtcTime) {
 				AsnUtcTimeMarshaller.marshal(document, root, "utc-time", (AsnUtcTime) element);
 			}
+			if (element.debug()) {
+				Element debug = Tox.appendChild(document, root, "debug");
+				Tox.appendChild(document, debug, "identifier", element.getIdentifierBytes().toByteArray());
+				Tox.appendChild(document, debug, "length", element.getLengthBytes().toByteArray());
+				Tox.appendChild(document, debug, "content", element.getContentBytes().toByteArray());
+			}
 		}
 	}
 
