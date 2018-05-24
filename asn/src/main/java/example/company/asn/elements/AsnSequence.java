@@ -50,20 +50,6 @@ public class AsnSequence extends AsnElement {
 
 	@Override
 	public void encode(List<Byte> bytes) {
-		List<byte[]> encodedElements = new ArrayList<>();
-		long[] encodedElementsSize = new long[] { 0 };
-
-		elements.forEach(element -> {
-			byte[] elementBytes = AsnUtils.encode(element);
-			encodedElements.add(elementBytes);
-			encodedElementsSize[0] += elementBytes.length;
-		});
-
-		AsnUtils.addIdentifierBytes(bytes, AsnClass.UNIVERSAL, AsnEncoding.CONSTRUCTED, AsnTag.SEQUENCE);
-		AsnUtils.addLengthBytes(bytes, encodedElementsSize[0]);
-		encodedElements.forEach(elementBytes -> {
-			AsnUtils.addBytes(bytes, elementBytes);
-		});
-
+		AsnUtils.encodeSequenceOrSet(bytes,AsnTag.SEQUENCE, elements);
 	}
 }

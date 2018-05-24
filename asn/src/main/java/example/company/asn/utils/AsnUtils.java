@@ -165,4 +165,23 @@ public class AsnUtils {
 	public static void addBytes(List<Byte> bytes, List<Byte> payloadBytes) {
 		bytes.addAll(payloadBytes);
 	}
+
+	public static void encodeSequenceOrSet(List<Byte> bytes, AsnTag tag, List<AsnElement> elements) {
+
+		List<byte[]> encodedElements = new ArrayList<>();
+		long[] encodedElementsSize = new long[] { 0 };
+
+		elements.forEach(element -> {
+			byte[] elementBytes = AsnUtils.encode(element);
+			encodedElements.add(elementBytes);
+			encodedElementsSize[0] += elementBytes.length;
+		});
+
+		AsnUtils.addIdentifierBytes(bytes, AsnClass.UNIVERSAL, AsnEncoding.CONSTRUCTED, tag);
+		AsnUtils.addLengthBytes(bytes, encodedElementsSize[0]);
+		encodedElements.forEach(elementBytes -> {
+			AsnUtils.addBytes(bytes, elementBytes);
+		});
+
+	}
 }

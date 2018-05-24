@@ -3,6 +3,7 @@ package example.company.asn.elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import example.company.asn.AsnTag;
 import example.company.asn.utils.AsnUtils;
 import example.company.tox.common.Bytes;
 
@@ -45,4 +46,8 @@ public class AsnSet extends AsnElement {
 		this.elements = elements;
 	}
 
+	@Override
+	public void encode(List<Byte> bytes) {
+		AsnUtils.encodeSequenceOrSet(bytes, AsnTag.SET, elements);
+	}
 }
