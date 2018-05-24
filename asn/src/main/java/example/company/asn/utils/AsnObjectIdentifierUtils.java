@@ -68,4 +68,16 @@ public class AsnObjectIdentifierUtils {
 		}
 		return label;
 	}
+
+	public static void encodeSubIdentifier(List<Byte> bytes, int value) {
+		List<Integer> parts = new ArrayList<>();
+		while (value > 0x7F) {
+			parts.add((value & 0x7F));
+			value >>= 7;
+		}
+		parts.add(value);
+		for (int i = parts.size() - 1; i >= 0; --i) {
+			bytes.add((byte) (parts.get(i) + (i == 0 ? 0 : 0x80)));
+		}
+	}
 }

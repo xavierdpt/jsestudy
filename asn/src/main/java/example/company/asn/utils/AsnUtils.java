@@ -143,4 +143,8 @@ public class AsnUtils {
 			list.add(array[i]);
 		}
 	}
+
+	public static void addBytes(List<Byte> bytes, List<Byte> payloadBytes) {
+		bytes.addAll(payloadBytes);
+	}
 }

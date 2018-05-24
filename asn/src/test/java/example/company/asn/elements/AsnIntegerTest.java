@@ -16,9 +16,9 @@ public class AsnIntegerTest {
 		public int value;
 		public byte[] encoded;
 
-		public SpecCase(int value, byte[] expected) {
+		public SpecCase(int value, byte[] encoded) {
 			this.value = value;
-			this.encoded = expected;
+			this.encoded = encoded;
 		}
 
 	}
