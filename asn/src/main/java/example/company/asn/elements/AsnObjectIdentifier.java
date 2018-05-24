@@ -36,11 +36,6 @@ public class AsnObjectIdentifier extends AsnElement {
 	}
 
 	@Override
-	public boolean debug() {
-		return true;
-	}
-
-	@Override
 	public void encode(List<Byte> bytes) {
 
 		AsnUtils.addIdentifierBytes(bytes, AsnClass.UNIVERSAL, AsnEncoding.PRIMITIVE, AsnTag.OBJECT_IDENTIFIER);

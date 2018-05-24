@@ -135,7 +135,20 @@ public class AsnUtils {
 	}
 
 	public static void addLengthBytes(List<Byte> bytes, int length) {
-		bytes.add(Common.bit(length));
+		if (length < 0x80) {
+			bytes.add(Common.bit(length));
+		} else {
+			List<Integer> parts = new ArrayList<>();
+			while (length > 0xFF) {
+				parts.add(length & 0xFF);
+				length >>= 8;
+			}
+			parts.add(length);
+			bytes.add((byte) (parts.size() | 0x80));
+			for (int i = parts.size() - 1; i >= 0; --i) {
+				bytes.add((byte) (parts.get(i).intValue()));
+			}
+		}
 	}
 
 	public static void addBytes(List<Byte> list, byte[] array) {
