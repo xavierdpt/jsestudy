@@ -56,7 +56,7 @@ public class AsnElement {
 	}
 
 	public void encode(List<Byte> bytes) {
-		throw new NotSupportedException();
+		throw new NotSupportedException(this.getClass().getName());
 	}
 
 	public boolean debug() {

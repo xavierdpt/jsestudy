@@ -3,8 +3,6 @@ package example.company.asn.elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import example.company.asn.AsnClass;
-import example.company.asn.AsnEncoding;
 import example.company.asn.AsnTag;
 import example.company.asn.utils.AsnUtils;
 import example.company.tox.common.Bytes;

@@ -136,7 +136,12 @@ public class AsnUtils {
 	}
 
 	public static void addIdentifierBytes(List<Byte> bytes, AsnClass asnClass, AsnEncoding asnEncoding, AsnTag asnTag) {
-		bytes.add(Common.bit(asnClass.getMasked() + asnEncoding.getMasked() + asnTag.getTagNumber()));
+		addIdentifierBytes(bytes, asnClass, asnEncoding, asnTag.getTagNumber());
+	}
+
+	public static void addIdentifierBytes(List<Byte> bytes, AsnClass asnClass, AsnEncoding asnEncoding,
+			long tagNumber) {
+		bytes.add(Common.bit(asnClass.getMasked() + asnEncoding.getMasked() + tagNumber));
 	}
 
 	public static void addLengthBytes(List<Byte> bytes, long length) {
