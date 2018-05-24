@@ -3,12 +3,18 @@ package example.company.asn.elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import example.company.asn.AsnClass;
+import example.company.asn.AsnEncoding;
+import example.company.asn.AsnTag;
 import example.company.asn.utils.AsnUtils;
 import example.company.tox.common.Bytes;
 
 public class AsnSequence extends AsnElement {
 
 	List<AsnElement> elements = new ArrayList<>();
+
+	public AsnSequence() {
+	}
 
 	public AsnSequence(Bytes allBytes) {
 		super(allBytes);
@@ -42,4 +48,22 @@ public class AsnSequence extends AsnElement {
 		this.elements = elements;
 	}
 
+	@Override
+	public void encode(List<Byte> bytes) {
+		List<byte[]> encodedElements = new ArrayList<>();
+		long[] encodedElementsSize = new long[] { 0 };
+
+		elements.forEach(element -> {
+			byte[] elementBytes = AsnUtils.encode(element);
+			encodedElements.add(elementBytes);
+			encodedElementsSize[0] += elementBytes.length;
+		});
+
+		AsnUtils.addIdentifierBytes(bytes, AsnClass.UNIVERSAL, AsnEncoding.CONSTRUCTED, AsnTag.SEQUENCE);
+		AsnUtils.addLengthBytes(bytes, encodedElementsSize[0]);
+		encodedElements.forEach(elementBytes -> {
+			AsnUtils.addBytes(bytes, elementBytes);
+		});
+
+	}
 }

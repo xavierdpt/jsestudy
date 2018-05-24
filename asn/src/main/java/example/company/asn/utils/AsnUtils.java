@@ -7,6 +7,7 @@ import example.company.asn.AsnClass;
 import example.company.asn.AsnEncoding;
 import example.company.asn.AsnTag;
 import example.company.asn.elements.AsnBitString;
+import example.company.asn.elements.AsnBoolean;
 import example.company.asn.elements.AsnContextSpecific;
 import example.company.asn.elements.AsnElement;
 import example.company.asn.elements.AsnInteger;
@@ -108,6 +109,10 @@ public class AsnUtils {
 				return new AsnBitString(bytes);
 			} else if (tag == AsnTag.OCTET_STRING.getTagNumber()) {
 				return new AsnOctetString(bytes);
+			} else if (tag == AsnTag.BOOLEAN.getTagNumber()) {
+				return new AsnBoolean(bytes);
+			} else if (tag == AsnTag.IA5STRING.getTagNumber()) {
+				return new AsnIA5String(bytes);
 			} else {
 				System.out.println("Warning : unknown " + asnClass + " tag " + tag);
 				return new AsnElement(bytes);
@@ -134,11 +139,11 @@ public class AsnUtils {
 		bytes.add(Common.bit(asnClass.getMasked() + asnEncoding.getMasked() + asnTag.getTagNumber()));
 	}
 
-	public static void addLengthBytes(List<Byte> bytes, int length) {
+	public static void addLengthBytes(List<Byte> bytes, long length) {
 		if (length < 0x80) {
 			bytes.add(Common.bit(length));
 		} else {
-			List<Integer> parts = new ArrayList<>();
+			List<Long> parts = new ArrayList<>();
 			while (length > 0xFF) {
 				parts.add(length & 0xFF);
 				length >>= 8;
