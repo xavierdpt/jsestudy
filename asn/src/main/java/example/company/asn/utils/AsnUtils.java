@@ -189,4 +189,8 @@ public class AsnUtils {
 		});
 
 	}
+
+	public static AsnElement parse(byte[] bytes) {
+		return parse(new Bytes(bytes));
+	}
 }

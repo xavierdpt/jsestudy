@@ -27,7 +27,7 @@ public class Tox {
 		}
 	}
 
-	public static void marshall(Document doc, OutputStream out) {
+	public static void toXML(Document doc, OutputStream out) {
 		DOMSource domSource = new DOMSource(doc);
 		StreamResult result = new StreamResult(out);
 		try {

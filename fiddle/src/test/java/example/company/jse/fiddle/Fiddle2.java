@@ -37,7 +37,7 @@ public class Fiddle2 {
 
 		Document document = Tox.createDocument();
 		KeyMarshaller.marshal(document, null, "key", key);
-		Tox.marshall(document, System.out);
+		Tox.toXML(document, System.out);
 
 	}
 

@@ -2,7 +2,10 @@ package example.company.asn.elements;
 
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import example.company.asn.AsnClass;
 import example.company.asn.AsnEncoding;
@@ -73,6 +76,26 @@ public class AsnUtcTime extends AsnElement {
 		byte[] encoded = value.replaceAll("[ :/]", "").getBytes();
 		AsnUtils.addLengthBytes(bytes, encoded.length);
 		AsnUtils.addBytes(bytes, encoded);
+	}
+
+	public Date toDate() {
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		String[] parts = value.split("[ :/]");
+		cal.setTimeInMillis(0);
+		Integer year = Integer.valueOf(parts[0]);
+		cal.set(Calendar.YEAR, 2000+year);
+		int month = Integer.valueOf(parts[1]) - 1;
+		cal.set(Calendar.MONTH, month);
+		Integer day = Integer.valueOf(parts[2]);
+		cal.set(Calendar.DAY_OF_MONTH, day);
+		Integer hour = Integer.valueOf(parts[3]);
+		cal.set(Calendar.HOUR_OF_DAY, hour);
+		Integer minute = Integer.valueOf(parts[4]);
+		cal.set(Calendar.MINUTE, minute);
+		Integer second = Integer.valueOf(parts[5]);
+		cal.set(Calendar.SECOND, second);
+		Date time = cal.getTime();
+		return time;
 	}
 
 }

@@ -63,7 +63,7 @@ public class AsnElementMarshaller {
 		marshal(document, asnRoot, asnElement);
 	}
 
-	public static void marshal(Document document, String name, AsnElement element) {
+	public static void toXML(Document document, String name, AsnElement element) {
 		Element asnRoot = Tox.appendChild(document, name);
 		marshal(document, asnRoot, element);
 	}

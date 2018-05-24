@@ -9,17 +9,24 @@ import example.company.tox.common.Bytes;
 
 public class AsnObjectIdentifierUtils {
 
+	public static final String COUNTRY_NAME_OID = "2.5.4.6";
+	public static final String STATE_OR_PROVINCE_NAME_OID = "2.5.4.8";
+	public static final String LOCALITY_NAME_OID = "2.5.4.7";
+	public static final String ORGANIZATION_NAME_OID = "2.5.4.10";
+	public static final String ORGANIZATIONAL_UNIT_NAME_OID = "2.5.4.11";
+	public static final String COMMON_NAME_OID = "2.5.4.3";
+
 	private static Map<String, String> oidLabels = new HashMap<>();
 	static {
-		oidLabels.put("1.2.840.113549.1.1.11", "sha256WithRSAEncryption");
+		oidLabels.put("1.2.840.113549.1.1.11", "SHA256withRSA");
 		oidLabels.put("1.2.840.113549.1.1.1", "rsaEncryption");
 		oidLabels.put("2.5.29.14", "subjectKeyIdentifier");
-		oidLabels.put("2.5.4.6", "countryName");
-		oidLabels.put("2.5.4.8", "stateOrProvinceName");
-		oidLabels.put("2.5.4.7", "localityName");
-		oidLabels.put("2.5.4.10", "organizationName");
-		oidLabels.put("2.5.4.11", "organizationalUnitName");
-		oidLabels.put("2.5.4.3", "commonName");
+		oidLabels.put(COUNTRY_NAME_OID, "countryName");
+		oidLabels.put(STATE_OR_PROVINCE_NAME_OID, "stateOrProvinceName");
+		oidLabels.put(LOCALITY_NAME_OID, "localityName");
+		oidLabels.put(ORGANIZATION_NAME_OID, "organizationName");
+		oidLabels.put(ORGANIZATIONAL_UNIT_NAME_OID, "organizationalUnitName");
+		oidLabels.put(COMMON_NAME_OID, "commonName");
 	}
 
 	public static String parsePayload(Bytes payload) {

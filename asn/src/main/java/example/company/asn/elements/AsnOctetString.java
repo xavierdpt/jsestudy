@@ -10,38 +10,28 @@ import example.company.tox.common.Bytes;
 
 public class AsnOctetString extends AsnElement {
 
-	private AsnElement element;
-	private byte[] rawBytes;
+	private byte[] value;
 
 	public AsnOctetString() {
 	}
 
 	public AsnOctetString(Bytes bytes) {
 		super(bytes);
-		rawBytes = contentBytes.toByteArray();
-//		element = AsnUtils.parse(contentBytes);
+		value = contentBytes.toByteArray();
 	}
 
-	public AsnElement getElement() {
-		return element;
+	public byte[] getValue() {
+		return value;
 	}
 
-	public void setElement(AsnElement element) {
-		this.element = element;
-	}
-
-	public byte[] getRawBytes() {
-		return rawBytes;
-	}
-
-	public void setRawBytes(byte[] rawBytes) {
-		this.rawBytes = rawBytes;
+	public void setValue(byte[] value) {
+		this.value = value;
 	}
 
 	@Override
 	public void encode(List<Byte> bytes) {
 		AsnUtils.addIdentifierBytes(bytes, AsnClass.UNIVERSAL, AsnEncoding.PRIMITIVE, AsnTag.OCTET_STRING);
-		AsnUtils.addLengthBytes(bytes, rawBytes.length);
-		AsnUtils.addBytes(bytes, rawBytes);
+		AsnUtils.addLengthBytes(bytes, value.length);
+		AsnUtils.addBytes(bytes, value);
 	}
 }

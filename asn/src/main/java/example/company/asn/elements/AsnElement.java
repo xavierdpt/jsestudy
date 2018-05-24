@@ -63,4 +63,9 @@ public class AsnElement {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
+	public <T> T as(Class<T> clazz) {
+		return (T) this;
+	}
+
 }
