@@ -13,13 +13,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import example.company.asn.elements.AsnElement;
+import example.company.asn.elements.AsnSequence;
 import example.company.asn.utils.AsnInterpretor;
 import example.company.asn.utils.AsnUtils;
 
-public class Fiddle6 {
+public class Fiddle07 {
 
 	/**
-	 * Parse the TBS certificate as Asn, and interpret the Asn structure
+	 * Parse the Certificate as Asn, and use the interpretor to get the signature
 	 * 
 	 * @throws KeyStoreException
 	 * @throws IOException
@@ -39,31 +40,12 @@ public class Fiddle6 {
 
 		X509Certificate x = (X509Certificate) keystore.getCertificate("selfsigned");
 
-		AsnElement tbs = AsnUtils.parse(x.getTBSCertificate());
+		AsnElement root = AsnUtils.parse(x.getEncoded());
+		AsnElement tbs = root.as(AsnSequence.class).getElements().get(0);
 
-		tbsTests(x, tbs);
-	}
+		Fiddle06.tbsTests(x, tbs);
 
-	public static void tbsTests(X509Certificate x, AsnElement tbs) {
-
-		Assert.assertEquals(3, x.getVersion());
-		Assert.assertEquals(3, AsnInterpretor.getVersion(tbs));
-
-		Assert.assertEquals(AsnInterpretor.getSerialNumber(tbs), x.getSerialNumber().longValue());
-
-		Assert.assertEquals("1.2.840.113549.1.1.11", x.getSigAlgOID());
-		Assert.assertEquals("1.2.840.113549.1.1.11", AsnInterpretor.getSigAlgOID(tbs));
-
-		Assert.assertEquals("SHA256withRSA", x.getSigAlgName());
-		Assert.assertEquals("SHA256withRSA", AsnInterpretor.getSigAlgName(tbs));
-
-		Assert.assertEquals(x.getIssuerDN().getName(), AsnInterpretor.getIssuerName(tbs));
-
-		Assert.assertEquals(x.getNotBefore().getTime(), AsnInterpretor.getNotBefore(tbs).getTime());
-		Assert.assertEquals(x.getNotAfter().getTime(), AsnInterpretor.getNotAfter(tbs).getTime());
-
-		Assert.assertEquals(x.getSubjectDN().getName(), AsnInterpretor.getSubjectName(tbs));
-
+		Assert.assertArrayEquals(x.getSignature(), AsnInterpretor.getSignature(root));
 	}
 
 }

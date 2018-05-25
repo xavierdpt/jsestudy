@@ -6,20 +6,19 @@ import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-public class Fiddle3 {
+public class Fiddle04 {
 
 	/**
-	 * "Manually" computes the signature of the self-signed certificate in keystore1 with the private key
+	 * "Manually" verify the signature of the certificate with the public key
 	 * 
 	 * @throws KeyStoreException
 	 * @throws IOException
@@ -31,7 +30,7 @@ public class Fiddle3 {
 	 */
 	@Test
 	public void fiddle() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException,
-			UnrecoverableKeyException, InvalidKeyException, SignatureException {
+			InvalidKeyException, SignatureException {
 
 		char[] password = "password".toCharArray();
 
@@ -40,15 +39,13 @@ public class Fiddle3 {
 		keystore.load(resourceAsStream, password);
 
 		X509Certificate certificate = (X509Certificate) keystore.getCertificate("selfsigned");
-		PrivateKey privateKey = (PrivateKey) keystore.getKey("selfsigned", password);
+		PublicKey publicKey = certificate.getPublicKey();
 
 		Signature sig = Signature.getInstance("SHA256withRSA");
 
-		sig.initSign(privateKey);
+		sig.initVerify(publicKey);
 		sig.update(certificate.getTBSCertificate());
-		byte[] expected = sig.sign();
-
-		Assert.assertArrayEquals(expected, certificate.getSignature());
+		sig.verify(certificate.getSignature());
 
 	}
 

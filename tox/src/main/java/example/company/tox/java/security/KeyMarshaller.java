@@ -17,7 +17,6 @@ public class KeyMarshaller {
 	}
 
 	public KeyMarshaller(Key key) {
-		// TODO Auto-generated constructor stub
 	}
 
 	public static void marshal(Document document, Element root, String name, Key key) {
