@@ -19,15 +19,21 @@ import org.w3c.dom.Text;
 
 public class Tox {
 
-	public static Document createDocument() {
+	public static Document createDocument(String name) {
 		try {
-			return ToxInitializers.documentBuilder.get().newDocument();
+			Document document = ToxInitializers.documentBuilder.get().newDocument();
+			Tox.appendChild(document, name);
+			return document;
 		} catch (ConcurrentException e) {
 			throw new ToxException(e);
 		}
 	}
 
-	public static void toXML(Document doc, OutputStream out) {
+	public static Document createDocument() {
+		return createDocument("root");
+	}
+
+	public static void print(Document doc, OutputStream out) {
 		DOMSource domSource = new DOMSource(doc);
 		StreamResult result = new StreamResult(out);
 		try {

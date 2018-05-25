@@ -27,6 +27,9 @@ public class AsnObjectIdentifierUtils {
 		oidLabels.put(ORGANIZATION_NAME_OID, "organizationName");
 		oidLabels.put(ORGANIZATIONAL_UNIT_NAME_OID, "organizationalUnitName");
 		oidLabels.put(COMMON_NAME_OID, "commonName");
+		oidLabels.put("2.5.29.14", "subjectKeyIdentifier");
+		oidLabels.put("2.5.29.15", "keyUsage");
+		oidLabels.put("2.5.29.19", "basicConstraints");
 	}
 
 	public static String parsePayload(Bytes payload) {
@@ -68,10 +71,11 @@ public class AsnObjectIdentifierUtils {
 
 	}
 
-	public static String getLabel(String value) {
-		String label = oidLabels.get(value);
+	public static String getLabel(String oid) {
+		String label = oidLabels.get(oid);
 		if (label == null) {
-			System.out.println("No label found for oid " + value);
+			System.out.println("No label found for oid " + oid);
+			return oid;
 		}
 		return label;
 	}

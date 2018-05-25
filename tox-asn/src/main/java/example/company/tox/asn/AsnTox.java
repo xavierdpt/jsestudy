@@ -18,8 +18,9 @@ import example.company.asn.elements.AsnUtcTime;
 import example.company.asn.utils.AsnUtils;
 import example.company.tox.common.Bytes;
 import example.company.tox.common.Tox;
+import example.company.tox.common.ToxTox;
 
-public class AsnElementMarshaller {
+public class AsnTox extends ToxTox<AsnElement> {
 
 	public static void marshal(Document document, Element root, AsnElement element) {
 		if (element != null) {
@@ -63,9 +64,23 @@ public class AsnElementMarshaller {
 		marshal(document, asnRoot, asnElement);
 	}
 
+	public static void marshal(Document document, Element root, String name, AsnElement element) {
+		marshal(document, root, element);
+	}
+
 	public static void toXML(Document document, String name, AsnElement element) {
 		Element asnRoot = Tox.appendChild(document, name);
 		marshal(document, asnRoot, element);
+	}
+
+	@Override
+	public void tox(Document document, Element root, String name, AsnElement t) {
+		marshal(document, root, name, t);
+	}
+
+	@Override
+	protected String getDefaultName() {
+		return "asn";
 	}
 
 }

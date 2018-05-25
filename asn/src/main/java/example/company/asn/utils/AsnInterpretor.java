@@ -79,7 +79,11 @@ public class AsnInterpretor {
 	}
 
 	public static byte[] getSignature(AsnElement asn) {
-		return asn.as(AsnSequence.class).getElements().get(2).as(AsnBitString.class).getContent();
+		return asn.as(AsnSequence.class).getElements().get(2).as(AsnBitString.class).toByteArray();
+	}
+
+	public static boolean isKeyCertSign(AsnElement tbsAsn) {
+		return false;
 	}
 
 }

@@ -33,7 +33,7 @@ public class Fiddle01 {
 		Certificate certificate = keystore.getCertificate("selfsigned");
 		Document document = Tox.createDocument();
 		CertificateMarshaller.marshall(document, null, "certificate", certificate);
-		Tox.toXML(document, System.out);
+		Tox.print(document, System.out);
 
 	}
 

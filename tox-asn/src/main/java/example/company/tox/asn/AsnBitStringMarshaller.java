@@ -9,7 +9,7 @@ import example.company.tox.common.Tox;
 public class AsnBitStringMarshaller {
 
 	public static void marshal(Document document, Element root, String name, AsnBitString bitString) {
-		Tox.appendChild(document, root, name, bitString.getContent());
+		Tox.appendChild(document, root, name, bitString.toByteArray());
 	}
 
 }
