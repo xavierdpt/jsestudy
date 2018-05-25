@@ -45,4 +45,12 @@ public class AsnContextSpecific extends AsnElement {
 		AsnUtils.addLengthBytes(bytes, elementBytes.length);
 		AsnUtils.addBytes(bytes, elementBytes);
 	}
+
+	public AsnElement get() {
+		return element;
+	}
+
+	public AsnSequence getSequence() {
+		return (AsnSequence) element;
+	}
 }

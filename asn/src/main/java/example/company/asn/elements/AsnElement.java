@@ -68,4 +68,20 @@ public class AsnElement {
 		return (T) this;
 	}
 
+	public AsnSequence asSequence() {
+		return (AsnSequence) this;
+	}
+
+	public AsnContextSpecific asContextSpecific() {
+		return (AsnContextSpecific) this;
+	}
+
+	public AsnObjectIdentifier asObjectIdentifier() {
+		return (AsnObjectIdentifier) this;
+	}
+
+	public AsnBitString asBitString() {
+		return (AsnBitString) this;
+	}
+
 }

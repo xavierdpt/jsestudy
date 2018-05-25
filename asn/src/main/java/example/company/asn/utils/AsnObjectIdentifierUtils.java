@@ -15,6 +15,7 @@ public class AsnObjectIdentifierUtils {
 	public static final String ORGANIZATION_NAME_OID = "2.5.4.10";
 	public static final String ORGANIZATIONAL_UNIT_NAME_OID = "2.5.4.11";
 	public static final String COMMON_NAME_OID = "2.5.4.3";
+	public static final String KEY_USAGE_OID = "2.5.29.15";
 
 	private static Map<String, String> oidLabels = new HashMap<>();
 	static {

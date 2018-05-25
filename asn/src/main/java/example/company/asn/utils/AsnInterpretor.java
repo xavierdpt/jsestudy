@@ -2,13 +2,17 @@ package example.company.asn.utils;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.junit.Assert;
 
 import example.company.asn.elements.AsnBitString;
 import example.company.asn.elements.AsnContextSpecific;
 import example.company.asn.elements.AsnElement;
 import example.company.asn.elements.AsnInteger;
 import example.company.asn.elements.AsnObjectIdentifier;
+import example.company.asn.elements.AsnOctetString;
 import example.company.asn.elements.AsnPrintableString;
 import example.company.asn.elements.AsnSequence;
 import example.company.asn.elements.AsnSet;
@@ -82,7 +86,27 @@ public class AsnInterpretor {
 		return asn.as(AsnSequence.class).getElements().get(2).as(AsnBitString.class).toByteArray();
 	}
 
+	public static AsnContextSpecific getContextSpecific(AsnElement tbsAsn, int i) {
+		if (i == 3) {
+			return tbsAsn.asSequence().getContextSpecific(7);
+		}
+		return null;
+	}
+
 	public static boolean isKeyCertSign(AsnElement tbsAsn) {
+
+		AsnSequence asnExts = getContextSpecific(tbsAsn, 3).getSequence();
+
+		AsnObjectIdentifierUtils.class.getName();
+
+		for (AsnElement element : asnExts) {
+			AsnSequence seq = element.asSequence();
+			if (AsnObjectIdentifierUtils.KEY_USAGE_OID.equals(seq.getObjectIdentifier(0).getValue())) {
+				AsnElement bits = AsnUtils.parse(seq.getOctetString(1).getValue()).asBitString();
+				return bits.as(AsnBitString.class).get(5);
+			}
+		}
+
 		return false;
 	}
 
