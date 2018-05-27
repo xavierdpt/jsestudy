@@ -84,4 +84,8 @@ public class AsnElement {
 		return (AsnBitString) this;
 	}
 
+	public AsnOctetString asOctetString() {
+		return (AsnOctetString) this;
+	}
+
 }

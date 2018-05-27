@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import example.company.asn.elements.AsnElement;
 import example.company.asn.elements.AsnSequence;
-import example.company.asn.utils.AsnInterpretor;
+import example.company.asn.utils.AsnX509Interpretation;
 import example.company.asn.utils.AsnUtils;
 
 public class Fiddle07 {
@@ -45,7 +45,7 @@ public class Fiddle07 {
 
 		Fiddle06.tbsTests(x, tbs);
 
-		Assert.assertArrayEquals(x.getSignature(), AsnInterpretor.getSignature(root));
+		Assert.assertArrayEquals(x.getSignature(), AsnX509Interpretation.getSignature(root));
 	}
 
 }

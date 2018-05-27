@@ -16,6 +16,7 @@ public class AsnObjectIdentifierUtils {
 	public static final String ORGANIZATIONAL_UNIT_NAME_OID = "2.5.4.11";
 	public static final String COMMON_NAME_OID = "2.5.4.3";
 	public static final String KEY_USAGE_OID = "2.5.29.15";
+	public static final String BASIC_CONSTRAINTS_OID = "2.5.29.19";
 
 	private static Map<String, String> oidLabels = new HashMap<>();
 	static {
@@ -29,8 +30,8 @@ public class AsnObjectIdentifierUtils {
 		oidLabels.put(ORGANIZATIONAL_UNIT_NAME_OID, "organizationalUnitName");
 		oidLabels.put(COMMON_NAME_OID, "commonName");
 		oidLabels.put("2.5.29.14", "subjectKeyIdentifier");
-		oidLabels.put("2.5.29.15", "keyUsage");
-		oidLabels.put("2.5.29.19", "basicConstraints");
+		oidLabels.put(KEY_USAGE_OID, "keyUsage");
+		oidLabels.put(BASIC_CONSTRAINTS_OID, "basicConstraints");
 	}
 
 	public static String parsePayload(Bytes payload) {

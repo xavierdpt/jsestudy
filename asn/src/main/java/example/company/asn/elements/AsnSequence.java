@@ -72,4 +72,8 @@ public class AsnSequence extends AsnElement implements Iterable<AsnElement> {
 	public AsnOctetString getOctetString(int i) {
 		return (AsnOctetString) get(i);
 	}
+
+	public AsnBoolean getBoolean(int i) {
+		return (AsnBoolean) get(0);
+	}
 }

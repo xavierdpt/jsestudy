@@ -12,8 +12,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import example.company.asn.elements.AsnElement;
-import example.company.asn.utils.AsnInterpretor;
 import example.company.asn.utils.AsnUtils;
+import example.company.asn.utils.AsnX509Interpretation;
+import example.company.tox.asn.AsnTox;
+import example.company.tox.common.Tox;
 
 /*
  * Check that certificate clientCA in genclient step 1 has keyCertSign key usage
@@ -24,7 +26,7 @@ public class Fiddle10 {
 	private String caAlias = "clientCA";
 
 	@Test
-	public void test() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+	public void fiddle() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
 
 		KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
 		InputStream resourceAsStream = this.getClass().getResourceAsStream("/genclient/step1/client.jks");
@@ -34,10 +36,15 @@ public class Fiddle10 {
 		Assert.assertNotNull(x);
 
 		AsnElement tbsAsn = AsnUtils.parse(x.getTBSCertificate());
+		AsnX509Interpretation i = new AsnX509Interpretation(tbsAsn);
 
 		Assert.assertEquals(true, x.getKeyUsage()[5]);
-		Assert.assertTrue(AsnInterpretor.isKeyCertSign(tbsAsn));
+		Assert.assertTrue(i.isKeyCertSign());
+		Assert.assertArrayEquals(i.getKeyUsage(), x.getKeyUsage());
 
+		Tox.print(new AsnTox().tox(tbsAsn), System.out);
+
+		Assert.assertEquals(i.getBasicConstraints(), x.getBasicConstraints());
 	}
 
 }

@@ -2,23 +2,25 @@ package example.company.asn.utils;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import org.junit.Assert;
 
 import example.company.asn.elements.AsnBitString;
 import example.company.asn.elements.AsnContextSpecific;
 import example.company.asn.elements.AsnElement;
 import example.company.asn.elements.AsnInteger;
 import example.company.asn.elements.AsnObjectIdentifier;
-import example.company.asn.elements.AsnOctetString;
 import example.company.asn.elements.AsnPrintableString;
 import example.company.asn.elements.AsnSequence;
 import example.company.asn.elements.AsnSet;
 import example.company.asn.elements.AsnUtcTime;
 
-public class AsnInterpretor {
+public class AsnX509Interpretation {
+
+	private AsnElement tbsAsn;
+
+	public AsnX509Interpretation(AsnElement tbsAsn) {
+		this.tbsAsn = tbsAsn;
+	}
 
 	private static String foo(AsnSequence nameSeq) {
 
@@ -86,28 +88,54 @@ public class AsnInterpretor {
 		return asn.as(AsnSequence.class).getElements().get(2).as(AsnBitString.class).toByteArray();
 	}
 
-	public static AsnContextSpecific getContextSpecific(AsnElement tbsAsn, int i) {
+	public AsnContextSpecific getContextSpecific(int i) {
 		if (i == 3) {
 			return tbsAsn.asSequence().getContextSpecific(7);
 		}
 		return null;
 	}
 
-	public static boolean isKeyCertSign(AsnElement tbsAsn) {
-
-		AsnSequence asnExts = getContextSpecific(tbsAsn, 3).getSequence();
-
-		AsnObjectIdentifierUtils.class.getName();
-
+	public AsnElement getExtensionBytes(String oid) {
+		AsnSequence asnExts = getContextSpecific(3).getSequence();
 		for (AsnElement element : asnExts) {
 			AsnSequence seq = element.asSequence();
-			if (AsnObjectIdentifierUtils.KEY_USAGE_OID.equals(seq.getObjectIdentifier(0).getValue())) {
-				AsnElement bits = AsnUtils.parse(seq.getOctetString(1).getValue()).asBitString();
-				return bits.as(AsnBitString.class).get(5);
+			if (oid.equals(seq.getObjectIdentifier(0).getValue())) {
+				return seq.get(1);
 			}
 		}
+		return null;
+	}
 
-		return false;
+	public boolean[] getKeyUsage() {
+
+		boolean[] keyUsage = new boolean[9];
+
+		byte[] extensionBytes = getExtensionBytes(AsnObjectIdentifierUtils.KEY_USAGE_OID).asOctetString().getValue();
+		AsnBitString bits = AsnUtils.parse(extensionBytes).asBitString();
+
+		for (int i = 0; i < keyUsage.length; ++i) {
+			keyUsage[i] = bits.get(i);
+		}
+
+		return keyUsage;
+	}
+
+	public int getBasicConstraints() {
+
+		byte[] extensionBytes = getExtensionBytes(AsnObjectIdentifierUtils.BASIC_CONSTRAINTS_OID).asOctetString()
+				.getValue();
+		AsnSequence seq = AsnUtils.parse(extensionBytes).asSequence();
+		boolean set = seq.getBoolean(0).getValue();
+
+		if (set) {
+			return Integer.MAX_VALUE;
+		} else {
+			return -1;
+		}
+	}
+
+	public boolean isKeyCertSign() {
+		return getKeyUsage()[5];
 	}
 
 }
