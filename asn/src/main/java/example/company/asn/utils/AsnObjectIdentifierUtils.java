@@ -32,6 +32,7 @@ public class AsnObjectIdentifierUtils {
 		oidLabels.put("2.5.29.14", "subjectKeyIdentifier");
 		oidLabels.put(KEY_USAGE_OID, "keyUsage");
 		oidLabels.put(BASIC_CONSTRAINTS_OID, "basicConstraints");
+		oidLabels.put("1.2.840.113549.1.9.14", "extensionRequest");
 	}
 
 	public static String parsePayload(Bytes payload) {

@@ -98,11 +98,6 @@ public class AsnBitString extends AsnElement {
 		AsnUtils.addBytes(bytes, toByteArray());
 	}
 
-	@Override
-	public boolean debug() {
-		return true;
-	}
-
 	public boolean get(int i) {
 		return bits.get(i);
 	}
