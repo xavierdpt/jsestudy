@@ -24,6 +24,8 @@ public class AsnObjectIdentifierUtils {
 		oidLabels.put(OIDS.KEY_USAGE_OID, "keyUsage");
 		oidLabels.put(OIDS.BASIC_CONSTRAINTS_OID, "basicConstraints");
 		oidLabels.put(OIDS.EXTENSION_REQUEST_OID, "extensionRequest");
+		oidLabels.put(OIDS.AUTHORITY_KEY_IDENTIFIER_OID, "authorityKeyIdentifier");
+		oidLabels.put(OIDS.EXT_KEY_USAGE_OID, "extKeyUsage");
 	}
 
 	public static String parsePayload(Bytes payload) {
