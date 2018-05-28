@@ -76,4 +76,20 @@ public class AsnSequence extends AsnElement implements Iterable<AsnElement> {
 	public AsnBoolean getBoolean(int i) {
 		return (AsnBoolean) get(0);
 	}
+
+	public AsnSequence getSequence(int i) {
+		return (AsnSequence) get(i);
+	}
+
+	public AsnInteger getInteger(int i) {
+		return (AsnInteger) get(i);
+	}
+
+	public AsnBitString getBitString(int i) {
+		return (AsnBitString) get(i);
+	}
+
+	public AsnSet getSet(int i) {
+		return (AsnSet) get(i);
+	}
 }

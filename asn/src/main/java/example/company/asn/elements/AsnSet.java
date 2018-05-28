@@ -50,4 +50,13 @@ public class AsnSet extends AsnElement {
 	public void encode(List<Byte> bytes) {
 		AsnUtils.encodeSequenceOrSet(bytes, AsnTag.SET, elements);
 	}
+
+	private AsnElement get(int i) {
+		return elements.get(i);
+	}
+
+	public AsnSequence getSequence(int i) {
+		return (AsnSequence) get(i);
+	}
+
 }

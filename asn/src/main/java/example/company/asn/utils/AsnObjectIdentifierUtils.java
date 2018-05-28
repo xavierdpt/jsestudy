@@ -9,30 +9,21 @@ import example.company.tox.common.Bytes;
 
 public class AsnObjectIdentifierUtils {
 
-	public static final String COUNTRY_NAME_OID = "2.5.4.6";
-	public static final String STATE_OR_PROVINCE_NAME_OID = "2.5.4.8";
-	public static final String LOCALITY_NAME_OID = "2.5.4.7";
-	public static final String ORGANIZATION_NAME_OID = "2.5.4.10";
-	public static final String ORGANIZATIONAL_UNIT_NAME_OID = "2.5.4.11";
-	public static final String COMMON_NAME_OID = "2.5.4.3";
-	public static final String KEY_USAGE_OID = "2.5.29.15";
-	public static final String BASIC_CONSTRAINTS_OID = "2.5.29.19";
-
 	private static Map<String, String> oidLabels = new HashMap<>();
 	static {
-		oidLabels.put("1.2.840.113549.1.1.11", "SHA256withRSA");
-		oidLabels.put("1.2.840.113549.1.1.1", "rsaEncryption");
+		oidLabels.put(OIDS.SHA256RSA_OID, "SHA256withRSA");
+		oidLabels.put("1.2.840.113549.1.1.1", "RSA");
 		oidLabels.put("2.5.29.14", "subjectKeyIdentifier");
-		oidLabels.put(COUNTRY_NAME_OID, "countryName");
-		oidLabels.put(STATE_OR_PROVINCE_NAME_OID, "stateOrProvinceName");
-		oidLabels.put(LOCALITY_NAME_OID, "localityName");
-		oidLabels.put(ORGANIZATION_NAME_OID, "organizationName");
-		oidLabels.put(ORGANIZATIONAL_UNIT_NAME_OID, "organizationalUnitName");
-		oidLabels.put(COMMON_NAME_OID, "commonName");
-		oidLabels.put("2.5.29.14", "subjectKeyIdentifier");
-		oidLabels.put(KEY_USAGE_OID, "keyUsage");
-		oidLabels.put(BASIC_CONSTRAINTS_OID, "basicConstraints");
-		oidLabels.put("1.2.840.113549.1.9.14", "extensionRequest");
+		oidLabels.put(OIDS.COUNTRY_NAME_OID, "countryName");
+		oidLabels.put(OIDS.STATE_OR_PROVINCE_NAME_OID, "stateOrProvinceName");
+		oidLabels.put(OIDS.LOCALITY_NAME_OID, "localityName");
+		oidLabels.put(OIDS.ORGANIZATION_NAME_OID, "organizationName");
+		oidLabels.put(OIDS.ORGANIZATIONAL_UNIT_NAME_OID, "organizationalUnitName");
+		oidLabels.put(OIDS.COMMON_NAME_OID, "commonName");
+		oidLabels.put(OIDS.SUBJECT_KEY_IDENTIFIER_OID, "subjectKeyIdentifier");
+		oidLabels.put(OIDS.KEY_USAGE_OID, "keyUsage");
+		oidLabels.put(OIDS.BASIC_CONSTRAINTS_OID, "basicConstraints");
+		oidLabels.put(OIDS.EXTENSION_REQUEST_OID, "extensionRequest");
 	}
 
 	public static String parsePayload(Bytes payload) {
