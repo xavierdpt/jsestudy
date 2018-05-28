@@ -20,6 +20,10 @@ public class AsnOctetString extends AsnElement {
 		value = contentBytes.toByteArray();
 	}
 
+	public AsnOctetString(byte[] value) {
+		this.value = value;
+	}
+
 	public byte[] getValue() {
 		return value;
 	}

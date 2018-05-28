@@ -12,7 +12,7 @@ public class AsnObjectIdentifierUtils {
 	private static Map<String, String> oidLabels = new HashMap<>();
 	static {
 		oidLabels.put(OIDS.SHA256RSA_OID, "SHA256withRSA");
-		oidLabels.put("1.2.840.113549.1.1.1", "RSA");
+		oidLabels.put(OIDS.RSA_OID, "RSA");
 		oidLabels.put("2.5.29.14", "subjectKeyIdentifier");
 		oidLabels.put(OIDS.COUNTRY_NAME_OID, "countryName");
 		oidLabels.put(OIDS.STATE_OR_PROVINCE_NAME_OID, "stateOrProvinceName");

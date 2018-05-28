@@ -13,5 +13,6 @@ public class OIDS {
 	public static final String EXTENSION_REQUEST_OID = "1.2.840.113549.1.9.14";
 	public static final String SUBJECT_KEY_IDENTIFIER_OID = "2.5.29.14";
 	public static final String SHA256RSA_OID = "1.2.840.113549.1.1.11";
+	public static final String RSA_OID = "1.2.840.113549.1.1.1";
 	
 }
