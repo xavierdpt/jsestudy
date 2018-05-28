@@ -12,8 +12,7 @@ public class AsnSubjectIdentifier extends AsnElement {
 	public AsnSubjectIdentifier() {
 	}
 
-	public AsnSubjectIdentifier(Bytes bytes) {
-		super(bytes);
+	public AsnSubjectIdentifier(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
 		value = contentBytes.toByteArray();
 	}
 

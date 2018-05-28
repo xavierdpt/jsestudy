@@ -11,7 +11,7 @@ public class AsnSetMarshaller {
 	public static void marshal(Document document, Element root, String name, AsnSet set) {
 		Element element = Tox.appendChild(document, root, name);
 		set.getElements().forEach((item) -> {
-			AsnTox.marshal(document, element, item);
+			new AsnTox().tox(document, element, item);
 		});
 	}
 

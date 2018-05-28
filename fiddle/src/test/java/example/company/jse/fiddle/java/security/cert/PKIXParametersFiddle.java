@@ -16,16 +16,16 @@ import org.junit.Test;
 import example.company.jse.something.java.security.KeyStoreSomething;
 
 public class PKIXParametersFiddle {
-	@Test
+	@Test(expected = InvalidAlgorithmParameterException.class)
 	public void fiddle1() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException,
 			InvalidAlgorithmParameterException {
 		KeyStore keyStore = KeyStoreSomething.createKeyStore();
-		PKIXParameters parameters = new PKIXParameters(keyStore);
+		new PKIXParameters(keyStore);
 	}
 
-	@Test
+	@Test(expected = InvalidAlgorithmParameterException.class)
 	public void fiddle2() throws InvalidAlgorithmParameterException {
 		Set<TrustAnchor> trustAnchors = new HashSet<>();
-		PKIXParameters parameters = new PKIXParameters(trustAnchors);
+		new PKIXParameters(trustAnchors);
 	}
 }

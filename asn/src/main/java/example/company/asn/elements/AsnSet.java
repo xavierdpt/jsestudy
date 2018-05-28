@@ -14,23 +14,29 @@ public class AsnSet extends AsnElement {
 	public AsnSet() {
 	}
 
-	public AsnSet(Bytes bytes) {
-		super(bytes);
+	public AsnSet(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
+
+		int totalLength = identifierBytes.length() + lengthBytes.length() + contentBytes.length();
 
 		Bytes nextElementBytes = contentBytes;
 		while (true) {
 			if (nextElementBytes.length() == 0) {
 				break;
 			}
-			AsnElement element = AsnUtils.parse(nextElementBytes);
+			Bytes elementIdentifierBytes = AsnUtils.getIdentifierBytes(nextElementBytes);
+			Bytes elementLengthBytes = AsnUtils.getLengthBytes(nextElementBytes.offset(elementIdentifierBytes));
+			int elementLength = AsnUtils.parseLengthBytes(elementLengthBytes);
+			Bytes elementContentBytes = nextElementBytes
+					.subStartLen(elementIdentifierBytes.length() + elementLengthBytes.length(), elementLength);
+			AsnElement element = AsnUtils.parse(elementIdentifierBytes, elementLengthBytes, elementContentBytes);
 			if (element == null) {
 				break;
 			}
 			elements.add(element);
 
-			int elementSize = element.identifierBytes.length() + element.lengthBytes.length()
-					+ element.contentBytes.length();
-			if (elementSize >= bytes.length()) {
+			int elementSize = elementIdentifierBytes.length() + elementLengthBytes.length()
+					+ elementContentBytes.length();
+			if (elementSize >= totalLength) {
 				break;
 			} else {
 				nextElementBytes = nextElementBytes.offset(elementSize);

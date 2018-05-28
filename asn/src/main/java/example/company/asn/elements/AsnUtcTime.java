@@ -24,8 +24,7 @@ public class AsnUtcTime extends AsnElement {
 		this.value = value;
 	}
 
-	public AsnUtcTime(Bytes bytes) {
-		super(bytes);
+	public AsnUtcTime(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
 
 		String rawvalue = new String(contentBytes.toByteArray(), Charset.forName("UTF-8"));
 
@@ -83,7 +82,7 @@ public class AsnUtcTime extends AsnElement {
 		String[] parts = value.split("[ :/]");
 		cal.setTimeInMillis(0);
 		Integer year = Integer.valueOf(parts[0]);
-		cal.set(Calendar.YEAR, 2000+year);
+		cal.set(Calendar.YEAR, 2000 + year);
 		int month = Integer.valueOf(parts[1]) - 1;
 		cal.set(Calendar.MONTH, month);
 		Integer day = Integer.valueOf(parts[2]);

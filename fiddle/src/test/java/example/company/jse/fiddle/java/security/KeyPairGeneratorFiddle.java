@@ -9,9 +9,10 @@ import java.security.Security;
 import javax.xml.bind.JAXBException;
 
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import example.company.tox.common.Tox;
-import example.company.tox.java.security.AnnotatedKeyPairDescription;
 import example.company.tox.java.security.AnnotatedKeyPairDescriptions;
 import example.company.tox.java.security.KeyPairDescription;
 
@@ -31,9 +32,9 @@ public class KeyPairGeneratorFiddle {
 
 		KeyPair keypair = kpg.generateKeyPair();
 
-		KeyPairDescription keyPairDescription = new KeyPairDescription(keypair);
+		KeyPairDescription keyPairDescription = new KeyPairDescription();
 
-		Tox.marshall_(keyPairDescription, System.out);
+		Tox.print(keyPairDescription.tox(keypair), System.out);
 	}
 
 	/**
@@ -44,7 +45,9 @@ public class KeyPairGeneratorFiddle {
 	@Test
 	public void fiddle2() throws JAXBException {
 
-		AnnotatedKeyPairDescriptions keyPairs = new AnnotatedKeyPairDescriptions();
+		Document document = Tox.createDocument();
+
+		AnnotatedKeyPairDescriptions tox = new AnnotatedKeyPairDescriptions();
 
 		Provider[] providers = Security.getProviders();
 		for (int i = 0; i < providers.length; ++i) {
@@ -52,11 +55,12 @@ public class KeyPairGeneratorFiddle {
 			provider.getServices().forEach((service) -> {
 				if ("KeyPairGenerator".equals(service.getType())) {
 					String providerName = provider.getName();
+					Element providerE = Tox.appendChild(document, "provider");
+					Tox.setAttribute(providerE, "name", providerName);
 					try {
 						KeyPairGeneratorSpi keyPairGenerator = (KeyPairGeneratorSpi) service.newInstance(null);
 						KeyPair keyPair = keyPairGenerator.generateKeyPair();
-						KeyPairDescription keyPairDescription = new KeyPairDescription(keyPair);
-						keyPairs.getKeyPairs().add(new AnnotatedKeyPairDescription(providerName, keyPairDescription));
+						tox.tox(document, keyPair);
 					} catch (NoSuchAlgorithmException e) {
 						System.out.println(e.getClass().getName() + " : " + e.getMessage());
 					}
@@ -64,6 +68,6 @@ public class KeyPairGeneratorFiddle {
 			});
 		}
 
-		Tox.marshall_(keyPairs, System.out);
+		Tox.print(document, System.out);
 	}
 }

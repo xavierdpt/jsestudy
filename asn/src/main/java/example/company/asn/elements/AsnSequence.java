@@ -15,23 +15,29 @@ public class AsnSequence extends AsnElement implements Iterable<AsnElement> {
 	public AsnSequence() {
 	}
 
-	public AsnSequence(Bytes allBytes) {
-		super(allBytes);
+	public AsnSequence(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
+
+		int totalLength = identifierBytes.length() + lengthBytes.length() + contentBytes.length();
 
 		Bytes nextElementBytes = contentBytes;
 		while (true) {
 			if (nextElementBytes.length() == 0) {
 				break;
 			}
-			AsnElement element = AsnUtils.parse(nextElementBytes);
+			Bytes elementIdentifierBytes = AsnUtils.getIdentifierBytes(nextElementBytes);
+			Bytes elementLengthBytes = AsnUtils.getLengthBytes(nextElementBytes.offset(elementIdentifierBytes));
+			int elementLength = AsnUtils.parseLengthBytes(elementLengthBytes);
+			Bytes elementContentBytes = nextElementBytes
+					.subStartLen(elementIdentifierBytes.length() + elementLengthBytes.length(), elementLength);
+			AsnElement element = AsnUtils.parse(elementIdentifierBytes, elementLengthBytes, elementContentBytes);
 			if (element == null) {
 				break;
 			}
 			elements.add(element);
 
-			int elementSize = element.identifierBytes.length() + element.lengthBytes.length()
-					+ element.contentBytes.length();
-			if (elementSize >= allBytes.length()) {
+			int elementSize = elementIdentifierBytes.length() + elementLengthBytes.length()
+					+ elementContentBytes.length();
+			if (elementSize >= totalLength) {
 				break;
 			} else {
 				nextElementBytes = nextElementBytes.offset(elementSize);

@@ -15,8 +15,7 @@ public class AsnOctetString extends AsnElement {
 	public AsnOctetString() {
 	}
 
-	public AsnOctetString(Bytes bytes) {
-		super(bytes);
+	public AsnOctetString(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
 		value = contentBytes.toByteArray();
 	}
 

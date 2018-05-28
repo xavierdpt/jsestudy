@@ -5,18 +5,21 @@ import java.security.Security;
 import javax.xml.bind.JAXBException;
 
 import org.junit.Test;
+import org.w3c.dom.Document;
 
 import example.company.tox.common.Tox;
-import example.company.tox.java.security.ProvidersDescriptions;
+import example.company.tox.java.security.ProviderTox;
 
 public class SecurityFiddle {
 
 	@Test
 	public void test() throws JAXBException {
 
-		ProvidersDescriptions providers = new ProvidersDescriptions(Security.getProviders());
+		ProviderTox tox = new ProviderTox();
 
-		Tox.marshall_(providers, System.out);
+		Document document = Tox.createDocument();
+		tox.tox(document, Security.getProviders());
+		Tox.print(document, System.out);
 
 	}
 }

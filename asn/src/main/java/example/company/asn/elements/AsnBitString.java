@@ -30,8 +30,7 @@ public class AsnBitString extends AsnElement {
 		init(bytes, 0);
 	}
 
-	public AsnBitString(Bytes bytes) {
-		super(bytes);
+	public AsnBitString(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
 		int unused = contentBytes.at(0);
 		Bytes cb = contentBytes.offset(1);
 		init(cb.toByteArray(), unused);

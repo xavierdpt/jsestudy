@@ -14,11 +14,7 @@ public class AsnObjectIdentifier extends AsnElement {
 
 	private String value;
 
-	public AsnObjectIdentifier() {
-	}
-
-	public AsnObjectIdentifier(Bytes bytes) {
-		super(bytes);
+	public AsnObjectIdentifier(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
 		this.value = AsnObjectIdentifierUtils.parsePayload(contentBytes);
 
 	}

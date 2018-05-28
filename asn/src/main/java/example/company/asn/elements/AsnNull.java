@@ -13,8 +13,7 @@ public class AsnNull extends AsnElement {
 	public AsnNull() {
 	}
 
-	public AsnNull(Bytes bytes) {
-		super(bytes);
+	public AsnNull(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
 	}
 
 	@Override

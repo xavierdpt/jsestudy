@@ -16,8 +16,7 @@ public class AsnBoolean extends AsnElement {
 		this.value = value;
 	}
 
-	public AsnBoolean(Bytes bytes) {
-		super(bytes);
+	public AsnBoolean(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
 		value = contentBytes.at(0) != 0;
 	}
 

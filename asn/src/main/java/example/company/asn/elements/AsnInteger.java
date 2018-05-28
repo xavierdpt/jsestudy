@@ -14,15 +14,7 @@ public class AsnInteger extends AsnElement {
 
 	private long value;
 
-	public AsnInteger() {
-		value = 0;
-		for (int i = 0; i < getLength(); ++i) {
-			value = (value << 8) + (getContentBytes().at(i) & 0xFF);
-		}
-	}
-
-	public AsnInteger(Bytes bytes) {
-		super(bytes);
+	public AsnInteger(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
 		byte first = contentBytes.at(0);
 		for (int i = 0; i < contentBytes.length(); ++i) {
 			if (i == 0 && (first & 0x80) == 0x80) {

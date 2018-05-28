@@ -17,8 +17,7 @@ public class AsnIA5String extends AsnElement {
 		this.value = value;
 	}
 
-	public AsnIA5String(Bytes bytes) {
-		super(bytes);
+	public AsnIA5String(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
 		value = new String(contentBytes.toByteArray(), Charset.forName("UTF8"));
 	}
 

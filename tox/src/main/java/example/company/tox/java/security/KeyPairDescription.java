@@ -2,38 +2,21 @@ package example.company.tox.java.security;
 
 import java.security.KeyPair;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-@XmlRootElement(name = "keyPair")
-@XmlType(propOrder = { "privateKey", "publicKey" })
-public class KeyPairDescription {
+import example.company.tox.common.ToxTox;
 
-	private KeyMarshaller privateKey;
-	private KeyMarshaller publicKey;
+public class KeyPairDescription extends ToxTox<KeyPair> {
 
-	public KeyPairDescription() {
+	@Override
+	public void tox(Document document, Element root, String name, KeyPair t) {
+		// TODO Auto-generated method stub
 	}
 
-	public KeyPairDescription(KeyPair keypair) {
-		privateKey = new KeyMarshaller(keypair.getPrivate());
-		publicKey = new KeyMarshaller(keypair.getPublic());
-	}
-
-	public KeyMarshaller getPrivateKey() {
-		return privateKey;
-	}
-
-	public void setPrivateKey(KeyMarshaller privateKey) {
-		this.privateKey = privateKey;
-	}
-
-	public KeyMarshaller getPublicKey() {
-		return publicKey;
-	}
-
-	public void setPublicKey(KeyMarshaller publicKey) {
-		this.publicKey = publicKey;
+	@Override
+	protected String getDefaultName() {
+		return "keypair";
 	}
 
 }

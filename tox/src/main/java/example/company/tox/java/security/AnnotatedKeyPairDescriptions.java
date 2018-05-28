@@ -1,26 +1,22 @@
 package example.company.tox.java.security;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.security.KeyPair;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-@XmlRootElement(name = "keyPairs")
-public class AnnotatedKeyPairDescriptions {
+import example.company.tox.common.ToxTox;
 
-	private List<AnnotatedKeyPairDescription> keyPairs = new ArrayList<>();
+public class AnnotatedKeyPairDescriptions extends ToxTox<KeyPair> {
 
-	public AnnotatedKeyPairDescriptions() {
+	@Override
+	public void tox(Document document, Element root, String name, KeyPair t) {
+		// TODO Auto-generated method stub
 	}
 
-	@XmlElement(name = "keyPair")
-	public List<AnnotatedKeyPairDescription> getKeyPairs() {
-		return keyPairs;
-	}
-
-	public void setKeyPairs(List<AnnotatedKeyPairDescription> keyPairs) {
-		this.keyPairs = keyPairs;
+	@Override
+	protected String getDefaultName() {
+		return "keypairs";
 	}
 
 }

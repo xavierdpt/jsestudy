@@ -16,8 +16,7 @@ public class AsnContextSpecific extends AsnElement {
 		this.tag = tag;
 	}
 
-	public AsnContextSpecific(Bytes bytes) {
-		super(bytes);
+	public AsnContextSpecific(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
 		tag = AsnUtils.parseTag(identifierBytes);
 		element = AsnUtils.parse(contentBytes);
 	}

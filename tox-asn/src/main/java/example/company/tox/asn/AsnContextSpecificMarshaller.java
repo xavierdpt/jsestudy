@@ -11,7 +11,7 @@ public class AsnContextSpecificMarshaller {
 	public static void marshal(Document document, Element root, String name, AsnContextSpecific contextSpecific) {
 		Element element = Tox.appendChild(document, root, name);
 		Tox.setAttribute(element, "tag", contextSpecific.getTag());
-		AsnTox.marshal(document, element, contextSpecific.getElement());
+		new AsnTox().tox(document, element, contextSpecific.getElement());
 	}
 
 }

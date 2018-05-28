@@ -1,49 +1,26 @@
 package example.company.tox.java.security;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
+import java.security.KeyPair;
 
-public class AnnotatedKeyPairDescription {
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-	private String provider;
+import example.company.tox.common.ToxTox;
 
-	private KeyMarshaller privateKey;
-	private KeyMarshaller publicKey;
+public class AnnotatedKeyPairDescription extends ToxTox<KeyPair> {
 
 	public AnnotatedKeyPairDescription() {
 	}
 
-	public AnnotatedKeyPairDescription(String provider, KeyPairDescription keyPair) {
-		this.provider = provider;
-		privateKey = keyPair.getPrivateKey();
-		publicKey = keyPair.getPublicKey();
+	@Override
+	public void tox(Document document, Element root, String name, KeyPair t) {
+		// TODO Auto-generated method stub
+
 	}
 
-	@XmlAttribute(name="provider")
-	public String getProvider() {
-		return provider;
-	}
-
-	public void setProvider(String provider) {
-		this.provider = provider;
-	}
-
-	@XmlElement(name = "privateKey")
-	public KeyMarshaller getPrivateKey() {
-		return privateKey;
-	}
-
-	public void setPrivateKey(KeyMarshaller privateKey) {
-		this.privateKey = privateKey;
-	}
-
-	@XmlElement(name = "publicKey")
-	public KeyMarshaller getPublicKey() {
-		return publicKey;
-	}
-
-	public void setPublicKey(KeyMarshaller publicKey) {
-		this.publicKey = publicKey;
+	@Override
+	protected String getDefaultName() {
+		return "keypair";
 	}
 
 }

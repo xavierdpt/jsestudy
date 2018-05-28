@@ -10,11 +10,11 @@ import example.company.jse.something.java.security.KeyPairGeneratorSomething;
 
 public class TrustAnchorFiddle {
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void fiddle1() throws NoSuchAlgorithmException {
 		String caName = "caName";
 		PublicKey pubKey = KeyPairGeneratorSomething.createKeyPair().getPublic();
 		byte[] nameConstraints = new byte[] {};
-		TrustAnchor trustAnchor = new TrustAnchor(caName, pubKey, nameConstraints);
+		new TrustAnchor(caName, pubKey, nameConstraints);
 	}
 }

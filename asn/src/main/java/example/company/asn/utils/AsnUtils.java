@@ -18,6 +18,7 @@ import example.company.asn.elements.AsnPrintableString;
 import example.company.asn.elements.AsnSequence;
 import example.company.asn.elements.AsnSet;
 import example.company.asn.elements.AsnSubjectIdentifier;
+import example.company.asn.elements.AsnUnknownElement;
 import example.company.asn.elements.AsnUtcTime;
 import example.company.tox.common.Bytes;
 import example.company.tox.common.Common;
@@ -86,47 +87,55 @@ public class AsnUtils {
 		return new Bytes(allBytes, headerSize, (int) length);
 	}
 
-	public static AsnElement parse(Bytes bytes) {
-		Bytes idBytes = getIdentifierBytes(bytes);
-		AsnClass asnClass = parseClass(idBytes);
-		long tag = parseTag(idBytes);
+	public static AsnElement parse(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
+		AsnClass asnClass = parseClass(identifierBytes);
+		long tag = parseTag(identifierBytes);
 		if (asnClass == AsnClass.UNIVERSAL) {
 			if (tag == AsnTag.SEQUENCE.getTagNumber()) {
-				return new AsnSequence(bytes);
+				return new AsnSequence(identifierBytes, lengthBytes, contentBytes);
 			} else if (tag == AsnTag.INTEGER.getTagNumber()) {
-				return new AsnInteger(bytes);
+				return new AsnInteger(identifierBytes, lengthBytes, contentBytes);
 			} else if (tag == AsnTag.OBJECT_IDENTIFIER.getTagNumber()) {
-				return new AsnObjectIdentifier(bytes);
+				return new AsnObjectIdentifier(identifierBytes, lengthBytes, contentBytes);
 			} else if (tag == AsnTag.NULL.getTagNumber()) {
-				return new AsnNull(bytes);
+				return new AsnNull(identifierBytes, lengthBytes, contentBytes);
 			} else if (tag == AsnTag.SET.getTagNumber()) {
-				return new AsnSet(bytes);
+				return new AsnSet(identifierBytes, lengthBytes, contentBytes);
 			} else if (tag == AsnTag.PRINTABLE_STRING.getTagNumber()) {
-				return new AsnPrintableString(bytes);
+				return new AsnPrintableString(identifierBytes, lengthBytes, contentBytes);
 			} else if (tag == AsnTag.UTC_TIME.getTagNumber()) {
-				return new AsnUtcTime(bytes);
+				return new AsnUtcTime(identifierBytes, lengthBytes, contentBytes);
 			} else if (tag == AsnTag.BIT_STRING.getTagNumber()) {
-				return new AsnBitString(bytes);
+				return new AsnBitString(identifierBytes, lengthBytes, contentBytes);
 			} else if (tag == AsnTag.OCTET_STRING.getTagNumber()) {
-				return new AsnOctetString(bytes);
+				return new AsnOctetString(identifierBytes, lengthBytes, contentBytes);
 			} else if (tag == AsnTag.BOOLEAN.getTagNumber()) {
-				return new AsnBoolean(bytes);
+				return new AsnBoolean(identifierBytes, lengthBytes, contentBytes);
 			} else if (tag == AsnTag.IA5STRING.getTagNumber()) {
-				return new AsnIA5String(bytes);
+				return new AsnIA5String(identifierBytes, lengthBytes, contentBytes);
 			} else {
 				System.out.println("Warning : unknown " + asnClass + " tag " + tag);
-				return new AsnElement(bytes);
+				return new AsnUnknownElement(identifierBytes, lengthBytes, contentBytes);
 			}
 		} else if (asnClass == AsnClass.CONTEXT_SPECIFIC) {
-			return new AsnContextSpecific(bytes);
+			return new AsnContextSpecific(identifierBytes, lengthBytes, contentBytes);
 		} else if (asnClass == AsnClass.APPLICATION) {
 			if (tag == AsnTag.SUBJECT_IDENTIFIER.getTagNumber()) {
-				return new AsnSubjectIdentifier(bytes);
+				return new AsnSubjectIdentifier(identifierBytes, lengthBytes, contentBytes);
 			}
 		} else {
 			System.out.println("Warning : unknown " + asnClass + " tag " + tag);
 		}
 		return null;
+	}
+
+	public static AsnElement parse(Bytes bytes) {
+		Bytes identifierBytes = getIdentifierBytes(bytes);
+		Bytes lengthBytes = getLengthBytes(bytes.offset(identifierBytes));
+		int length = parseLengthBytes(lengthBytes);
+		Bytes contentBytes = bytes.subStartLen(identifierBytes.length() + lengthBytes.length(), length);
+		return parse(identifierBytes, lengthBytes, contentBytes);
+
 	}
 
 	public static byte[] encode(AsnElement element) {
@@ -193,6 +202,5 @@ public class AsnUtils {
 	public static AsnElement parse(byte[] bytes) {
 		return parse(new Bytes(bytes));
 	}
-	
-	
+
 }

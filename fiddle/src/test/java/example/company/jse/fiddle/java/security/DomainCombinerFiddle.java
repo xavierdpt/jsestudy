@@ -9,7 +9,7 @@ public class DomainCombinerFiddle {
 	private ProtectionDomain[] currentDomains;
 	private ProtectionDomain[] assignedDomains;
 
-	@Test
+	@Test(expected = InstantiationException.class)
 	public void fiddle() throws InstantiationException, IllegalAccessException {
 		DomainCombiner domainCombiner = DomainCombiner.class.newInstance();
 		domainCombiner.combine(currentDomains, assignedDomains);

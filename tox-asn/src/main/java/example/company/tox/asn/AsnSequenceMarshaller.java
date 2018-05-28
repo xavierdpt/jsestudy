@@ -11,7 +11,7 @@ public class AsnSequenceMarshaller {
 	public static void marshal(Document document, Element root, String name, AsnSequence sequence) {
 		Element element = Tox.appendChild(document, root, name);
 		sequence.getElements().forEach((item) -> {
-			AsnTox.marshal(document, element, item);
+			new AsnTox().tox(document, element, item);
 		});
 	}
 

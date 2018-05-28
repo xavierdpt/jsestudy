@@ -16,8 +16,7 @@ public class AsnPrintableString extends AsnElement {
 	public AsnPrintableString() {
 	}
 
-	public AsnPrintableString(Bytes bytes) {
-		super(bytes);
+	public AsnPrintableString(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
 		value = new String(contentBytes.toByteArray(), Charset.forName("UTF-8"));
 	}
 

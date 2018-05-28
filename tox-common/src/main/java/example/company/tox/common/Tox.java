@@ -3,12 +3,7 @@ package example.company.tox.common;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -41,25 +36,6 @@ public class Tox {
 		} catch (Exception e) {
 			throw new ToxException(e);
 		}
-	}
-
-	private static Map<Class<?>, JAXBContext> contexts = new HashMap<>();
-	private static Map<Class<?>, Marshaller> marshallers = new HashMap<>();
-
-	public static void marshall_(Object o, OutputStream out) throws JAXBException {
-		getMarshaller(o.getClass()).marshal(o, out);
-	}
-
-	private static Marshaller getMarshaller(Class<? extends Object> clazz) throws JAXBException {
-		if (!contexts.containsKey(clazz)) {
-			contexts.put(clazz, JAXBContext.newInstance(clazz));
-		}
-		if (!marshallers.containsKey(clazz)) {
-			Marshaller m = contexts.get(clazz).createMarshaller();
-			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			marshallers.put(clazz, m);
-		}
-		return marshallers.get(clazz);
 	}
 
 	public static void setAttribute(Element element, String name, Integer value) {
