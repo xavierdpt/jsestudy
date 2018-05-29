@@ -98,4 +98,12 @@ public class AsnSequence extends AsnElement implements Iterable<AsnElement> {
 	public AsnSet getSet(int i) {
 		return (AsnSet) get(i);
 	}
+
+	public static AsnSequence of(AsnElement... elements) {
+		AsnSequence seq = new AsnSequence();
+		for (AsnElement element : elements) {
+			seq.getElements().add(element);
+		}
+		return seq;
+	}
 }

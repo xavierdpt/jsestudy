@@ -14,7 +14,7 @@ public class AsnContextSpecificTest {
 	@Test
 	public void testEncode() {
 		AsnContextSpecific contextSpecific = new AsnContextSpecific(3);
-		contextSpecific.setElement(new AsnNull());
+		contextSpecific.setValue(new AsnNull().encode());
 
 		byte[] actual = AsnUtils.encode(contextSpecific);
 		Assert.assertArrayEquals(encoded, actual);
@@ -24,7 +24,7 @@ public class AsnContextSpecificTest {
 	public void testDecode() {
 		AsnContextSpecific acs = (AsnContextSpecific) AsnUtils.parse(new Bytes(encoded));
 		Assert.assertEquals(3, acs.getTag());
-		Assert.assertTrue(acs.getElement() instanceof AsnNull);
+		Assert.assertTrue(acs.get() instanceof AsnNull);
 	}
 
 }

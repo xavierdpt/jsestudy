@@ -26,6 +26,7 @@ import example.company.asn.elements.AsnElement;
 import example.company.asn.elements.AsnSequence;
 import example.company.asn.utils.AsnUtils;
 import example.company.asn.utils.AsnX509Interpretation;
+import example.company.asn.utils.AsnX509InterpretationType;
 import example.company.asn.utils.CSRBuilder;
 
 public class Fiddle12 {
@@ -67,7 +68,7 @@ public class Fiddle12 {
 	private byte[] getSubjectKeyIdentifier(X509Certificate x) throws CertificateEncodingException {
 		byte[] xtbs = x.getTBSCertificate();
 		AsnElement asnTbs = AsnUtils.parse(xtbs);
-		AsnX509Interpretation xi = new AsnX509Interpretation(asnTbs);
+		AsnX509Interpretation xi = new AsnX509Interpretation(asnTbs, AsnX509InterpretationType.TBS);
 		AsnContextSpecific extensions = xi.getContextSpecific(3);
 		AsnSequence xsk = extensions.getSequence().getSequence(0);
 		return xsk.getOctetString(1).getValue();

@@ -23,27 +23,27 @@ public class AsnTox extends ToxTox<AsnElement> {
 	public void tox(Document document, Element root, String name, AsnElement t) {
 		if (t != null) {
 			if (t instanceof AsnBitString) {
-				AsnBitStringMarshaller.marshal(document, root, "bit-string", (AsnBitString) t);
+				AsnBitStringTox.marshal(document, root, "bit-string", (AsnBitString) t);
 			} else if (t instanceof AsnContextSpecific) {
-				AsnContextSpecificMarshaller.marshal(document, root, "context-specific", (AsnContextSpecific) t);
+				AsnContextSpecificTox.marshal(document, root, "context-specific", (AsnContextSpecific) t);
 			} else if (t instanceof AsnInteger) {
-				AsnIntegerMarshaller.marshal(document, root, "integer", (AsnInteger) t);
+				AsnIntegerTox.marshal(document, root, "integer", (AsnInteger) t);
 			} else if (t instanceof AsnNull) {
-				AsnNullMarshaller.marshal(document, root, "null", (AsnNull) t);
+				AsnNullTox.marshal(document, root, "null", (AsnNull) t);
 			} else if (t instanceof AsnObjectIdentifier) {
-				AsnObjectIdentifierMarshaller.marshal(document, root, "object-identifier", (AsnObjectIdentifier) t);
+				AsnObjectIdentifierTox.marshal(document, root, "object-identifier", (AsnObjectIdentifier) t);
 			} else if (t instanceof AsnOctetString) {
-				AsnOctetStringMarshaller.marshal(document, root, "octet-string", (AsnOctetString) t);
+				AsnOctetStringTox.marshal(document, root, "octet-string", (AsnOctetString) t);
 			} else if (t instanceof AsnPrintableString) {
-				AsnPrintableStringMarshaller.marshal(document, root, "printable-string", (AsnPrintableString) t);
+				AsnPrintableStringTox.marshal(document, root, "printable-string", (AsnPrintableString) t);
 			} else if (t instanceof AsnSequence) {
-				AsnSequenceMarshaller.marshal(document, root, "sequence", (AsnSequence) t);
+				AsnSequenceTox.marshal(document, root, "sequence", (AsnSequence) t);
 			} else if (t instanceof AsnSet) {
-				AsnSetMarshaller.marshal(document, root, "set", (AsnSet) t);
+				AsnSetTox.marshal(document, root, "set", (AsnSet) t);
 			} else if (t instanceof AsnSubjectIdentifier) {
-				AsnSubjectIdentifierMarshaller.marshal(document, root, "subject-identifier", (AsnSubjectIdentifier) t);
+				AsnSubjectIdentifierTox.marshal(document, root, "subject-identifier", (AsnSubjectIdentifier) t);
 			} else if (t instanceof AsnUtcTime) {
-				AsnUtcTimeMarshaller.marshal(document, root, "utc-time", (AsnUtcTime) t);
+				AsnUtcTimeTox.marshal(document, root, "utc-time", (AsnUtcTime) t);
 			}
 		}
 	}

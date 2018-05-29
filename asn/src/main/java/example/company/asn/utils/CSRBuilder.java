@@ -58,31 +58,31 @@ public class CSRBuilder {
 		AsnSequence subjectSequence = new AsnSequence();
 
 		if (nameMap.containsKey("C")) {
-			addSubjectSet(subjectSequence, OIDS.COUNTRY_NAME_OID, nameMap.get("C"));
+			addSubjectSet(subjectSequence, OIDS.COUNTRY_NAME, nameMap.get("C"));
 		}
 
 		if (nameMap.containsKey("ST")) {
-			addSubjectSet(subjectSequence, OIDS.STATE_OR_PROVINCE_NAME_OID, nameMap.get("ST"));
+			addSubjectSet(subjectSequence, OIDS.STATE_OR_PROVINCE_NAME, nameMap.get("ST"));
 		}
 
 		if (nameMap.containsKey("L")) {
-			addSubjectSet(subjectSequence, OIDS.LOCALITY_NAME_OID, nameMap.get("L"));
+			addSubjectSet(subjectSequence, OIDS.LOCALITY_NAME, nameMap.get("L"));
 		}
 
 		if (nameMap.containsKey("O")) {
-			addSubjectSet(subjectSequence, OIDS.ORGANIZATION_NAME_OID, nameMap.get("O"));
+			addSubjectSet(subjectSequence, OIDS.ORGANIZATION_NAME, nameMap.get("O"));
 		}
 
 		if (nameMap.containsKey("OU")) {
-			addSubjectSet(subjectSequence, OIDS.ORGANIZATIONAL_UNIT_NAME_OID, nameMap.get("OU"));
+			addSubjectSet(subjectSequence, OIDS.ORGANIZATIONAL_UNIT_NAME, nameMap.get("OU"));
 		}
 
 		if (nameMap.containsKey("CN")) {
-			addSubjectSet(subjectSequence, OIDS.COMMON_NAME_OID, nameMap.get("CN"));
+			addSubjectSet(subjectSequence, OIDS.COMMON_NAME, nameMap.get("CN"));
 		}
 
 		AsnObjectIdentifierUtils.class.getName();
-		AsnObjectIdentifier publicKeyObjectIdentifier = new AsnObjectIdentifier(OIDS.RSA_OID);
+		AsnObjectIdentifier publicKeyObjectIdentifier = new AsnObjectIdentifier(OIDS.RSA);
 
 		AsnSequence publicKeyIdentifierSequence = new AsnSequence();
 		publicKeyIdentifierSequence.getElements().add(publicKeyObjectIdentifier);
@@ -95,9 +95,9 @@ public class CSRBuilder {
 		publicKeySequence.getElements().add(publicKeyIdentifierSequence);
 		publicKeySequence.getElements().add(publicKeyBitString);
 
-		AsnObjectIdentifier extensionRequestIdentifier = new AsnObjectIdentifier(OIDS.EXTENSION_REQUEST_OID);
+		AsnObjectIdentifier extensionRequestIdentifier = new AsnObjectIdentifier(OIDS.EXTENSION_REQUEST);
 
-		AsnObjectIdentifier subjectKeyObjectIdentifier = new AsnObjectIdentifier(OIDS.SUBJECT_KEY_IDENTIFIER_OID);
+		AsnObjectIdentifier subjectKeyObjectIdentifier = new AsnObjectIdentifier(OIDS.SUBJECT_KEY_IDENTIFIER);
 
 		AsnOctetString subjectKeyIdentifierContent = new AsnOctetString(subjectKeyIdentifier);
 
@@ -116,7 +116,7 @@ public class CSRBuilder {
 		contextSpecificSequence.getElements().add(extensionRequestSet);
 
 		AsnContextSpecific contextSpecific = new AsnContextSpecific(0);
-		contextSpecific.setElement(contextSpecificSequence);
+		contextSpecific.setValue(contextSpecificSequence.encode());
 
 		AsnSequence seq1 = new AsnSequence();
 		seq1.getElements().add(asnVersion);
@@ -124,13 +124,13 @@ public class CSRBuilder {
 		seq1.getElements().add(publicKeySequence);
 		seq1.getElements().add(contextSpecific);
 
-		AsnObjectIdentifier signatureIdentifier = new AsnObjectIdentifier(OIDS.SHA256RSA_OID);
+		AsnObjectIdentifier signatureIdentifier = new AsnObjectIdentifier(OIDS.SHA256RSA);
 
 		AsnSequence seq2 = new AsnSequence();
 		seq2.getElements().add(signatureIdentifier);
 		seq2.getElements().add(new AsnNull());
 
-		Signature s = Signature.getInstance(AsnObjectIdentifierUtils.getLabel(OIDS.SHA256RSA_OID));
+		Signature s = Signature.getInstance(OIDS.getLabel(OIDS.SHA256RSA));
 		s.initSign(privateKey);
 		s.update(AsnUtils.encode(seq1));
 		byte[] signature = s.sign();

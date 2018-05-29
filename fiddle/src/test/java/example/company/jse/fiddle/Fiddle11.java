@@ -28,9 +28,9 @@ import example.company.asn.elements.AsnContextSpecific;
 import example.company.asn.elements.AsnElement;
 import example.company.asn.elements.AsnSequence;
 import example.company.asn.utils.AsnCSRInterpretation;
-import example.company.asn.utils.AsnObjectIdentifierUtils;
 import example.company.asn.utils.AsnUtils;
 import example.company.asn.utils.AsnX509Interpretation;
+import example.company.asn.utils.AsnX509InterpretationType;
 import example.company.asn.utils.OIDS;
 
 public class Fiddle11 {
@@ -87,13 +87,13 @@ public class Fiddle11 {
 		AsnSequence sk = er.getSet(1).getSequence(0).getSequence(0);
 
 		Assert.assertEquals(0, additionalInfo.asContextSpecific().getTag());
-		Assert.assertEquals(OIDS.EXTENSION_REQUEST_OID, er.getObjectIdentifier(0).getValue());
-		Assert.assertEquals(OIDS.SUBJECT_KEY_IDENTIFIER_OID, sk.getObjectIdentifier(0).getValue());
+		Assert.assertEquals(OIDS.EXTENSION_REQUEST, er.getObjectIdentifier(0).getValue());
+		Assert.assertEquals(OIDS.SUBJECT_KEY_IDENTIFIER, sk.getObjectIdentifier(0).getValue());
 
 		byte[] xtbs = x.getTBSCertificate();
 		AsnElement asnTbs = AsnUtils.parse(xtbs);
 
-		AsnX509Interpretation xi = new AsnX509Interpretation(asnTbs);
+		AsnX509Interpretation xi = new AsnX509Interpretation(asnTbs, AsnX509InterpretationType.TBS);
 
 		AsnContextSpecific extensions = xi.getContextSpecific(3);
 		AsnSequence xsk = extensions.getSequence().getSequence(0);
@@ -103,10 +103,10 @@ public class Fiddle11 {
 
 	private void testSignature(PrivateKey privateKey, AsnElement csrAsn, AsnCSRInterpretation i)
 			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-		Assert.assertEquals(OIDS.SHA256RSA_OID, i.getSignatureOID());
+		Assert.assertEquals(OIDS.SHA256RSA, i.getSignatureOID());
 
 		byte[] csrtbs = AsnUtils.encode(csrAsn.asSequence().getSequence(0));
-		Signature sig = Signature.getInstance(AsnObjectIdentifierUtils.getLabel(i.getSignatureOID()));
+		Signature sig = Signature.getInstance(OIDS.getLabel(i.getSignatureOID()));
 		sig.initSign(privateKey);
 		sig.update(csrtbs);
 		byte[] signed = sig.sign();

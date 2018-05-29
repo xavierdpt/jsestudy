@@ -1,32 +1,11 @@
 package example.company.asn.utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import example.company.tox.common.Bytes;
 
 public class AsnObjectIdentifierUtils {
-
-	private static Map<String, String> oidLabels = new HashMap<>();
-	static {
-		oidLabels.put(OIDS.SHA256RSA_OID, "SHA256withRSA");
-		oidLabels.put(OIDS.RSA_OID, "RSA");
-		oidLabels.put("2.5.29.14", "subjectKeyIdentifier");
-		oidLabels.put(OIDS.COUNTRY_NAME_OID, "countryName");
-		oidLabels.put(OIDS.STATE_OR_PROVINCE_NAME_OID, "stateOrProvinceName");
-		oidLabels.put(OIDS.LOCALITY_NAME_OID, "localityName");
-		oidLabels.put(OIDS.ORGANIZATION_NAME_OID, "organizationName");
-		oidLabels.put(OIDS.ORGANIZATIONAL_UNIT_NAME_OID, "organizationalUnitName");
-		oidLabels.put(OIDS.COMMON_NAME_OID, "commonName");
-		oidLabels.put(OIDS.SUBJECT_KEY_IDENTIFIER_OID, "subjectKeyIdentifier");
-		oidLabels.put(OIDS.KEY_USAGE_OID, "keyUsage");
-		oidLabels.put(OIDS.BASIC_CONSTRAINTS_OID, "basicConstraints");
-		oidLabels.put(OIDS.EXTENSION_REQUEST_OID, "extensionRequest");
-		oidLabels.put(OIDS.AUTHORITY_KEY_IDENTIFIER_OID, "authorityKeyIdentifier");
-		oidLabels.put(OIDS.EXT_KEY_USAGE_OID, "extKeyUsage");
-	}
 
 	public static String parsePayload(Bytes payload) {
 
@@ -65,15 +44,6 @@ public class AsnObjectIdentifierUtils {
 
 		return b.toString();
 
-	}
-
-	public static String getLabel(String oid) {
-		String label = oidLabels.get(oid);
-		if (label == null) {
-			System.out.println("No label found for oid " + oid);
-			return oid;
-		}
-		return label;
 	}
 
 	public static void encodeSubIdentifier(List<Byte> bytes, int value) {

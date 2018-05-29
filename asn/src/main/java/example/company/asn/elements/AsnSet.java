@@ -65,4 +65,12 @@ public class AsnSet extends AsnElement {
 		return (AsnSequence) get(i);
 	}
 
+	public static AsnSet of(AsnElement... elements) {
+		AsnSet set = new AsnSet();
+		for (AsnElement element : elements) {
+			set.getElements().add(element);
+		}
+		return set;
+	}
+
 }

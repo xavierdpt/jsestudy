@@ -13,8 +13,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import example.company.asn.elements.AsnElement;
-import example.company.asn.utils.AsnX509Interpretation;
 import example.company.asn.utils.AsnUtils;
+import example.company.asn.utils.AsnX509Interpretation;
+import example.company.asn.utils.AsnX509InterpretationType;
 
 public class Fiddle06 {
 
@@ -46,23 +47,25 @@ public class Fiddle06 {
 
 	public static void tbsTests(X509Certificate x, AsnElement tbs) {
 
-		Assert.assertEquals(3, x.getVersion());
-		Assert.assertEquals(3, AsnX509Interpretation.getVersion(tbs));
+		AsnX509Interpretation i = new AsnX509Interpretation(tbs, AsnX509InterpretationType.TBS);
 
-		Assert.assertEquals(AsnX509Interpretation.getSerialNumber(tbs), x.getSerialNumber().longValue());
+		Assert.assertEquals(3, x.getVersion());
+		Assert.assertEquals(3, i.getVersion());
+
+		Assert.assertEquals(i.getSerialNumber(), x.getSerialNumber().longValue());
 
 		Assert.assertEquals("1.2.840.113549.1.1.11", x.getSigAlgOID());
-		Assert.assertEquals("1.2.840.113549.1.1.11", AsnX509Interpretation.getSigAlgOID(tbs));
+		Assert.assertEquals("1.2.840.113549.1.1.11", i.getSigAlgOID());
 
 		Assert.assertEquals("SHA256withRSA", x.getSigAlgName());
-		Assert.assertEquals("SHA256withRSA", AsnX509Interpretation.getSigAlgName(tbs));
+		Assert.assertEquals("SHA256withRSA", i.getSigAlgName());
 
-		Assert.assertEquals(x.getIssuerDN().getName(), AsnX509Interpretation.getIssuerName(tbs));
+		Assert.assertEquals(x.getIssuerDN().getName(), i.getIssuerName());
 
-		Assert.assertEquals(x.getNotBefore().getTime(), AsnX509Interpretation.getNotBefore(tbs).getTime());
-		Assert.assertEquals(x.getNotAfter().getTime(), AsnX509Interpretation.getNotAfter(tbs).getTime());
+		Assert.assertEquals(x.getNotBefore().getTime(), i.getNotBefore().getTime());
+		Assert.assertEquals(x.getNotAfter().getTime(), i.getNotAfter().getTime());
 
-		Assert.assertEquals(x.getSubjectDN().getName(), AsnX509Interpretation.getSubjectName(tbs));
+		Assert.assertEquals(x.getSubjectDN().getName(), i.getSubjectName());
 
 	}
 

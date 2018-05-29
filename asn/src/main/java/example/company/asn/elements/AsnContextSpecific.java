@@ -10,7 +10,7 @@ import example.company.tox.common.Bytes;
 public class AsnContextSpecific extends AsnElement {
 
 	private long tag;
-	private AsnElement element;
+	private byte[] value;
 
 	public AsnContextSpecific(long tag) {
 		this.tag = tag;
@@ -18,7 +18,12 @@ public class AsnContextSpecific extends AsnElement {
 
 	public AsnContextSpecific(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
 		tag = AsnUtils.parseTag(identifierBytes);
-		element = AsnUtils.parse(contentBytes);
+		value = contentBytes.toByteArray();
+	}
+
+	public AsnContextSpecific(int tag, byte[] value) {
+		this.value = value;
+		this.tag = tag;
 	}
 
 	public long getTag() {
@@ -29,27 +34,26 @@ public class AsnContextSpecific extends AsnElement {
 		this.tag = tag;
 	}
 
-	public AsnElement getElement() {
-		return element;
+	public byte[] getValue() {
+		return value;
 	}
 
-	public void setElement(AsnElement element) {
-		this.element = element;
+	public void setValue(byte[] value) {
+		this.value = value;
 	}
 
 	@Override
 	public void encode(List<Byte> bytes) {
 		AsnUtils.addIdentifierBytes(bytes, AsnClass.CONTEXT_SPECIFIC, AsnEncoding.CONSTRUCTED, tag);
-		byte[] elementBytes = AsnUtils.encode(element);
-		AsnUtils.addLengthBytes(bytes, elementBytes.length);
-		AsnUtils.addBytes(bytes, elementBytes);
+		AsnUtils.addLengthBytes(bytes, value.length);
+		AsnUtils.addBytes(bytes, value);
 	}
 
 	public AsnElement get() {
-		return element;
+		return AsnUtils.parse(value);
 	}
 
 	public AsnSequence getSequence() {
-		return (AsnSequence) element;
+		return (AsnSequence) get();
 	}
 }

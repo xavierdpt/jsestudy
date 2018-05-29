@@ -18,7 +18,6 @@ import example.company.asn.elements.AsnPrintableString;
 import example.company.asn.elements.AsnSequence;
 import example.company.asn.elements.AsnSet;
 import example.company.asn.elements.AsnSubjectIdentifier;
-import example.company.asn.elements.AsnUnknownElement;
 import example.company.asn.elements.AsnUtcTime;
 import example.company.tox.common.Bytes;
 import example.company.tox.common.Common;
@@ -115,7 +114,7 @@ public class AsnUtils {
 				return new AsnIA5String(identifierBytes, lengthBytes, contentBytes);
 			} else {
 				System.out.println("Warning : unknown " + asnClass + " tag " + tag);
-				return new AsnUnknownElement(identifierBytes, lengthBytes, contentBytes);
+				return null;
 			}
 		} else if (asnClass == AsnClass.CONTEXT_SPECIFIC) {
 			return new AsnContextSpecific(identifierBytes, lengthBytes, contentBytes);

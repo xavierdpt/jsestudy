@@ -63,4 +63,8 @@ public class Common {
 		return array;
 	}
 
+	public static byte[] bytes(String s) {
+		return new HexBinaryAdapter().unmarshal(s);
+	}
+
 }

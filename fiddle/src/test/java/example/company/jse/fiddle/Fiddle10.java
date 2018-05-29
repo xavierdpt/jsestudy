@@ -14,6 +14,7 @@ import org.junit.Test;
 import example.company.asn.elements.AsnElement;
 import example.company.asn.utils.AsnUtils;
 import example.company.asn.utils.AsnX509Interpretation;
+import example.company.asn.utils.AsnX509InterpretationType;
 import example.company.tox.asn.AsnTox;
 import example.company.tox.common.Tox;
 
@@ -36,7 +37,7 @@ public class Fiddle10 {
 		Assert.assertNotNull(x);
 
 		AsnElement tbsAsn = AsnUtils.parse(x.getTBSCertificate());
-		AsnX509Interpretation i = new AsnX509Interpretation(tbsAsn);
+		AsnX509Interpretation i = new AsnX509Interpretation(tbsAsn, AsnX509InterpretationType.TBS);
 
 		Assert.assertEquals(true, x.getKeyUsage()[5]);
 		Assert.assertTrue(i.isKeyCertSign());

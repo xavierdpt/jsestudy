@@ -1,5 +1,6 @@
 package example.company.asn.elements;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import example.company.tox.common.NotSupportedException;
@@ -35,4 +36,13 @@ public class AsnElement {
 		throw new NotSupportedException(this.getClass().getName());
 	}
 
+	public final byte[] encode() {
+		List<Byte> bytes = new ArrayList<>();
+		encode(bytes);
+		byte[] b = new byte[bytes.size()];
+		for (int i = 0; i < bytes.size(); ++i) {
+			b[i] = bytes.get(i);
+		}
+		return b;
+	}
 }

@@ -21,12 +21,12 @@ public class AsnInterpretationUtils {
 			parts.put(oid, value);
 		});
 
-		String c = parts.get(OIDS.COUNTRY_NAME_OID);
-		String st = parts.get(OIDS.STATE_OR_PROVINCE_NAME_OID);
-		String l = parts.get(OIDS.LOCALITY_NAME_OID);
-		String o = parts.get(OIDS.ORGANIZATION_NAME_OID);
-		String ou = parts.get(OIDS.ORGANIZATIONAL_UNIT_NAME_OID);
-		String cncommonName = parts.get(OIDS.COMMON_NAME_OID);
+		String c = parts.get(OIDS.COUNTRY_NAME);
+		String st = parts.get(OIDS.STATE_OR_PROVINCE_NAME);
+		String l = parts.get(OIDS.LOCALITY_NAME);
+		String o = parts.get(OIDS.ORGANIZATION_NAME);
+		String ou = parts.get(OIDS.ORGANIZATIONAL_UNIT_NAME);
+		String cncommonName = parts.get(OIDS.COMMON_NAME);
 
 		return "CN=" + cncommonName + ", OU=" + ou + ", O=" + o + ", L=" + l + ", ST=" + st + ", C=" + c;
 
@@ -40,7 +40,7 @@ public class AsnInterpretationUtils {
 		for (int i = 0; i < byteList.size(); ++i) {
 			bytes[i] = byteList.get(i);
 		}
-		String algorithmName = AsnObjectIdentifierUtils.getLabel(algorithmOID);
+		String algorithmName = OIDS.getLabel(algorithmOID);
 		return new KeyInfo(algorithmOID, algorithmName , bytes);
 	}
 }
