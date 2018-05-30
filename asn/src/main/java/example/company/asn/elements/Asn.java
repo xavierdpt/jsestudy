@@ -20,6 +20,10 @@ public class Asn {
 		return set;
 	}
 
+	public static AsnElement cs(int tag, byte[] value) {
+		return new AsnContextSpecific(tag, value);
+	}
+
 	public static AsnElement cs(int tag, byte[] value, AsnEncoding encoding) {
 		return new AsnContextSpecific(tag, value, encoding);
 	}
@@ -62,6 +66,10 @@ public class Asn {
 
 	public static AsnOctetString os(AsnElement element) {
 		return os(element.encode());
+	}
+
+	public static AsnContextSpecific cs(int tag, AsnElement element) {
+		return new AsnContextSpecific(tag, element.encode());
 	}
 
 }

@@ -19,6 +19,18 @@ import org.junit.Assert;
 
 public class FiddleCommon {
 
+	public static final String CLIENT_JKS_4 = "/genclient/step4/client.jks";
+	public static final String CLIENT_CRT_4 = "/genclient/step4/client.crt";
+	
+	public static final String CLIENT_JKS_5 = "/genclient/step5/client.jks";
+	public static final String CLIENTCA_CRT_5 = "/genclient/step5/clientca.crt";
+	
+	public static final String CLIENT_JKS_6 = "/genclient/step6/client.jks";
+	public static final String CLIENT_CRT_6 = "/genclient/step6/client.crt";
+	
+	public static final String CLIENT_JKS_7 = "/genclient/step7/client.jks";
+	public static final String CLIENTCA_P12_7 = "/genclient/step7/clientca.p12";
+	
 	public static KeyStore getKeyStore(String path, String password)
 			throws NoSuchAlgorithmException, CertificateException, IOException, KeyStoreException {
 		KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -38,7 +50,7 @@ public class FiddleCommon {
 		return getBase64Bytes(path, "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----");
 	}
 
-	public static byte[] getBase64Bytes(String path, String firstLine, String lastLine) throws IOException {
+	private static byte[] getBase64Bytes(String path, String firstLine, String lastLine) throws IOException {
 		InputStream r = FiddleCommon.class.getResourceAsStream(path);
 		Assert.assertNotNull(r);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

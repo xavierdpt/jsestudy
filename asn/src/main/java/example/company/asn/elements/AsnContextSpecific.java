@@ -62,4 +62,8 @@ public class AsnContextSpecific extends AsnElement {
 	public AsnSequence getSequence() {
 		return (AsnSequence) get();
 	}
+
+	public AsnElement parse() {
+		return AsnUtils.parse(value);
+	}
 }

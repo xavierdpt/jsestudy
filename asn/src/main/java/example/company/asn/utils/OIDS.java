@@ -21,25 +21,41 @@ public class OIDS {
 	public static final String BASIC_CONSTRAINTS = "2.5.29.19";
 	public static final String AUTHORITY_KEY_IDENTIFIER = "2.5.29.35";
 	public static final String EXT_KEY_USAGE = "2.5.29.37";
+	public static final String HASH_ALGORITHM_IDENTIFIER = "1.3.14.3.2.26";
+	public static final String DATA = "1.2.840.113549.1.7.1";
+	public static final String ENCRYPTED_DATA = "1.2.840.113549.1.7.6";
+	public static final String PBE_WITH_SHA_AND_40_BIT_RC2_CBC = "1.2.840.113549.1.12.1.6";
+	public static final String PKCS_8_SHROUDED_KEY_BAG = "1.2.840.113549.1.12.10.1.2";
+	public static final String PBE_WITH_SHA_AND_3_KEY_TRIPLE_DES_CBC = "1.2.840.113549.1.12.1.3";
+	public static final String FRIENDLY_NAME = "1.2.840.113549.1.9.20";
+	public static final String LOCAL_KEY_ID = "1.2.840.113549.1.9.21";
 
 	private static Map<String, String> oidLabels = new HashMap<>();
 	static {
-		oidLabels.put(OIDS.SHA256RSA, "SHA256withRSA");
-		oidLabels.put(OIDS.RSA, "RSA");
-		oidLabels.put(OIDS.SUBJECT_KEY_IDENTIFIER, "subjectKeyIdentifier");
-		oidLabels.put(OIDS.COUNTRY_NAME, "countryName");
-		oidLabels.put(OIDS.STATE_OR_PROVINCE_NAME, "stateOrProvinceName");
-		oidLabels.put(OIDS.LOCALITY_NAME, "localityName");
-		oidLabels.put(OIDS.ORGANIZATION_NAME, "organizationName");
-		oidLabels.put(OIDS.ORGANIZATIONAL_UNIT_NAME, "organizationalUnitName");
-		oidLabels.put(OIDS.COMMON_NAME, "commonName");
-		oidLabels.put(OIDS.SUBJECT_KEY_IDENTIFIER, "subjectKeyIdentifier");
-		oidLabels.put(OIDS.KEY_USAGE, "keyUsage");
-		oidLabels.put(OIDS.BASIC_CONSTRAINTS, "basicConstraints");
-		oidLabels.put(OIDS.EXTENSION_REQUEST, "extensionRequest");
-		oidLabels.put(OIDS.AUTHORITY_KEY_IDENTIFIER, "authorityKeyIdentifier");
-		oidLabels.put(OIDS.EXT_KEY_USAGE, "extKeyUsage");
-		oidLabels.put(OIDS.CLIENT_AUTH, "clientAuth");
+		oidLabels.put(SHA256RSA, "SHA256withRSA");
+		oidLabels.put(RSA, "RSA");
+		oidLabels.put(SUBJECT_KEY_IDENTIFIER, "subjectKeyIdentifier");
+		oidLabels.put(COUNTRY_NAME, "countryName");
+		oidLabels.put(STATE_OR_PROVINCE_NAME, "stateOrProvinceName");
+		oidLabels.put(LOCALITY_NAME, "localityName");
+		oidLabels.put(ORGANIZATION_NAME, "organizationName");
+		oidLabels.put(ORGANIZATIONAL_UNIT_NAME, "organizationalUnitName");
+		oidLabels.put(COMMON_NAME, "commonName");
+		oidLabels.put(SUBJECT_KEY_IDENTIFIER, "subjectKeyIdentifier");
+		oidLabels.put(KEY_USAGE, "keyUsage");
+		oidLabels.put(BASIC_CONSTRAINTS, "basicConstraints");
+		oidLabels.put(EXTENSION_REQUEST, "extensionRequest");
+		oidLabels.put(AUTHORITY_KEY_IDENTIFIER, "authorityKeyIdentifier");
+		oidLabels.put(EXT_KEY_USAGE, "extKeyUsage");
+		oidLabels.put(CLIENT_AUTH, "clientAuth");
+		oidLabels.put(HASH_ALGORITHM_IDENTIFIER, "hashAlgorithmIdentifier");
+		oidLabels.put(DATA, "data");
+		oidLabels.put(ENCRYPTED_DATA, "encryptedData");
+		oidLabels.put(PBE_WITH_SHA_AND_40_BIT_RC2_CBC, "pbeWithSHAAnd40BitRC2-CBC");
+		oidLabels.put(PKCS_8_SHROUDED_KEY_BAG, "pkcs-8ShroudedKeyBag");
+		oidLabels.put(PBE_WITH_SHA_AND_3_KEY_TRIPLE_DES_CBC, "pbeWithSHAAnd3-KeyTripleDES-CBC");
+		oidLabels.put(FRIENDLY_NAME, "friendlyName");
+		oidLabels.put(LOCAL_KEY_ID, "localKeyID");
 	}
 
 	public static String getLabel(String oid) {

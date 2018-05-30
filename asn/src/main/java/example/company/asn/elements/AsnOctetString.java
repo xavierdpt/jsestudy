@@ -37,4 +37,8 @@ public class AsnOctetString extends AsnElement {
 		AsnUtils.addLengthBytes(bytes, value.length);
 		AsnUtils.addBytes(bytes, value);
 	}
+
+	public AsnElement parse() {
+		return AsnUtils.parse(value);
+	}
 }

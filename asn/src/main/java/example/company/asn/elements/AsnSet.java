@@ -73,4 +73,8 @@ public class AsnSet extends AsnElement {
 		return set;
 	}
 
+	public AsnOctetString getOctetString(int i) {
+		return (AsnOctetString) get(i);
+	}
+
 }
