@@ -1,5 +1,7 @@
 package example.company.asn.utils;
 
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
 import java.util.Date;
 
 import example.company.asn.elements.AsnBitString;
@@ -20,6 +22,14 @@ public class AsnX509Interpretation {
 	public AsnX509Interpretation(AsnElement tbsAsn, AsnX509InterpretationType type) {
 		this.asn = tbsAsn;
 		this.type = type;
+	}
+
+	public AsnX509Interpretation(X509Certificate cax) throws CertificateEncodingException {
+		this(AsnUtils.parse(cax.getEncoded()), AsnX509InterpretationType.FULL);
+	}
+
+	public AsnX509Interpretation(byte[] bytes, AsnX509InterpretationType type) {
+		this(AsnUtils.parse(bytes), type);
 	}
 
 	public AsnElement getTbs() {
