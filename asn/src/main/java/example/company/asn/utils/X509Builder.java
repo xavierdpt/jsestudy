@@ -14,7 +14,7 @@ import example.company.asn.elements.AsnUtcTime;
 
 public class X509Builder {
 
-	private byte[] publicKeyBSs;
+	private byte[] encodedPublicKey;
 
 	private int version = 3;
 
@@ -27,18 +27,17 @@ public class X509Builder {
 	private String notAfter;
 
 	private String signatureOid = OIDS.SHA256RSA;
-	private String rsaOid = OIDS.RSA;
 
 	private byte[] authorityKeyIdentifier;
 	private String extKeyUsage;
 	private byte[] subjectKeyIdentifier;
 
-	public byte[] getPublicKeyBSs() {
-		return publicKeyBSs;
+	public byte[] getEncodedPublicKey() {
+		return encodedPublicKey;
 	}
 
-	public void setPublicKeyBSs(byte[] publicKeyBSs) {
-		this.publicKeyBSs = publicKeyBSs;
+	public void setEncodedPublicKey(byte[] encodedPublicKey) {
+		this.encodedPublicKey = encodedPublicKey;
 	}
 
 	public int getVersion() {
@@ -105,14 +104,6 @@ public class X509Builder {
 		setNotAfter(AsnUtcTime.toString(date));
 	}
 
-	public String getRsaOid() {
-		return rsaOid;
-	}
-
-	public void setRsaOid(String rsaOid) {
-		this.rsaOid = rsaOid;
-	}
-
 	public byte[] getAuthorityKeyIdentifier() {
 		return authorityKeyIdentifier;
 	}
@@ -154,13 +145,7 @@ public class X509Builder {
 
 				DistinguishedNameUtils.toSequence(DistinguishedNameUtils.parse(subjectName)),
 
-				Asn.seq(
-
-						Asn.seq(Asn.oid(rsaOid), Asn.n()),
-
-						Asn.bitstring(publicKeyBSs)
-
-				),
+				AsnUtils.parse(encodedPublicKey),
 
 				Asn.contextSpecific(3, Asn.seq(
 
