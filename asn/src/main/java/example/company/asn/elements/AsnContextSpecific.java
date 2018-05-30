@@ -11,6 +11,7 @@ public class AsnContextSpecific extends AsnElement {
 
 	private long tag;
 	private byte[] value;
+	private AsnEncoding encoding = AsnEncoding.CONSTRUCTED;
 
 	public AsnContextSpecific(long tag) {
 		this.tag = tag;
@@ -24,6 +25,11 @@ public class AsnContextSpecific extends AsnElement {
 	public AsnContextSpecific(int tag, byte[] value) {
 		this.value = value;
 		this.tag = tag;
+	}
+
+	public AsnContextSpecific(int tag, byte[] value, AsnEncoding encoding) {
+		this(tag,value);
+		this.encoding = encoding;
 	}
 
 	public long getTag() {
@@ -44,7 +50,7 @@ public class AsnContextSpecific extends AsnElement {
 
 	@Override
 	public void encode(List<Byte> bytes) {
-		AsnUtils.addIdentifierBytes(bytes, AsnClass.CONTEXT_SPECIFIC, AsnEncoding.CONSTRUCTED, tag);
+		AsnUtils.addIdentifierBytes(bytes, AsnClass.CONTEXT_SPECIFIC, encoding, tag);
 		AsnUtils.addLengthBytes(bytes, value.length);
 		AsnUtils.addBytes(bytes, value);
 	}

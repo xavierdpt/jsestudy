@@ -1,5 +1,7 @@
 package example.company.asn.elements;
 
+import example.company.asn.AsnEncoding;
+
 public class Asn {
 
 	public static AsnSequence seq(AsnElement... elements) {
@@ -16,6 +18,10 @@ public class Asn {
 			set.getElements().add(element);
 		}
 		return set;
+	}
+
+	public static AsnElement cs(int tag, byte[] value, AsnEncoding encoding) {
+		return new AsnContextSpecific(tag, value, encoding);
 	}
 
 	public static AsnContextSpecific contextSpecific(int tag, byte[] value) {
@@ -50,8 +56,12 @@ public class Asn {
 		return new AsnBitString(bytes);
 	}
 
-	public static AsnOctetString octetString(byte[] bytes) {
+	public static AsnOctetString os(byte[] bytes) {
 		return new AsnOctetString(bytes);
+	}
+
+	public static AsnOctetString os(AsnElement element) {
+		return os(element.encode());
 	}
 
 }

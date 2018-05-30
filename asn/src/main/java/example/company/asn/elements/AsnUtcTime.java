@@ -97,4 +97,49 @@ public class AsnUtcTime extends AsnElement {
 		return time;
 	}
 
+	public static String toString(Date date) {
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		cal.setTimeInMillis(date.getTime());
+		int y = cal.get(Calendar.YEAR);
+		y = y % 100;
+		int m = cal.get(Calendar.MONTH) + 1;
+		int d = cal.get(Calendar.DAY_OF_MONTH);
+		int hh = cal.get(Calendar.HOUR_OF_DAY);
+		int mm = cal.get(Calendar.MINUTE);
+		int ss = cal.get(Calendar.SECOND);
+
+		StringWriter sw = new StringWriter();
+		if (y < 10) {
+			sw.append("0");
+		}
+		sw.append(Integer.toString(y));
+		sw.append("/");
+		if (m < 10) {
+			sw.append("0");
+		}
+		sw.append(Integer.toString(m));
+		sw.append("/");
+		if (d < 10) {
+			sw.append("0");
+		}
+		sw.append(Integer.toString(d));
+		sw.append(" ");
+		if (hh < 10) {
+			sw.append("0");
+		}
+		sw.append(Integer.toString(hh));
+		sw.append(":");
+		if (mm < 10) {
+			sw.append("0");
+		}
+		sw.append(Integer.toString(mm));
+		sw.append(":");
+		if (ss < 10) {
+			sw.append("0");
+		}
+		sw.append(Integer.toString(ss));
+		sw.append(" Z");
+		return sw.toString();
+	}
+
 }

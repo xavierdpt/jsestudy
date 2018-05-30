@@ -5,9 +5,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.util.Date;
 
+import example.company.asn.AsnEncoding;
 import example.company.asn.elements.Asn;
 import example.company.asn.elements.AsnSequence;
+import example.company.asn.elements.AsnUtcTime;
+import example.company.tox.common.Common;
 
 public class X509Builder {
 
@@ -38,7 +42,7 @@ public class X509Builder {
 	private String rsaOid = OIDS.RSA;
 
 	private byte[] authorityKeyIdentifier;
-	private byte[] extKeyUsage;
+	private String extKeyUsage;
 	private byte[] subjectKeyIdentifier;
 
 	public byte[] getPublicKeyBSs() {
@@ -177,12 +181,20 @@ public class X509Builder {
 		this.notBefore = notBefore;
 	}
 
+	public void setNotBefore(Date date) {
+		setNotBefore(AsnUtcTime.toString(date));
+	}
+
 	public String getNotAfter() {
 		return notAfter;
 	}
 
 	public void setNotAfter(String notAfter) {
 		this.notAfter = notAfter;
+	}
+
+	public void setNotAfter(Date date) {
+		setNotAfter(AsnUtcTime.toString(date));
 	}
 
 	public String getRsaOid() {
@@ -201,11 +213,11 @@ public class X509Builder {
 		this.authorityKeyIdentifier = authorityKeyIdentifier;
 	}
 
-	public byte[] getExtKeyUsage() {
+	public String getExtKeyUsage() {
 		return extKeyUsage;
 	}
 
-	public void setExtKeyUsage(byte[] extKeyUsage) {
+	public void setExtKeyUsage(String extKeyUsage) {
 		this.extKeyUsage = extKeyUsage;
 	}
 
@@ -276,7 +288,7 @@ public class X509Builder {
 
 								Asn.oid(OIDS.AUTHORITY_KEY_IDENTIFIER),
 
-								Asn.octetString(authorityKeyIdentifier)
+								Asn.os(Asn.seq(Asn.cs(0, authorityKeyIdentifier, AsnEncoding.PRIMITIVE)))
 
 						),
 
@@ -284,7 +296,7 @@ public class X509Builder {
 
 								Asn.oid(OIDS.EXT_KEY_USAGE),
 
-								Asn.octetString(extKeyUsage)
+								Asn.os(Asn.seq(Asn.oid(extKeyUsage)))
 
 						),
 
@@ -292,7 +304,7 @@ public class X509Builder {
 
 								Asn.oid(OIDS.SUBJECT_KEY_IDENTIFIER),
 
-								Asn.octetString(subjectKeyIdentifier)
+								Asn.os(subjectKeyIdentifier)
 
 						)
 
