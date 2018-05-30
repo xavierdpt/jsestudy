@@ -18,8 +18,6 @@ import java.util.Base64;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.asn.AsnEncoding;
-import example.company.asn.elements.Asn;
 import example.company.asn.elements.AsnElement;
 import example.company.asn.utils.AsnUtils;
 import example.company.asn.utils.AsnX509Interpretation;
@@ -58,22 +56,11 @@ public class Fiddle15 {
 		b.setNotAfter(expectedCertificate.getNotAfter());
 
 		b.setAuthorityKeyIdentifier(crtI.getAuthorityKeyIdentifier());
-		System.out.println(crtI.getExtKeyUsage());
 		b.setExtKeyUsage(crtI.getExtKeyUsage());
-		b.setSubjectKeyIdentifier(Common.bytes("0414A1613F82403D1E6A2478CABD8493AE96D63C9287"));
+		b.setSubjectKeyIdentifier(crtI.getSubjectKeyIdentifier());
 
-		b.setIssuerCC("US");
-		b.setIssuerST("California");
-		b.setIssuerL("San Francisco");
-		b.setIssuerO("Example Company");
-		b.setIssuerOU("Example Org");
-		b.setIssuerCN("clientCA");
-		b.setSubjectCC("US");
-		b.setSubjectST("California");
-		b.setSubjectL("San Francisco");
-		b.setSubjectO("Example Company");
-		b.setSubjectOU("Example Org");
-		b.setSubjectCN("client");
+		b.setIssuerName(crtI.getIssuerName());
+		b.setSubjectName(crtI.getSubjectName());
 
 		byte[] actualCrtBytes = b.encode(privateKey);
 

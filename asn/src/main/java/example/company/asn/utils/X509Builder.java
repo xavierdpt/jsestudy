@@ -11,7 +11,6 @@ import example.company.asn.AsnEncoding;
 import example.company.asn.elements.Asn;
 import example.company.asn.elements.AsnSequence;
 import example.company.asn.elements.AsnUtcTime;
-import example.company.tox.common.Common;
 
 public class X509Builder {
 
@@ -21,19 +20,8 @@ public class X509Builder {
 
 	private int serial;
 
-	private String issuerCC;
-	private String issuerST;
-	private String issuerL;
-	private String issuerO;
-	private String issuerOU;
-	private String issuerCN;
-
-	private String subjectCC;
-	private String subjectST;
-	private String subjectL;
-	private String subjectO;
-	private String subjectOU;
-	private String subjectCN;
+	private String issuerName;
+	private String subjectName;
 
 	private String notBefore;
 	private String notAfter;
@@ -77,100 +65,20 @@ public class X509Builder {
 		this.signatureOid = signatureOid;
 	}
 
-	public String getIssuerCC() {
-		return issuerCC;
+	public String getIssuerName() {
+		return issuerName;
 	}
 
-	public void setIssuerCC(String issuerCC) {
-		this.issuerCC = issuerCC;
+	public void setIssuerName(String issuerName) {
+		this.issuerName = issuerName;
 	}
 
-	public String getIssuerST() {
-		return issuerST;
+	public String getSubjectName() {
+		return subjectName;
 	}
 
-	public void setIssuerST(String issuerST) {
-		this.issuerST = issuerST;
-	}
-
-	public String getIssuerL() {
-		return issuerL;
-	}
-
-	public void setIssuerL(String issuerL) {
-		this.issuerL = issuerL;
-	}
-
-	public String getIssuerO() {
-		return issuerO;
-	}
-
-	public void setIssuerO(String issuerO) {
-		this.issuerO = issuerO;
-	}
-
-	public String getIssuerOU() {
-		return issuerOU;
-	}
-
-	public void setIssuerOU(String issuerOU) {
-		this.issuerOU = issuerOU;
-	}
-
-	public String getIssuerCN() {
-		return issuerCN;
-	}
-
-	public void setIssuerCN(String issuerCN) {
-		this.issuerCN = issuerCN;
-	}
-
-	public String getSubjectCC() {
-		return subjectCC;
-	}
-
-	public void setSubjectCC(String subjectCC) {
-		this.subjectCC = subjectCC;
-	}
-
-	public String getSubjectST() {
-		return subjectST;
-	}
-
-	public void setSubjectST(String subjectST) {
-		this.subjectST = subjectST;
-	}
-
-	public String getSubjectL() {
-		return subjectL;
-	}
-
-	public void setSubjectL(String subjectL) {
-		this.subjectL = subjectL;
-	}
-
-	public String getSubjectO() {
-		return subjectO;
-	}
-
-	public void setSubjectO(String subjectO) {
-		this.subjectO = subjectO;
-	}
-
-	public String getSubjectOU() {
-		return subjectOU;
-	}
-
-	public void setSubjectOU(String subjectOU) {
-		this.subjectOU = subjectOU;
-	}
-
-	public String getSubjectCN() {
-		return subjectCN;
-	}
-
-	public void setSubjectCN(String subjectCN) {
-		this.subjectCN = subjectCN;
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
 	}
 
 	public String getNotBefore() {
@@ -240,39 +148,11 @@ public class X509Builder {
 
 				Asn.seq(Asn.oid(signatureOid), Asn.n()),
 
-				Asn.seq(
-
-						Asn.set(Asn.seq(Asn.oid(OIDS.COUNTRY_NAME), Asn.str(issuerCC))),
-
-						Asn.set(Asn.seq(Asn.oid(OIDS.STATE_OR_PROVINCE_NAME), Asn.str(issuerST))),
-
-						Asn.set(Asn.seq(Asn.oid(OIDS.LOCALITY_NAME), Asn.str(issuerL))),
-
-						Asn.set(Asn.seq(Asn.oid(OIDS.ORGANIZATION_NAME), Asn.str(issuerO))),
-
-						Asn.set(Asn.seq(Asn.oid(OIDS.ORGANIZATIONAL_UNIT_NAME), Asn.str(issuerOU))),
-
-						Asn.set(Asn.seq(Asn.oid(OIDS.COMMON_NAME), Asn.str(issuerCN)))
-
-				),
+				DistinguishedNameUtils.toSequence(DistinguishedNameUtils.parse(issuerName)),
 
 				Asn.seq(Asn.time(notBefore), Asn.time(notAfter)),
 
-				Asn.seq(
-
-						Asn.set(Asn.seq(Asn.oid(OIDS.COUNTRY_NAME), Asn.str(subjectCC))),
-
-						Asn.set(Asn.seq(Asn.oid(OIDS.STATE_OR_PROVINCE_NAME), Asn.str(subjectST))),
-
-						Asn.set(Asn.seq(Asn.oid(OIDS.LOCALITY_NAME), Asn.str(subjectL))),
-
-						Asn.set(Asn.seq(Asn.oid(OIDS.ORGANIZATION_NAME), Asn.str(subjectO))),
-
-						Asn.set(Asn.seq(Asn.oid(OIDS.ORGANIZATIONAL_UNIT_NAME), Asn.str(subjectOU))),
-
-						Asn.set(Asn.seq(Asn.oid(OIDS.COMMON_NAME), Asn.str(subjectCN)))
-
-				),
+				DistinguishedNameUtils.toSequence(DistinguishedNameUtils.parse(subjectName)),
 
 				Asn.seq(
 
@@ -304,7 +184,7 @@ public class X509Builder {
 
 								Asn.oid(OIDS.SUBJECT_KEY_IDENTIFIER),
 
-								Asn.os(subjectKeyIdentifier)
+								Asn.os(Asn.os(subjectKeyIdentifier))
 
 						)
 

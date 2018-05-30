@@ -6,7 +6,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
-import java.util.HashMap;
 import java.util.Map;
 
 import example.company.asn.elements.AsnBitString;
@@ -15,7 +14,6 @@ import example.company.asn.elements.AsnInteger;
 import example.company.asn.elements.AsnNull;
 import example.company.asn.elements.AsnObjectIdentifier;
 import example.company.asn.elements.AsnOctetString;
-import example.company.asn.elements.AsnPrintableString;
 import example.company.asn.elements.AsnSequence;
 import example.company.asn.elements.AsnSet;
 
@@ -47,39 +45,11 @@ public class CSRBuilder {
 
 		AsnInteger asnVersion = new AsnInteger(version);
 
-		Map<String, String> nameMap = new HashMap<>();
+		Map<String, String> nameMap = DistinguishedNameUtils.parse(name);
 
-		String[] nameParts = name.split(", ");
-		for (int i = 0; i < nameParts.length; ++i) {
-			String[] kvParts = nameParts[i].split("=");
-			nameMap.put(kvParts[0], kvParts[1]);
-		}
+		AsnSequence subjectSequence = DistinguishedNameUtils.toSequence(nameMap);
 
-		AsnSequence subjectSequence = new AsnSequence();
-
-		if (nameMap.containsKey("C")) {
-			addSubjectSet(subjectSequence, OIDS.COUNTRY_NAME, nameMap.get("C"));
-		}
-
-		if (nameMap.containsKey("ST")) {
-			addSubjectSet(subjectSequence, OIDS.STATE_OR_PROVINCE_NAME, nameMap.get("ST"));
-		}
-
-		if (nameMap.containsKey("L")) {
-			addSubjectSet(subjectSequence, OIDS.LOCALITY_NAME, nameMap.get("L"));
-		}
-
-		if (nameMap.containsKey("O")) {
-			addSubjectSet(subjectSequence, OIDS.ORGANIZATION_NAME, nameMap.get("O"));
-		}
-
-		if (nameMap.containsKey("OU")) {
-			addSubjectSet(subjectSequence, OIDS.ORGANIZATIONAL_UNIT_NAME, nameMap.get("OU"));
-		}
-
-		if (nameMap.containsKey("CN")) {
-			addSubjectSet(subjectSequence, OIDS.COMMON_NAME, nameMap.get("CN"));
-		}
+		
 
 		AsnObjectIdentifierUtils.class.getName();
 		AsnObjectIdentifier publicKeyObjectIdentifier = new AsnObjectIdentifier(OIDS.RSA);
@@ -145,19 +115,6 @@ public class CSRBuilder {
 		return AsnUtils.encode(csrSequence);
 	}
 
-	private void addSubjectSet(AsnSequence subjectSequence, String key, String value) {
-		AsnObjectIdentifier oid = new AsnObjectIdentifier(key);
-		AsnPrintableString str = new AsnPrintableString(value);
-
-		AsnSequence seq = new AsnSequence();
-		seq.getElements().add(oid);
-		seq.getElements().add(str);
-
-		AsnSet set = new AsnSet();
-		set.getElements().add(seq);
-
-		subjectSequence.getElements().add(set);
-
-	}
+	
 
 }
