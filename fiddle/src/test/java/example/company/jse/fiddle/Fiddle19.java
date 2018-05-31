@@ -16,8 +16,6 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.tox.common.Common;
-
 public class Fiddle19 {
 
 	/* Inspect clientca.p12 */

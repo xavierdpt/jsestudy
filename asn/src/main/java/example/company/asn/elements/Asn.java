@@ -72,4 +72,8 @@ public class Asn {
 		return new AsnContextSpecific(tag, element.encode());
 	}
 
+	public static AsnBMPString bmpstring(byte[] bytes) {
+		return new AsnBMPString(bytes);
+	}
+
 }

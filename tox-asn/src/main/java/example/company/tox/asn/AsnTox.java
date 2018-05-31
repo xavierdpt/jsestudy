@@ -3,6 +3,7 @@ package example.company.tox.asn;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import example.company.asn.elements.AsnBMPString;
 import example.company.asn.elements.AsnBitString;
 import example.company.asn.elements.AsnContextSpecific;
 import example.company.asn.elements.AsnElement;
@@ -44,6 +45,8 @@ public class AsnTox extends ToxTox<AsnElement> {
 				AsnSubjectIdentifierTox.marshal(document, root, "subject-identifier", (AsnSubjectIdentifier) t);
 			} else if (t instanceof AsnUtcTime) {
 				AsnUtcTimeTox.marshal(document, root, "utc-time", (AsnUtcTime) t);
+			} else if (t instanceof AsnBMPString) {
+				AsnBMPStringTox.marshal(document, root, "bmpstring", (AsnBMPString) t);
 			}
 		}
 	}

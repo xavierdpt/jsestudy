@@ -25,12 +25,13 @@ public class AsnIntegerTest {
 
 	static List<SpecCase> specCases = new ArrayList<>();
 	static {
-		specCases.add(new SpecCase(0, Common.bytes(0x02, 0x01, 0x00)));
-		specCases.add(new SpecCase(0x7F, Common.bytes(0x02, 0x01, 0x7F)));
-		specCases.add(new SpecCase(0x80, Common.bytes(0x02, 0x02, 0x00, 0x80)));
-		specCases.add(new SpecCase(0x100, Common.bytes(0x02, 0x02, 0x01, 0x00)));
-		specCases.add(new SpecCase(-128, Common.bytes(0x02, 0x01, 0x80)));
-		specCases.add(new SpecCase(-129, Common.bytes(0x02, 0x02, 0xFF, 0x7F)));
+		specCases.add(new SpecCase(0, Common.bytes("020100")));
+		specCases.add(new SpecCase(0x7F, Common.bytes("02017F")));
+		specCases.add(new SpecCase(0x80, Common.bytes("02020080")));
+		specCases.add(new SpecCase(0x100, Common.bytes("02020100")));
+		specCases.add(new SpecCase(-128, Common.bytes("020180")));
+		specCases.add(new SpecCase(-129, Common.bytes("0202FF7F")));
+		specCases.add(new SpecCase(50000, Common.bytes("020300C350")));
 	}
 
 	@Test
@@ -38,6 +39,8 @@ public class AsnIntegerTest {
 		specCases.forEach(tc -> {
 			AsnInteger integer = new AsnInteger(tc.value);
 			byte[] actual = AsnUtils.encode(integer);
+			System.out.println(Common.bytesToString(tc.encoded));
+			System.out.println(Common.bytesToString(actual));
 			Assert.assertArrayEquals(tc.encoded, actual);
 		});
 	}

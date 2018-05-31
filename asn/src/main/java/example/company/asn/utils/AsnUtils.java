@@ -6,6 +6,7 @@ import java.util.List;
 import example.company.asn.AsnClass;
 import example.company.asn.AsnEncoding;
 import example.company.asn.AsnTag;
+import example.company.asn.elements.AsnBMPString;
 import example.company.asn.elements.AsnBitString;
 import example.company.asn.elements.AsnBoolean;
 import example.company.asn.elements.AsnContextSpecific;
@@ -112,6 +113,8 @@ public class AsnUtils {
 				return new AsnBoolean(identifierBytes, lengthBytes, contentBytes);
 			} else if (tag == AsnTag.IA5STRING.getTagNumber()) {
 				return new AsnIA5String(identifierBytes, lengthBytes, contentBytes);
+			} else if (tag == AsnTag.BMP_STRING.getTagNumber()) {
+				return new AsnBMPString(identifierBytes, lengthBytes, contentBytes);
 			} else {
 				System.out.println("Warning : unknown " + asnClass + " tag " + tag);
 				return null;

@@ -43,18 +43,19 @@ public class AsnInteger extends AsnElement {
 		AsnUtils.addIdentifierBytes(bytes, AsnClass.UNIVERSAL, AsnEncoding.PRIMITIVE, AsnTag.INTEGER);
 
 		List<Byte> cb = new ArrayList<>();
+
 		long v = value;
 		while (v > 0xFF) {
 			cb.add(Common.bit(v & 0xFF));
 			v >>= 8;
 		}
-		if (v < 0x80) {
-			cb.add(Common.bit(v));
-		} else {
-			cb.add(Common.bit(v & 0x80));
-			cb.add(Common.bit(v & 0x7F));
-		}
-		if (value < 0 & (v & 0xFF) < 0x80) {
+
+		int lastByte = (int) (v & 0xFF);
+		cb.add(Common.bit(lastByte));
+
+		if (value > 0 && (lastByte & 0x80) == 0x80) {
+			cb.add(Common.bit(0));
+		} else if (value < 0 && (v & 0xFF) < 0x80) {
 			cb.add(Common.bit(0xFF));
 		}
 
