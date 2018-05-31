@@ -45,7 +45,7 @@ public class Fiddle19 {
 
 		PKCS12Builder builder = new PKCS12Builder();
 
-		Assert.assertArrayEquals(bytes2, builder.build());
+		Assert.assertArrayEquals(bytes2, builder.encode());
 
 	}
 
