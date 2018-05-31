@@ -29,6 +29,8 @@ public class OIDS {
 	public static final String PBE_WITH_SHA_AND_3_KEY_TRIPLE_DES_CBC = "1.2.840.113549.1.12.1.3";
 	public static final String FRIENDLY_NAME = "1.2.840.113549.1.9.20";
 	public static final String LOCAL_KEY_ID = "1.2.840.113549.1.9.21";
+	public static final String CERT_BAG = "1.2.840.113549.1.12.10.1.3";
+	public static final String X509_CERTIFICATE = "1.2.840.113549.1.9.22.1";
 
 	private static Map<String, String> oidLabels = new HashMap<>();
 	static {
@@ -56,6 +58,8 @@ public class OIDS {
 		oidLabels.put(PBE_WITH_SHA_AND_3_KEY_TRIPLE_DES_CBC, "pbeWithSHAAnd3-KeyTripleDES-CBC");
 		oidLabels.put(FRIENDLY_NAME, "friendlyName");
 		oidLabels.put(LOCAL_KEY_ID, "localKeyID");
+		oidLabels.put(CERT_BAG, "certBag");
+		oidLabels.put(X509_CERTIFICATE, "x509Certificate");
 	}
 
 	public static String getLabel(String oid) {
