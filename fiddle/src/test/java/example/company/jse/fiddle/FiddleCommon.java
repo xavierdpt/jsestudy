@@ -79,4 +79,10 @@ public class FiddleCommon {
 			throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException {
 		return (PrivateKey) keyStore.getKey(name, password.toCharArray());
 	}
+
+	public static byte[] getResourceBytes(String path) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		IOUtils.copy(FiddleCommon.class.getResourceAsStream(path), baos);
+		return baos.toByteArray();
+	}
 }

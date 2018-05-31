@@ -12,7 +12,6 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,14 +37,11 @@ public class Fiddle19 {
 		X509Certificate x2 = FiddleCommon.getCertificate(ks2, "clientca");
 		Assert.assertArrayEquals(x1.getEncoded(), x2.getEncoded());
 
-		ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
-		IOUtils.copy(this.getClass().getResourceAsStream(FiddleCommon.CLIENTCA_P12_7), baos2);
+		byte[] bytes2 = FiddleCommon.getResourceBytes(FiddleCommon.CLIENTCA_P12_7);
 
-		byte[] bytes2 = baos2.toByteArray();
+		PKCS12Sample p12Sample = new PKCS12Sample();
 
-		PKCS12Builder builder = new PKCS12Builder();
-
-		Assert.assertArrayEquals(bytes2, builder.encode());
+		Assert.assertArrayEquals(bytes2, p12Sample.encode());
 
 	}
 

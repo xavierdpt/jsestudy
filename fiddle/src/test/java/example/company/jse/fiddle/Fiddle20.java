@@ -27,11 +27,11 @@ public class Fiddle20 {
 	public void fiddle() throws NoSuchAlgorithmException, IOException, InvalidParameterSpecException,
 			InvalidKeyException, InvalidAlgorithmParameterException, InvalidKeySpecException {
 
-		byte[] salt = PKCS12Builder.macSalt;
-		int iterationCount = PKCS12Builder.macIterationCount;
+		byte[] salt = PKCS12Sample.macSalt;
+		int iterationCount = PKCS12Sample.macIterationCount;
 		String password = "password";
-		byte[] content = PKCS12Builder.getSampleDataContent().getValue();
-		byte[] hash = PKCS12Builder.macHash;
+		byte[] content = PKCS12Sample.getSampleDataContent().getValue();
+		byte[] hash = PKCS12Sample.macHash;
 
 		verifyMac(salt, iterationCount, password, content, hash);
 

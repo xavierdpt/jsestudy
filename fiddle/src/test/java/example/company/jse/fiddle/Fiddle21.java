@@ -49,8 +49,8 @@ public class Fiddle21 {
 			InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 
 		String password = "password";
-		byte[] input = PKCS12Builder.encryptedCertificate;
-		byte[] parameters = PKCS12Builder.getSamplePBSParameters().encode();
+		byte[] input = PKCS12Sample.encryptedCertificate;
+		byte[] parameters = PKCS12Sample.getSamplePBSParameters().encode();
 
 		byte[] output = decrypt(password, input, parameters);
 
