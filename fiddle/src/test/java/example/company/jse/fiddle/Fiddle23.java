@@ -20,6 +20,8 @@ import javax.crypto.NoSuchPaddingException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import example.company.asn.pkcs12.PKCS12Builder;
+
 /* Make PKCS12Sample rely only on certificate and private key  */
 
 public class Fiddle23 {

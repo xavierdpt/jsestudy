@@ -1,4 +1,5 @@
-package example.company.jse.fiddle;
+
+package example.company.asn.pkcs12;
 
 import java.io.IOException;
 import java.security.AlgorithmParameters;

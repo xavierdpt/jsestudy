@@ -22,6 +22,8 @@ import javax.crypto.NoSuchPaddingException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import example.company.asn.pkcs12.PKCS12Builder;
+
 public class Fiddle19 {
 
 	/* Inspect clientca.p12 */

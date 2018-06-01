@@ -24,6 +24,7 @@ import javax.crypto.spec.PBEKeySpec;
 import org.junit.Assert;
 import org.junit.Test;
 
+import example.company.asn.pkcs12.PKCS12Builder;
 import example.company.asn.utils.OIDS;
 
 public class Fiddle22 {
