@@ -3,11 +3,17 @@ package example.company.jse.fiddle;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.Mac;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -25,13 +31,17 @@ public class Fiddle20 {
 
 	@Test
 	public void fiddle() throws NoSuchAlgorithmException, IOException, InvalidParameterSpecException,
-			InvalidKeyException, InvalidAlgorithmParameterException, InvalidKeySpecException {
+			InvalidKeyException, InvalidAlgorithmParameterException, InvalidKeySpecException, UnrecoverableKeyException,
+			CertificateException, KeyStoreException, NoSuchPaddingException, IllegalBlockSizeException,
+			BadPaddingException {
 
-		byte[] salt = PKCS12Sample.macSalt;
-		int iterationCount = PKCS12Sample.macIterationCount;
+		PKCS12Builder builder = FiddleCommon.getSamplePKCS12Builder();
+
+		byte[] salt = builder.getMacSalt();
+		int iterationCount = builder.getMacIterationCount();
 		String password = "password";
-		byte[] content = PKCS12Sample.getSampleDataContent().getValue();
-		byte[] hash = PKCS12Sample.macHash;
+		byte[] content = builder.getContentBytes();
+		byte[] hash = builder.getMacHash(content);
 
 		verifyMac(salt, iterationCount, password, content, hash);
 

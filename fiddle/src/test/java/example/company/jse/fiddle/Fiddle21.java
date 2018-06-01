@@ -7,6 +7,7 @@ import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
@@ -34,7 +35,8 @@ public class Fiddle21 {
 	@Test
 	public void fiddle() throws InvalidKeyException, InvalidKeySpecException, NoSuchAlgorithmException,
 			InvalidParameterSpecException, NoSuchPaddingException, InvalidAlgorithmParameterException,
-			IllegalBlockSizeException, BadPaddingException, IOException, CertificateException, KeyStoreException {
+			IllegalBlockSizeException, BadPaddingException, IOException, CertificateException, KeyStoreException,
+			UnrecoverableKeyException {
 
 		byte[] actualBytes = getActualBytes();
 
@@ -44,13 +46,16 @@ public class Fiddle21 {
 
 	}
 
-	public byte[] getActualBytes() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException,
-			InvalidParameterSpecException, NoSuchPaddingException, InvalidKeyException,
-			InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+	public byte[] getActualBytes()
+			throws InvalidKeySpecException, NoSuchAlgorithmException, IOException, InvalidParameterSpecException,
+			NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
+			BadPaddingException, UnrecoverableKeyException, CertificateException, KeyStoreException {
+
+		PKCS12Builder builder = FiddleCommon.getSamplePKCS12Builder();
 
 		String password = "password";
-		byte[] input = PKCS12Sample.encryptedCertificate;
-		byte[] parameters = PKCS12Sample.getSamplePBSParameters().encode();
+		byte[] input = builder.getEncryptedCertificateBytes();
+		byte[] parameters = builder.getCertificateCipherParameters().encode();
 
 		byte[] output = decrypt(password, input, parameters);
 

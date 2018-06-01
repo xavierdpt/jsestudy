@@ -35,21 +35,22 @@ public class Fiddle22 {
 			throws InvalidKeySpecException, NoSuchAlgorithmException, IOException, InvalidParameterSpecException,
 			NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
 			BadPaddingException, CertificateException, KeyStoreException, UnrecoverableKeyException {
-		PKCS12Sample.getSampleShroudedContentAsn();
+
+		PKCS12Builder builder = FiddleCommon.getSamplePKCS12Builder();
 
 		byte[] expectedBytes = getExpected();
 
-		Assert.assertArrayEquals(expectedBytes, getActualBytes());
+		Assert.assertArrayEquals(expectedBytes, getActualBytes(builder));
 
 	}
 
-	private byte[] getActualBytes() throws InvalidKeySpecException, NoSuchAlgorithmException, IOException,
-			InvalidParameterSpecException, NoSuchPaddingException, InvalidKeyException,
+	private byte[] getActualBytes(PKCS12Builder b) throws InvalidKeySpecException, NoSuchAlgorithmException,
+			IOException, InvalidParameterSpecException, NoSuchPaddingException, InvalidKeyException,
 			InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 
 		String password = "password";
-		byte[] input = PKCS12Sample.encryptedPrivateKey;
-		byte[] parameters = PKCS12Sample.getPrivateKeyEncryptionParameters().encode();
+		byte[] input = b.getEncryptedPrivateKeyBytes();
+		byte[] parameters = b.getPrivateKeyCipherParameters().encode();
 
 		return decrypt(password, input, parameters);
 

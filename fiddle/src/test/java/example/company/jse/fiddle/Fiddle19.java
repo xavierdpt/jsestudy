@@ -2,6 +2,8 @@ package example.company.jse.fiddle;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -11,6 +13,11 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +28,8 @@ public class Fiddle19 {
 
 	@Test
 	public void fiddle() throws NoSuchAlgorithmException, CertificateException, KeyStoreException, IOException,
-			UnrecoverableKeyException {
+			UnrecoverableKeyException, InvalidKeyException, InvalidKeySpecException, NoSuchPaddingException,
+			InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 
 		KeyStore ks1 = FiddleCommon.getKeyStore(FiddleCommon.CLIENT_JKS_7, "password");
 		KeyStore ks2 = FiddleCommon.getKeyStore(FiddleCommon.CLIENTCA_P12_7, "password");
@@ -39,9 +47,9 @@ public class Fiddle19 {
 
 		byte[] bytes2 = FiddleCommon.getResourceBytes(FiddleCommon.CLIENTCA_P12_7);
 
-		PKCS12Sample p12Sample = new PKCS12Sample();
+		PKCS12Builder builder = FiddleCommon.getSamplePKCS12Builder();
 
-		Assert.assertArrayEquals(bytes2, p12Sample.encode());
+		Assert.assertArrayEquals(bytes2, builder.build());
 
 	}
 

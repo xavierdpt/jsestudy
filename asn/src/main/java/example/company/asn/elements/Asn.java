@@ -1,5 +1,7 @@
 package example.company.asn.elements;
 
+import java.nio.charset.Charset;
+
 import example.company.asn.AsnEncoding;
 
 public class Asn {
@@ -72,8 +74,12 @@ public class Asn {
 		return new AsnContextSpecific(tag, element.encode());
 	}
 
-	public static AsnBMPString bmpstring(byte[] bytes) {
+	public static AsnBMPString bmpstring(String bytes) {
 		return new AsnBMPString(bytes);
+	}
+
+	public static AsnBMPString bmpstring(byte[] bytes) {
+		return new AsnBMPString(new String(bytes, Charset.forName("UTF-16")));
 	}
 
 }

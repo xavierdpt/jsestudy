@@ -1,5 +1,6 @@
 package example.company.asn.elements;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 import example.company.asn.AsnClass;
@@ -10,28 +11,29 @@ import example.company.tox.common.Bytes;
 
 public class AsnBMPString extends AsnElement {
 
-	private byte[] value;
+	private String value;
 
 	public AsnBMPString(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
-		value = contentBytes.toByteArray();
+		value = new String(contentBytes.toByteArray(), Charset.forName("UTF-16BE"));
 	}
 
-	public AsnBMPString(byte[] value) {
+	public AsnBMPString(String value) {
 		this.value = value;
 	}
 
-	public byte[] getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(byte[] value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 
 	@Override
 	public void encode(List<Byte> bytes) {
 		AsnUtils.addIdentifierBytes(bytes, AsnClass.UNIVERSAL, AsnEncoding.PRIMITIVE, AsnTag.BMP_STRING);
-		AsnUtils.addLengthBytes(bytes, value.length);
-		AsnUtils.addBytes(bytes, value);
+		byte[] valueBytes = value.getBytes(Charset.forName("UTF-16BE"));
+		AsnUtils.addLengthBytes(bytes, valueBytes.length);
+		AsnUtils.addBytes(bytes, valueBytes);
 	}
 }
