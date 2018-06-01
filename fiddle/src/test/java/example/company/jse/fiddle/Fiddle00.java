@@ -1,22 +1,19 @@
-package example.company.jse.fiddle.java.security;
+package example.company.jse.fiddle;
 
 import java.security.Provider;
-import java.security.Provider.Service;
 import java.security.Security;
+import java.security.Provider.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.xml.bind.JAXBException;
-
 import org.junit.Test;
 
-public class SecurityFiddle {
+public class Fiddle00 {
 
 	@Test
-	public void test() throws JAXBException {
-
+	public void fiddle() {
 		Map<String, Map<String, List<String>>> map = new TreeMap<>();
 
 		Provider[] providers = Security.getProviders();
@@ -46,4 +43,5 @@ public class SecurityFiddle {
 			});
 		});
 	}
+
 }

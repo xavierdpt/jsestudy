@@ -34,6 +34,7 @@ public class FiddleCommon {
 
 	public static final String CLIENT_JKS_7 = "/genclient/step7/client.jks";
 	public static final String CLIENTCA_P12_7 = "/genclient/step7/clientca.p12";
+	public static final String LETSENCRTYPT = "/letsencrypt";
 
 	public static KeyStore getKeyStore(String path, String password)
 			throws NoSuchAlgorithmException, CertificateException, IOException, KeyStoreException {
