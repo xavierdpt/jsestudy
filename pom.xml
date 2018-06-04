@@ -34,6 +34,21 @@
 				<artifactId>commons-io</artifactId>
 				<version>2.6</version>
 			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.5.5</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>fluent-hc</artifactId>
+				<version>4.5.5</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>2.9.5</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<modules>
@@ -44,5 +59,6 @@
 		<module>asn</module>
 		<module>tox-asn</module>
 		<module>tox-common</module>
+		<module>acme</module>
 	</modules>
 </project>

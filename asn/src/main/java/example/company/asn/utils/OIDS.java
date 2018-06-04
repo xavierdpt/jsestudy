@@ -31,6 +31,8 @@ public class OIDS {
 	public static final String LOCAL_KEY_ID = "1.2.840.113549.1.9.21";
 	public static final String CERT_BAG = "1.2.840.113549.1.12.10.1.3";
 	public static final String X509_CERTIFICATE = "1.2.840.113549.1.9.22.1";
+	public static final String EC_PUBLIC_KEY = "1.2.840.10045.2.1";
+	public static final String PRIME_256_V1 = "1.2.840.10045.3.1.7";
 
 	private static Map<String, String> oidLabels = new HashMap<>();
 	static {
@@ -60,6 +62,8 @@ public class OIDS {
 		oidLabels.put(LOCAL_KEY_ID, "localKeyID");
 		oidLabels.put(CERT_BAG, "certBag");
 		oidLabels.put(X509_CERTIFICATE, "x509Certificate");
+		oidLabels.put(EC_PUBLIC_KEY, "ecPublicKey");
+		oidLabels.put(PRIME_256_V1, "prime256v1");
 	}
 
 	public static String getLabel(String oid) {
