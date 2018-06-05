@@ -28,8 +28,8 @@ public class Tox {
 		return createDocument("root");
 	}
 
-	public static void print(Document doc, OutputStream out) {
-		DOMSource domSource = new DOMSource(doc);
+	public static void print(Document document, OutputStream out) {
+		DOMSource domSource = new DOMSource(document);
 		StreamResult result = new StreamResult(out);
 		try {
 			ToxInitializers.transformer.get().transform(domSource, result);
@@ -141,6 +141,21 @@ public class Tox {
 		return null;
 	}
 
+	public static Element appendChild(Document document, Element root, String name, Integer value) {
+		if (value != null) {
+			
+			Text text = document.createTextNode(value.toString());
+			
+			Element element = document.createElement(name);
+			element.appendChild(text);
+			
+			root.appendChild(element);
+			
+			return element;
+		}
+		return null;
+	}
+	
 	public static Element appendChild(Document document, Element root, String name, Long value) {
 		if (value != null) {
 

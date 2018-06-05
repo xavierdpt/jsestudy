@@ -16,44 +16,51 @@ import example.company.asn.elements.AsnSequence;
 import example.company.asn.elements.AsnSet;
 import example.company.asn.elements.AsnSubjectIdentifier;
 import example.company.asn.elements.AsnUtcTime;
+import example.company.tox.common.Tox;
 import example.company.tox.common.ToxTox;
 
 public class AsnTox extends ToxTox<AsnElement> {
 
 	@Override
 	public void tox(Document document, Element root, String name, AsnElement t) {
+
+		Element element  = root;
+		if(name != null) {
+			element = Tox.appendChild(document, root, name);
+		}
+
 		if (t != null) {
 			if (t instanceof AsnBitString) {
-				AsnBitStringTox.marshal(document, root, "bit-string", (AsnBitString) t);
+				AsnBitStringTox.marshal(document, element, "bit-string", (AsnBitString) t);
 			} else if (t instanceof AsnContextSpecific) {
-				AsnContextSpecificTox.marshal(document, root, "context-specific", (AsnContextSpecific) t);
+				AsnContextSpecificTox.marshal(document, element, "context-specific", (AsnContextSpecific) t);
 			} else if (t instanceof AsnInteger) {
-				AsnIntegerTox.marshal(document, root, "integer", (AsnInteger) t);
+				AsnIntegerTox.marshal(document, element, "integer", (AsnInteger) t);
 			} else if (t instanceof AsnNull) {
-				AsnNullTox.marshal(document, root, "null", (AsnNull) t);
+				AsnNullTox.marshal(document, element, "null", (AsnNull) t);
 			} else if (t instanceof AsnObjectIdentifier) {
-				AsnObjectIdentifierTox.marshal(document, root, "object-identifier", (AsnObjectIdentifier) t);
+				AsnObjectIdentifierTox.marshal(document, element, "object-identifier", (AsnObjectIdentifier) t);
 			} else if (t instanceof AsnOctetString) {
-				AsnOctetStringTox.marshal(document, root, "octet-string", (AsnOctetString) t);
+				AsnOctetStringTox.marshal(document, element, "octet-string", (AsnOctetString) t);
 			} else if (t instanceof AsnPrintableString) {
-				AsnPrintableStringTox.marshal(document, root, "printable-string", (AsnPrintableString) t);
+				AsnPrintableStringTox.marshal(document, element, "printable-string", (AsnPrintableString) t);
 			} else if (t instanceof AsnSequence) {
-				AsnSequenceTox.marshal(document, root, "sequence", (AsnSequence) t);
+				AsnSequenceTox.marshal(document, element, "sequence", (AsnSequence) t);
 			} else if (t instanceof AsnSet) {
-				AsnSetTox.marshal(document, root, "set", (AsnSet) t);
+				AsnSetTox.marshal(document, element, "set", (AsnSet) t);
 			} else if (t instanceof AsnSubjectIdentifier) {
-				AsnSubjectIdentifierTox.marshal(document, root, "subject-identifier", (AsnSubjectIdentifier) t);
+				AsnSubjectIdentifierTox.marshal(document, element, "subject-identifier", (AsnSubjectIdentifier) t);
 			} else if (t instanceof AsnUtcTime) {
-				AsnUtcTimeTox.marshal(document, root, "utc-time", (AsnUtcTime) t);
+				AsnUtcTimeTox.marshal(document, element, "utc-time", (AsnUtcTime) t);
 			} else if (t instanceof AsnBMPString) {
-				AsnBMPStringTox.marshal(document, root, "bmpstring", (AsnBMPString) t);
+				AsnBMPStringTox.marshal(document, element, "bmpstring", (AsnBMPString) t);
 			}
 		}
 	}
 
 	@Override
 	protected String getDefaultName() {
-		return "asn";
+		return null;
 	}
 
 }

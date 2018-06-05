@@ -101,4 +101,8 @@ public class AsnBitString extends AsnElement {
 		return bits.get(i);
 	}
 
+	public AsnElement parse() {
+		return AsnUtils.parse(toByteArray());
+	}
+
 }
