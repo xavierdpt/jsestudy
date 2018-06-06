@@ -1,5 +1,6 @@
 package example.company.asn.elements;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,28 +13,31 @@ import example.company.tox.common.Common;
 
 public class AsnInteger extends AsnElement {
 
-	private long value;
+	private BigInteger value=BigInteger.ZERO;
 
 	public AsnInteger(Bytes identifierBytes, Bytes lengthBytes, Bytes contentBytes) {
 		byte first = contentBytes.at(0);
 		for (int i = 0; i < contentBytes.length(); ++i) {
 			if (i == 0 && (first & 0x80) == 0x80) {
-				value = -1;
+				value = BigInteger.ZERO.subtract(BigInteger.ONE);
 			}
-			value = (value << 8) + (contentBytes.at(i) & 0xFF);
+			value = value.shiftLeft(8).add(BigInteger.valueOf(contentBytes.at(i) & 0xFF));
 		}
 	}
 
-	public AsnInteger(int value) {
+	public AsnInteger(BigInteger value) {
 		this.value = value;
-
 	}
 
-	public long getValue() {
+	public AsnInteger(long value) {
+		this.value = BigInteger.valueOf(value);
+	}
+
+	public BigInteger getValue() {
 		return value;
 	}
 
-	public void setValue(long value) {
+	public void setValue(BigInteger value) {
 		this.value = value;
 	}
 
@@ -44,18 +48,20 @@ public class AsnInteger extends AsnElement {
 
 		List<Byte> cb = new ArrayList<>();
 
-		long v = value;
-		while (v > 0xFF) {
-			cb.add(Common.bit(v & 0xFF));
-			v >>= 8;
+		BigInteger v = value;
+
+		while (v.compareTo(new BigInteger("FF", 16)) == 1) {
+
+			cb.add(Common.bit(v.and(new BigInteger("FF", 16)).intValue()));
+			v = v.shiftRight(8);
 		}
 
-		int lastByte = (int) (v & 0xFF);
+		int lastByte = v.and(new BigInteger("FF", 16)).intValue();
 		cb.add(Common.bit(lastByte));
 
-		if (value > 0 && (lastByte & 0x80) == 0x80) {
+		if (value.compareTo(BigInteger.ZERO) == 1 && (lastByte & 0x80) == 0x80) {
 			cb.add(Common.bit(0));
-		} else if (value < 0 && (v & 0xFF) < 0x80) {
+		} else if (value.compareTo(BigInteger.ZERO) == -1 && v.and(new BigInteger("FF", 16)).intValue() < 0x80) {
 			cb.add(Common.bit(0xFF));
 		}
 

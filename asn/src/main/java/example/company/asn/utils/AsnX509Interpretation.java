@@ -71,11 +71,11 @@ public class AsnX509Interpretation {
 
 	public int getVersion() {
 		return (int) (getTbs().as(AsnSequence.class).getElements().get(0).as(AsnContextSpecific.class).get()
-				.as(AsnInteger.class).getValue() + 1);
+				.as(AsnInteger.class).getValue().intValue() + 1);
 	}
 
 	public long getSerialNumber() {
-		return getTbs().as(AsnSequence.class).getElements().get(1).as(AsnInteger.class).getValue();
+		return getTbs().as(AsnSequence.class).getElements().get(1).as(AsnInteger.class).getValue().longValue();
 	}
 
 	public byte[] getSignature() {

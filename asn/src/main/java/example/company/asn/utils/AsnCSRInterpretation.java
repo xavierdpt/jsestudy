@@ -11,7 +11,7 @@ public class AsnCSRInterpretation {
 	}
 
 	public long getVersion() {
-		return asn.asSequence().getSequence(0).getInteger(0).getValue();
+		return asn.asSequence().getSequence(0).getInteger(0).getValue().longValue();
 	}
 
 	public String getSubjectName() {

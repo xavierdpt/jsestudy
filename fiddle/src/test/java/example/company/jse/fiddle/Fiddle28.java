@@ -42,7 +42,7 @@ public class Fiddle28 {
 		AcmeDirectoryInfos2 infos = Acme2.directory(om);
 
 		Assert.assertEquals("https://acme-staging-v02.api.letsencrypt.org/acme/key-change", infos.getKeyChange());
-		Assert.assertEquals("https://acme-staging-v02.api.letsencrypt.org/acme/new-acct", infos.getNewAccount());
+		Assert.assertEquals("https://acme-staging-v02.api.letsencrypt.org/acme/new-acct", infos.getNewAccountURL());
 		Assert.assertEquals("https://acme-staging-v02.api.letsencrypt.org/acme/new-nonce", infos.getNewNonce());
 		Assert.assertEquals("https://acme-staging-v02.api.letsencrypt.org/acme/new-order", infos.getNewOrder());
 		Assert.assertEquals("https://acme-staging-v02.api.letsencrypt.org/acme/revoke-cert", infos.getRevokeCert());

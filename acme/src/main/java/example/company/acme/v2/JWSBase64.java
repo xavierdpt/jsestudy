@@ -21,11 +21,11 @@ public class JWSBase64 {
 		return decoder.decode(s);
 	}
 
-	public static Object encode(byte[] bytes) {
+	public static String encode(byte[] bytes) {
 		String e = encoder.encodeToString(bytes);
 		e = e.split("=")[0];
 		e = e.replaceAll("/", "_");
-		e = e.replaceAll("+", "-");
+		e = e.replaceAll("\\+", "-");
 		return e;
 	}
 

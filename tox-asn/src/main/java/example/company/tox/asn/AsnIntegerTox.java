@@ -10,12 +10,12 @@ import example.company.tox.common.ToxTox;
 public class AsnIntegerTox extends ToxTox<AsnInteger> {
 
 	public static void marshal(Document document, Element root, String name, AsnInteger integer) {
-		Tox.appendChild(document, root, name, (Long) integer.getValue());
+		Tox.appendChild(document, root, name, integer.getValue().toByteArray());
 	}
 
 	@Override
 	public void tox(Document document, Element root, String name, AsnInteger t) {
-		Tox.appendChild(document, root, name, (Long) t.getValue());
+		Tox.appendChild(document, root, name, t.getValue().toByteArray());
 
 	}
 

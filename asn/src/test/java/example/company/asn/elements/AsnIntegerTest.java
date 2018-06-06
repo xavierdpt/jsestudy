@@ -49,7 +49,7 @@ public class AsnIntegerTest {
 	public void decodingTest() {
 		specCases.forEach(tc -> {
 			AsnInteger actual = (AsnInteger) AsnUtils.parse(new Bytes(tc.encoded));
-			Assert.assertEquals(tc.value, actual.getValue());
+			Assert.assertEquals(tc.value, actual.getValue().longValue());
 		});
 	}
 }

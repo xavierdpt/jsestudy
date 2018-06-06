@@ -1,5 +1,6 @@
 package example.company.asn.elements;
 
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 
 import example.company.asn.AsnEncoding;
@@ -39,7 +40,7 @@ public class Asn {
 	}
 
 	public static AsnInteger integer(int value) {
-		return new AsnInteger(value);
+		return new AsnInteger(BigInteger.valueOf(value));
 	}
 
 	public static AsnObjectIdentifier oid(String oid) {
