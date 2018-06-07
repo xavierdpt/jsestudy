@@ -96,13 +96,24 @@ public class Common {
 	}
 
 	public static byte[] first(byte[] bytes, int num) {
+
+		byte[] result = new byte[num];
+
+		for (int i = 0; i < num; ++i) {
+			result[i] = bytes[i];
+		}
+
+		return result;
+	}
+
+	public static byte[] last(byte[] bytes, int num) {
 		
 		byte[] result = new byte[num];
-		
-		for(int i=0;i<num;++i) {
-			result[i]=bytes[i];
+
+		for (int i = num-1; i >= 0; --i) {
+			result[i] = bytes[bytes.length-i-1];
 		}
-		
+
 		return result;
 	}
 

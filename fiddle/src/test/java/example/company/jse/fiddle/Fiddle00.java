@@ -4,6 +4,7 @@ import java.security.Provider;
 import java.security.Security;
 import java.security.Provider.Service;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -13,7 +14,7 @@ import org.junit.Test;
 public class Fiddle00 {
 
 	@Test
-	public void fiddle() {
+	public void dumpServices() {
 		Map<String, Map<String, List<String>>> map = new TreeMap<>();
 
 		Provider[] providers = Security.getProviders();
@@ -44,4 +45,24 @@ public class Fiddle00 {
 		});
 	}
 
+	@Test
+	public void dumpProps() {
+
+		List<String> list = new ArrayList<>();
+
+		for (Provider p : Security.getProviders()) {
+			String n = p.getName();
+			for (String prop : p.stringPropertyNames()) {
+				String line = n + "." + prop + "=" + p.getProperty(prop);
+				list.add(line);
+			}
+		}
+
+		Collections.sort(list);
+
+		for (String line : list) {
+			System.out.println(line);
+		}
+
+	}
 }
