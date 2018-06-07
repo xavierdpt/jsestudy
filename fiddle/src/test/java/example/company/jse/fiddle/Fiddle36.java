@@ -17,7 +17,6 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
-import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -31,7 +30,7 @@ import example.company.tox.common.Common;
 
 public class Fiddle36 {
 
-	@Test
+//	@Test
 	public void fiddle() throws ClientProtocolException, IOException, NoSuchAlgorithmException,
 			InvalidParameterSpecException, InvalidAlgorithmParameterException, InvalidKeyException, SignatureException {
 

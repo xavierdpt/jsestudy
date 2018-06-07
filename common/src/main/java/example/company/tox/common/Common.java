@@ -77,4 +77,33 @@ public class Common {
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.headers", "ERROR");
 	}
 
+	public static byte[] concatenate(byte[]... arrays) {
+		int len = 0;
+		for (byte[] array : arrays) {
+			len += array.length;
+		}
+		byte[] output = new byte[len];
+
+		int offset = 0;
+		for (byte[] array : arrays) {
+			for (int i = 0; i < array.length; ++i) {
+				output[i + offset] = array[i];
+			}
+			offset += array.length;
+		}
+		return output;
+
+	}
+
+	public static byte[] first(byte[] bytes, int num) {
+		
+		byte[] result = new byte[num];
+		
+		for(int i=0;i<num;++i) {
+			result[i]=bytes[i];
+		}
+		
+		return result;
+	}
+
 }
