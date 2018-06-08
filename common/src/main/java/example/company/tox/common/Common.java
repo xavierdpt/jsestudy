@@ -1,6 +1,8 @@
 package example.company.tox.common;
 
 import java.io.StringWriter;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -107,14 +109,41 @@ public class Common {
 	}
 
 	public static byte[] last(byte[] bytes, int num) {
-		
+
 		byte[] result = new byte[num];
 
-		for (int i = num-1; i >= 0; --i) {
-			result[i] = bytes[bytes.length-i-1];
+		for (int i = num - 1; i >= 0; --i) {
+			result[i] = bytes[bytes.length - i - 1];
 		}
 
 		return result;
+	}
+
+	public static BigInteger bigInteger(byte[] bytes) {
+		BigInteger bigInteger = BigInteger.ZERO;
+		for (int i = 0; i < bytes.length; ++i) {
+			bigInteger = bigInteger.shiftLeft(8).add(BigInteger.valueOf(bytes[i]&0xFF));
+		}
+		return bigInteger;
+	}
+	
+	public static byte[] bigIntegerToBytes(BigInteger big) {
+
+		List<Byte> rbytes = new ArrayList<>();
+
+		BigInteger ff = BigInteger.valueOf(0xFF);
+		while (big.compareTo(BigInteger.ZERO) == 1) {
+			rbytes.add(big.and(ff).byteValue());
+			big = big.shiftRight(8);
+		}
+
+		byte[] bytes = new byte[rbytes.size()];
+		for (int i = 0; i < rbytes.size(); ++i) {
+			bytes[i] = rbytes.get(rbytes.size() - 1 - i);
+		}
+
+		return bytes;
+
 	}
 
 }
