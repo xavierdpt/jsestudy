@@ -146,4 +146,11 @@ public class Common {
 
 	}
 
+	public static byte[] part(byte[] input, int start, int end) {
+		byte[] output = new byte[end - start];
+		for (int i = start; i < end; ++i) {
+			output[i - start] = input[i];
+		}
+		return output;
+	}
 }

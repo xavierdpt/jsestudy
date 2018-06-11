@@ -1,18 +1,14 @@
 package example.company.jse.fiddle;
 
 import java.nio.charset.Charset;
-import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.Mac;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -21,8 +17,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import example.company.acme.v2.JWSBase64;
-import example.company.common.security.CipherE;
-import example.company.common.security.SecurityUtils;
 import example.company.tox.common.Common;
 
 public class Fiddle37 {
