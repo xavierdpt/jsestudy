@@ -44,7 +44,7 @@ public class Fiddle36 {
 
 		AcmeDirectoryInfos2 infos = Acme2.directory(om);
 
-		String nonce = Acme2.nonce(infos);
+		String nonce = Acme2.nonce64(infos);
 
 		String url = infos.getNewAccountURL();
 

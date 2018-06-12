@@ -24,7 +24,7 @@ public class Fiddle29 {
 
 		AcmeDirectoryInfos2 infos = Acme2.directory(om);
 
-		String nonce = Acme2.nonce(infos);
+		String nonce = Acme2.nonce64(infos);
 
 		Assert.assertFalse(StringUtils.isBlank(nonce));
 

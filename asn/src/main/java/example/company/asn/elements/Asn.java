@@ -43,6 +43,10 @@ public class Asn {
 		return new AsnInteger(BigInteger.valueOf(value));
 	}
 
+	public static AsnInteger integer(BigInteger value) {
+		return new AsnInteger(value);
+	}
+
 	public static AsnObjectIdentifier oid(String oid) {
 		return new AsnObjectIdentifier(oid);
 	}
