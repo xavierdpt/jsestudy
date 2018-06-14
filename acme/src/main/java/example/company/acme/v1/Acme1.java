@@ -13,7 +13,7 @@ import example.company.tox.common.JsonUtils;
 
 public class Acme1 {
 
-	private static final String ACME_STAGING_V1 = "https://acme-staging.api.letsencrypt.org";
+	public static final String ACME_STAGING_V1 = "https://acme-staging.api.letsencrypt.org";
 	private static final String DIRECTORY = "/directory";
 
 	public static AcmeDirectoryInfos1 directory(ObjectMapper om) throws ClientProtocolException, IOException {

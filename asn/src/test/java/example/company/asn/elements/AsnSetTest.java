@@ -24,7 +24,7 @@ public class AsnSetTest {
 		Assert.assertEquals("Smith", first.getValue());
 
 		AsnBoolean second = (AsnBoolean) elements.get(1);
-		Assert.assertEquals(false, second.getValue());
+		Assert.assertEquals(true, second.getValue());
 	}
 
 	@Test

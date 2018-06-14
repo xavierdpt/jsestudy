@@ -8,7 +8,6 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
-import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
@@ -27,6 +26,10 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeDirectoryInfos2;
 import example.company.acme.v2.JWSBase64;
+import example.company.jse.fiddle.acme.AcmeAccount;
+import example.company.jse.fiddle.acme.AcmeNewAccount;
+import example.company.jse.fiddle.acme.AcmeNewOrder;
+import example.company.jse.fiddle.acme.ECCurves;
 import example.company.tox.common.Common;
 
 public class Fiddle48 {

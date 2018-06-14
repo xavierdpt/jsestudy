@@ -60,5 +60,7 @@
 		<module>tox-asn</module>
 		<module>tox-common</module>
 		<module>acme</module>
+		<module>acme-maven-plugin</module>
+		<module>acme-gui</module>
 	</modules>
 </project>

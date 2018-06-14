@@ -15,6 +15,15 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import example.company.jse.fiddle.acme.FlatJWS;
+import example.company.jse.fiddle.acme.JOSEHeader;
+import example.company.jse.fiddle.acme.JWA;
+import example.company.jse.fiddle.acme.JWK;
+import example.company.jse.fiddle.acme.JWSGenerator;
+import example.company.jse.fiddle.acme.JWSSignature;
+import example.company.jse.fiddle.acme.JWSValidator;
+import example.company.jse.fiddle.acme.JWSWithMultipleSignatures;
+
 public class Fiddle47 {
 
 	@Test

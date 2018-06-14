@@ -26,6 +26,9 @@ import example.company.acme.v2.AcmeDirectoryInfos2;
 import example.company.acme.v2.JWSBase64;
 import example.company.acme.v2.NewAccountRequest;
 import example.company.acme.v2.NewAccountResponse;
+import example.company.jse.fiddle.acme.JWK;
+import example.company.jse.fiddle.acme.JWKProtected;
+import example.company.jse.fiddle.acme.Payload;
 import example.company.tox.common.Common;
 
 public class Fiddle36 {
