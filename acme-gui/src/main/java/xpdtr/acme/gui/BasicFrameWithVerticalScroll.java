@@ -3,22 +3,21 @@ package xpdtr.acme.gui;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.LayoutManager;
 import java.awt.Toolkit;
 
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
-public class AcmeFrame2 {
+public abstract class BasicFrameWithVerticalScroll {
 
 	private JFrame frame;
 
 	private Dimension screenSize;
 
-	public AcmeFrame2() {
+	public BasicFrameWithVerticalScroll() {
 
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -27,10 +26,9 @@ public class AcmeFrame2 {
 		frame.setTitle("xdptdr's Acme Maven Plugin Gui");
 
 		JPanel scrollView = new JPanel();
-		scrollView.setLayout(new H());
+		scrollView.setLayout(getLayout());
 
-		scrollView.add(new JTextField());
-		scrollView.add(new JTextField());
+		addComponents(scrollView);
 
 		JScrollPane scrollPane = new JScrollPane(scrollView);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -45,8 +43,12 @@ public class AcmeFrame2 {
 		frame.setResizable(false);
 	}
 
-	public void setVisible(boolean visible) {
+	public final void setVisible(boolean visible) {
 		frame.setVisible(visible);
 	}
+
+	abstract protected void addComponents(JPanel scrollView);
+
+	abstract protected LayoutManager getLayout();
 
 }

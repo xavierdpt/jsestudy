@@ -23,7 +23,7 @@ public class Main {
 				public void run() {
 
 					JFrame.setDefaultLookAndFeelDecorated(true);
-					new AcmeFrame2().setVisible(true);
+					new FullWidthTextAreaWithButtons().setVisible(true);
 				}
 			});
 			Thread.currentThread().join();
