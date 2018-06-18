@@ -5,6 +5,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import xpdtr.acme.gui.fiddling.ExceptionHandler;
+import xpdtr.acme.gui.fiddling.ExceptionType;
+
 public class Main {
 
 	public static void show(ExceptionHandler eh) {
@@ -23,7 +26,7 @@ public class Main {
 				public void run() {
 
 					JFrame.setDefaultLookAndFeelDecorated(true);
-					new FullWidthTextAreaWithButtons().setVisible(true);
+					new MainFrame().setVisible(true);
 				}
 			});
 			Thread.currentThread().join();

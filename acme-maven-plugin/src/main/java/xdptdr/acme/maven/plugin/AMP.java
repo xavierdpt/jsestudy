@@ -5,9 +5,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 
-import xpdtr.acme.gui.ExceptionHandler;
-import xpdtr.acme.gui.ExceptionType;
 import xpdtr.acme.gui.Main;
+import xpdtr.acme.gui.fiddling.ExceptionHandler;
+import xpdtr.acme.gui.fiddling.ExceptionType;
 
 @Mojo(name = "gui")
 public class AMP extends AbstractMojo {

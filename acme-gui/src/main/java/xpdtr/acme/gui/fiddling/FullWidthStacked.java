@@ -1,8 +1,10 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.fiddling;
 
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+
+import xpdtr.acme.gui.LayoutAdapter;
 
 public class FullWidthStacked extends LayoutAdapter {
 
@@ -16,6 +18,18 @@ public class FullWidthStacked extends LayoutAdapter {
 			c.setSize(size);
 			y += c.getPreferredSize().getHeight();
 		}
+	}
+
+	@Override
+	public Dimension preferredLayoutSize(Container parent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Dimension minimumLayoutSize(Container parent) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.fiddling;
 
 public interface ExceptionHandler {
 

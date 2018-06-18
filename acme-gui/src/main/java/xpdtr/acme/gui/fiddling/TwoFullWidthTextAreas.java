@@ -1,5 +1,6 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.fiddling;
 
+import java.awt.Container;
 import java.awt.LayoutManager;
 
 import javax.swing.JPanel;
@@ -14,7 +15,7 @@ public class TwoFullWidthTextAreas extends BasicFrameWithVerticalScroll {
 	}
 
 	@Override
-	 protected LayoutManager getLayout() {
+	 protected LayoutManager getLayout(Container target) {
 		return new FullWidthStacked();
 	}
 	

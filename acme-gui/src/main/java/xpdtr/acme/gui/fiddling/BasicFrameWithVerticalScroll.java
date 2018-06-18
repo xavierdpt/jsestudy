@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.fiddling;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -26,7 +26,7 @@ public abstract class BasicFrameWithVerticalScroll {
 		frame.setTitle("xdptdr's Acme Maven Plugin Gui");
 
 		JPanel scrollView = new JPanel();
-		scrollView.setLayout(getLayout());
+		scrollView.setLayout(getLayout(scrollView));
 
 		addComponents(scrollView);
 
@@ -47,8 +47,12 @@ public abstract class BasicFrameWithVerticalScroll {
 		frame.setVisible(visible);
 	}
 
+	protected final void validate() {
+		frame.validate();
+	}
+
 	abstract protected void addComponents(JPanel scrollView);
 
-	abstract protected LayoutManager getLayout();
+	abstract protected LayoutManager getLayout(Container target);
 
 }

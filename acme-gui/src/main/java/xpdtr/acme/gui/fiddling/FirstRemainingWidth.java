@@ -1,8 +1,10 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.fiddling;
 
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+
+import xpdtr.acme.gui.LayoutAdapter;
 
 public class FirstRemainingWidth extends LayoutAdapter {
 
@@ -32,6 +34,18 @@ public class FirstRemainingWidth extends LayoutAdapter {
 			c.setSize(c.getPreferredSize());
 		}
 
+	}
+
+	@Override
+	public Dimension preferredLayoutSize(Container parent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Dimension minimumLayoutSize(Container parent) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
