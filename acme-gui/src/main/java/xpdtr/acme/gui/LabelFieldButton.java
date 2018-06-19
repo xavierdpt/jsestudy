@@ -4,7 +4,13 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 
-public class LCB extends LayoutAdapter {
+public class LabelFieldButton extends LayoutAdapter {
+
+	private int hspace;
+
+	public LabelFieldButton(int hspace) {
+		this.hspace = hspace;
+	}
 
 	@Override
 	public Dimension minimumLayoutSize(Container parent) {
@@ -21,7 +27,7 @@ public class LCB extends LayoutAdapter {
 		int cw = (int) c.getMinimumSize().getWidth();
 		int ch = (int) c.getMinimumSize().getHeight();
 
-		return new Dimension(Math.max(lw, bw + cw), lh + Math.max(bh, ch));
+		return new Dimension(Math.max(lw, bw + cw + hspace), lh + Math.max(bh, ch));
 	}
 
 	@Override
@@ -40,7 +46,7 @@ public class LCB extends LayoutAdapter {
 		int cw = (int) c.getPreferredSize().getWidth();
 		int ch = (int) c.getPreferredSize().getHeight();
 
-		return new Dimension(Math.max(lw, bw + cw), lh + Math.max(bh, ch));
+		return new Dimension(Math.max(lw, bw + cw + hspace), lh + Math.max(bh, ch));
 	}
 
 	@Override
@@ -62,19 +68,21 @@ public class LCB extends LayoutAdapter {
 		Dimension newCSize = new Dimension(c.getPreferredSize());
 		Dimension newBSize = new Dimension(b.getPreferredSize());
 
-		int w = Math.max((int)lw, (int)cw+(int)bw);
-		
+		int w = Math.max((int) lw, (int) cw + (int) bw);
+
 		newLSize.setSize(w, lh);
-		newCSize.setSize(w - bw, Math.max(ch, bh));
+		newCSize.setSize(w - bw - hspace, Math.max(ch, bh));
 		newBSize.setSize(bw, Math.max(ch, bh));
 
-		l.setLocation(0, 0);
+		int x = 0;
+
+		l.setLocation(x, 0);
 		l.setSize(newLSize);
 
-		c.setLocation(0, lh);
+		c.setLocation(x, lh);
 		c.setSize(newCSize);
 
-		b.setLocation(w - bw, lh);
+		b.setLocation(x + hspace + w - bw, lh);
 		b.setSize(newBSize);
 
 	}

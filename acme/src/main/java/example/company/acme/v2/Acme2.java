@@ -2,6 +2,18 @@ package example.company.acme.v2;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.AlgorithmParameters;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.interfaces.ECPublicKey;
+import java.security.spec.AlgorithmParameterSpec;
+import java.security.spec.ECGenParameterSpec;
+import java.security.spec.ECParameterSpec;
+import java.security.spec.InvalidParameterSpecException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -79,4 +91,56 @@ public class Acme2 {
 		return JWSBase64.decode(nonce64(infos, false));
 	}
 
+	public static AcmeAccount newAccount(AcmeDirectoryInfos2 infos, String nonce, ObjectMapper om, String contact) throws AcmeException {
+
+		try {
+			KeyPair keyPair = newKeyPair();
+
+			ECPublicKey publicKey = (ECPublicKey) keyPair.getPublic();
+
+			String x64 = JWSBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineX()));
+			String y64 = JWSBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineY()));
+
+			Map<String, Object> newAccountJWS = AcmeNewAccount.newAccountJWS(infos, keyPair, nonce, om,
+					getJWK(x64, y64), contact);
+
+			AcmeAccount account = AcmeNewAccount.newAccount(infos, newAccountJWS, om);
+
+			account.setUrl(getUrl(infos, account));
+
+			return account;
+		} catch (Exception ex) {
+			throw new AcmeException(ex);
+		}
+	}
+
+	private static KeyPair newKeyPair()
+			throws NoSuchAlgorithmException, InvalidParameterSpecException, InvalidAlgorithmParameterException {
+		AlgorithmParameterSpec algorithmParameterSpec = new ECGenParameterSpec(ECCurves.NIST_P_256);
+
+		AlgorithmParameters algorithmParameters = AlgorithmParameters.getInstance("EC");
+		algorithmParameters.init(algorithmParameterSpec);
+		ECParameterSpec ecParameterSpec = algorithmParameters.getParameterSpec(ECParameterSpec.class);
+
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("EC");
+		keyPairGenerator.initialize(ecParameterSpec);
+		return keyPairGenerator.generateKeyPair();
+	}
+
+	private static String getUrl(AcmeDirectoryInfos2 infos, AcmeAccount account) {
+
+		String url = infos.getNewAccountURL();
+		int lastSlash = url.lastIndexOf('/');
+
+		return url.substring(0, lastSlash) + "/acct/" + account.getId();
+	}
+
+	private static Map<String, String> getJWK(String x64, String y64) {
+		Map<String, String> jwk = new HashMap<>();
+		jwk.put("kty", "EC");
+		jwk.put("crv", "P-256");
+		jwk.put("x", x64);
+		jwk.put("y", y64);
+		return jwk;
+	}
 }

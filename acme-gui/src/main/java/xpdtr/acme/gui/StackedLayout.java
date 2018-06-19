@@ -6,6 +6,12 @@ import java.awt.Dimension;
 
 public class StackedLayout extends LayoutAdapter {
 
+	private int vspace;
+
+	public StackedLayout(int vspace) {
+		this.vspace = vspace;
+	}
+
 	@Override
 	public Dimension preferredLayoutSize(Container parent) {
 
@@ -49,17 +55,19 @@ public class StackedLayout extends LayoutAdapter {
 			w = Math.max(w, parent.getComponent(i).getPreferredSize().getWidth());
 		}
 
-		w = Math.min(w, parent.getWidth());
+		w = parent.getWidth();
+
+		int x = parent.getInsets().left;
 
 		double h = 0;
 		for (int i = 0; i < parent.getComponentCount(); ++i) {
 			Component c = parent.getComponent(i);
 			double ch = c.getMinimumSize().getHeight();
 
-			c.setLocation(0, (int) h);
+			c.setLocation(x, (int) h);
 			c.setSize((int) w, (int) c.getPreferredSize().getHeight());
 
-			h += ch;
+			h += ch+vspace;
 		}
 
 	}
