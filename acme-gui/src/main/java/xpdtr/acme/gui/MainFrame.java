@@ -11,9 +11,23 @@ import javax.swing.JPanel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import example.company.acme.v2.AcmeAccount;
 import example.company.acme.v2.AcmeDirectoryInfos2;
+import example.company.acme.v2.account.AcmeAccount;
+import xpdtr.acme.gui.async.AccountCreationRequest;
+import xpdtr.acme.gui.async.DirectoryRequest;
+import xpdtr.acme.gui.async.NonceRequest;
+import xpdtr.acme.gui.components.AccountCreationUI;
+import xpdtr.acme.gui.components.Acme2Buttons;
+import xpdtr.acme.gui.components.AcmeUrlUI;
+import xpdtr.acme.gui.components.AcmeVersionUI;
+import xpdtr.acme.gui.components.DirectoryUI;
+import xpdtr.acme.gui.components.ExceptionUI;
+import xpdtr.acme.gui.components.MessageUI;
+import xpdtr.acme.gui.components.NonceUI;
+import xpdtr.acme.gui.components.Title;
 import xpdtr.acme.gui.fiddling.BasicFrameWithVerticalScroll;
+import xpdtr.acme.gui.layout.StackedLayout;
+import xpdtr.acme.gui.utils.U;
 
 public class MainFrame extends BasicFrameWithVerticalScroll {
 
@@ -24,6 +38,7 @@ public class MainFrame extends BasicFrameWithVerticalScroll {
 	private String nonce;
 	private JPanel scrollView;
 	private long accountId;
+	private String accountUrl;
 
 	public MainFrame() {
 		om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -35,26 +50,26 @@ public class MainFrame extends BasicFrameWithVerticalScroll {
 		U.setMargins(scrollView, 10, 0);
 
 		scrollView.add(Title.create());
-		scrollView.add(AcmeVersionQuestion.create(this::setVersionAndAskForUrl));
+		scrollView.add(AcmeVersionUI.create(this::setVersionAndAskForUrl));
 
 	}
 
 	private void setVersionAndAskForUrl(String version) {
 		this.version = version;
-		scrollView.add(AcmeUrlQuestion.create(version, this::setUrlAndQueryDirectory));
+		scrollView.add(AcmeUrlUI.create(version, this::setUrlAndQueryDirectory));
 		validate();
 	}
 
 	private void setUrlAndQueryDirectory(String url) {
 		this.url = url;
-		scrollView.add(DirectoryGetter.renderStarting());
-		DirectoryGetter.start(om).then(this::directorySuccess, this::directoryFailure);
+		scrollView.add(DirectoryUI.renderStarting());
+		DirectoryRequest.send(om).then(this::directorySuccess, this::directoryFailure);
 		validate();
 	}
 
 	private void directorySuccess(AcmeDirectoryInfos2 infos) {
 		this.directoryInfos = infos;
-		List<Component> responseComponents = DirectoryGetter.getSuccessComponents(infos);
+		List<Component> responseComponents = DirectoryUI.getSuccessComponents(infos);
 		for (Component component : responseComponents) {
 			scrollView.add(component);
 		}
@@ -63,69 +78,77 @@ public class MainFrame extends BasicFrameWithVerticalScroll {
 	}
 
 	private void directoryFailure(Exception exception) {
-		scrollView.add(DirectoryGetter.getFailureComponent(exception));
+		scrollView.add(DirectoryUI.getFailureComponent(exception));
 		validate();
 	}
 
 	private void nonceClicked() {
-
-		scrollView.add(Nonce.renderGetting());
+		scrollView.add(NonceUI.renderGetting());
 		validate();
-		Nonce.get(directoryInfos).then(this::nonceSuccess, this::nonceFailure);
+		NonceRequest.send(directoryInfos).then(this::nonceSuccess, this::nonceFailure);
 
 	}
 
 	private void nonceSuccess(String nonce) {
 		this.nonce = nonce;
-		scrollView.add(Nonce.renderSuccess(nonce));
+		scrollView.add(NonceUI.renderSuccess(nonce));
 		scrollView.add(renderNewButtons());
 		validate();
 	}
 
 	private void nonceFailure(Exception ex) {
-		scrollView.add(Nonce.renderFailure(ex));
+		scrollView.add(NonceUI.renderFailure(ex));
 		validate();
 	}
 
-	private void accountClicked() {
-		scrollView.add(Account.renderInput(this::createAccount, this::cancelCreateAccount));
+	private void createAccountClicked() {
+		scrollView.add(AccountCreationUI.renderInput(this::createAccountProceed, this::createAccountCancel));
 		validate();
 	}
 
-	private void createAccount(String contact) {
-		scrollView.add(Account.renderCalling());
-		Account.get(directoryInfos, nonce, om, contact).then(this::accountSuccess, this::accountFailure);
+	private void createAccountProceed(String contact) {
+		scrollView.add(AccountCreationUI.renderCalling());
+		AccountCreationRequest.send(directoryInfos, nonce, om, contact).then(this::createAccountSuccess, this::createAccountFailure);
 		validate();
 	}
 
-	private void cancelCreateAccount() {
+	private void createAccountCancel() {
 		addM(new JLabel("Account creation cancelled"));
 		addM(renderNewButtons());
 		validate();
 	}
 
-	private void accountSuccess(AcmeAccount account) {
+	private void createAccountSuccess(AcmeAccount account) {
 		nonce = account.getNonce();
 		accountId = account.getId();
-		addM(Account.renderSuccess(account));
+		accountUrl = account.getUrl();
+		addM(AccountCreationUI.renderSuccess(account));
 		addM(renderNewButtons());
 		validate();
 	}
 
-	private void accountFailure(Exception ex) {
-		addM(ExceptionGui.render(ex));
+	private void createAccountFailure(Exception ex) {
+		addM(ExceptionUI.render(ex));
 		addM(renderNewButtons());
+		validate();
+	}
+
+	private void accountDetailsClicked() {
+		addM(MessageUI.render("Account details :)"));
 		validate();
 	}
 
 	private Component renderNewButtons() {
-		Acme2ButtonsFactory buttonsFactory = new Acme2ButtonsFactory();
+		Acme2Buttons buttonsFactory = new Acme2Buttons();
 
 		buttonsFactory.setNonceEnabled(url != null);
-		buttonsFactory.setAccountEnabled(nonce != null);
+		buttonsFactory.setCreateAccountEnabled(nonce != null);
 
 		buttonsFactory.setNonceClicked(this::nonceClicked);
-		buttonsFactory.setAccountClicked(this::accountClicked);
+		buttonsFactory.setCreateAccountClicked(this::createAccountClicked);
+
+		buttonsFactory.setAccountDetailsEnabled(accountUrl != null);
+		buttonsFactory.setAccountDetailsClicked(this::accountDetailsClicked);
 		return buttonsFactory.create();
 
 	}

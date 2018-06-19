@@ -1,8 +1,7 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.components;
 
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -14,36 +13,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import example.company.acme.v2.account.AcmeAccount;
+import xpdtr.acme.gui.layout.LabelFieldButton;
 
-import example.company.acme.v2.Acme2;
-import example.company.acme.v2.AcmeAccount;
-import example.company.acme.v2.AcmeDirectoryInfos2;
-
-public class Account {
+public class AccountCreationUI {
 
 	public static Component renderCalling() {
 		JLabel label = new JLabel("Calling account create");
 		return label;
-	}
-
-	public static Promise<AcmeAccount> get(AcmeDirectoryInfos2 infos, String nonce, ObjectMapper om, String contact) {
-
-		Promise<AcmeAccount> promise = new Promise<>();
-
-		Thread thread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					promise.success(Acme2.newAccount(infos, nonce, om, contact));
-				} catch (Exception exception) {
-					promise.failure(exception);
-				}
-			}
-		});
-		promise.setThread(thread);
-
-		return promise;
 	}
 
 	public static List<Component> renderSuccess(AcmeAccount account) {
@@ -87,7 +64,6 @@ public class Account {
 				onCancel.run();
 			}
 		});
-
 
 		JPanel panel = new JPanel(new LabelFieldButton(5));
 		panel.add(label);

@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.components;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -11,7 +11,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class AcmeVersionQuestion {
+import xpdtr.acme.gui.layout.LabelFieldButton;
+import xpdtr.acme.gui.utils.U;
+
+public class AcmeVersionUI {
 
 	public static Component create(Consumer<String> consumer) {
 

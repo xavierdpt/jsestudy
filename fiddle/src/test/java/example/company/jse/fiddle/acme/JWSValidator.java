@@ -13,7 +13,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import example.company.acme.v2.JWSBase64;
+import example.company.acme.jw.JWBase64;
 import example.company.tox.common.Common;
 
 public class JWSValidator {
@@ -27,9 +27,9 @@ public class JWSValidator {
 		String payload64 = parts[1];
 		String signature64 = parts[2];
 
-		byte[] headerBytes = JWSBase64.decode(header64);
-		byte[] payloadBytes = JWSBase64.decode(payload64);
-		byte[] signatureBytes = JWSBase64.decode(signature64);
+		byte[] headerBytes = JWBase64.decode(header64);
+		byte[] payloadBytes = JWBase64.decode(payload64);
+		byte[] signatureBytes = JWBase64.decode(signature64);
 
 		JOSEHeader header = om.readValue(headerBytes, JOSEHeader.class);
 
@@ -44,14 +44,14 @@ public class JWSValidator {
 
 			String curve = javaCurve(ecwk.getCrv());
 
-			BigInteger x = Common.bigInteger(JWSBase64.decode(ecwk.getX()));
-			BigInteger y = Common.bigInteger(JWSBase64.decode(ecwk.getY()));
+			BigInteger x = Common.bigInteger(JWBase64.decode(ecwk.getX()));
+			BigInteger y = Common.bigInteger(JWBase64.decode(ecwk.getY()));
 
 			ECSigner.verify(new ECSignature(r, s), input, curve, x, y);
 		} else if (JWA.RS256.equals(header.getAlg())) {
 
-			BigInteger n = Common.bigInteger(JWSBase64.decode(ecwk.getN()));
-			BigInteger e = Common.bigInteger(JWSBase64.decode(ecwk.getE()));
+			BigInteger n = Common.bigInteger(JWBase64.decode(ecwk.getN()));
+			BigInteger e = Common.bigInteger(JWBase64.decode(ecwk.getE()));
 
 			RSASigner.verify(signatureBytes, input, n, e);
 		} else {

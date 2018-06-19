@@ -1,4 +1,4 @@
-package example.company.acme.v2;
+package example.company.acme.v2.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

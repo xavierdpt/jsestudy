@@ -21,11 +21,11 @@ import org.apache.http.entity.ContentType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import example.company.acme.jw.JWBase64;
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeDirectoryInfos2;
-import example.company.acme.v2.JWSBase64;
-import example.company.acme.v2.NewAccountRequest;
-import example.company.acme.v2.NewAccountResponse;
+import example.company.acme.v2.account.NewAccountRequest;
+import example.company.acme.v2.account.NewAccountResponse;
 import example.company.jse.fiddle.acme.JWK;
 import example.company.jse.fiddle.acme.JWKProtected;
 import example.company.jse.fiddle.acme.Payload;
@@ -47,13 +47,13 @@ public class Fiddle36 {
 
 		AcmeDirectoryInfos2 infos = Acme2.directory(om);
 
-		String nonce = Acme2.nonce64(infos);
+		String nonce = Acme2.nonce(infos);
 
 		String url = infos.getNewAccountURL();
 
 		JWK jwk = new JWK();
-		jwk.setX(JWSBase64.encode(publik.getW().getAffineX().toByteArray()));
-		jwk.setY(JWSBase64.encode(publik.getW().getAffineY().toByteArray()));
+		jwk.setX(JWBase64.encode(publik.getW().getAffineX().toByteArray()));
+		jwk.setY(JWBase64.encode(publik.getW().getAffineY().toByteArray()));
 
 		JWKProtected jwkProtected = new JWKProtected();
 		jwkProtected.setAlg("ES256");
@@ -67,11 +67,11 @@ public class Fiddle36 {
 		byte[] payloadBytes = om.writeValueAsBytes(payload);
 
 		NewAccountRequest request = new NewAccountRequest();
-		request.setProtected(JWSBase64.encode(protectedBytes));
-		request.setPayload(JWSBase64.encode(payloadBytes));
+		request.setProtected(JWBase64.encode(protectedBytes));
+		request.setPayload(JWBase64.encode(payloadBytes));
 
 		byte[] tbs = (request.getProtected() + "." + request.getPayload()).getBytes();
-		request.setSignature(JWSBase64.encode(sign(keys.getPrivate(), tbs, EC.SHA256WITH_ECDSA)));
+		request.setSignature(JWBase64.encode(sign(keys.getPrivate(), tbs, EC.SHA256WITH_ECDSA)));
 
 		System.out.println(om.writeValueAsString(request));
 		HttpEntity entity = new ByteArrayEntity(om.writeValueAsBytes(request));

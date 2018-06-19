@@ -19,7 +19,7 @@ import javax.crypto.NoSuchPaddingException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.acme.v2.JWSBase64;
+import example.company.acme.jw.JWBase64;
 import example.company.tox.common.Common;
 
 public class Fiddle45 {
@@ -78,14 +78,14 @@ public class Fiddle45 {
 
 		// We can also check that the byts and base64 given in the documentation match
 		String expectedEncrypted64 = "OKOawDo13gRp2ojaHV7LFpZcgV7T6DVZKTyKOMTYUmKoTCVJRgckCL9kiMT03JGeipsEdY3mx_etLbbWSrFr05kLzcSr4qKAq7YN7e9jwQRb23nfa6c9d-StnImGyFDbSv04uVuxIp5Zms1gNxKKK2Da14B8S4rzVRltdYwam_lDp5XnZAYpQdb76FdIKLaVmqgfwX7XWRxv2322i-vDxRfqNzo_tETKzpVLzfiwQyeyPGLBIO56YJ7eObdv0je81860ppamavo35UgoRdbYaBcoh9QcfylQr66oc6vFWXRcZ_ZT2LawVCWTIy3brGPi6UklfCpIMfIjf7iGdXKHzg";
-		Assert.assertEquals(expectedEncrypted64, JWSBase64.encode(expectedEncrypted));
+		Assert.assertEquals(expectedEncrypted64, JWBase64.encode(expectedEncrypted));
 	}
 
 	private KeyPair getKeypair(String n64, String e64, String d64)
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
-		BigInteger modulus = Common.bigInteger(JWSBase64.decode(n64));
-		BigInteger publicExponent = Common.bigInteger(JWSBase64.decode(e64));
-		BigInteger privateExponent = Common.bigInteger(JWSBase64.decode(d64));
+		BigInteger modulus = Common.bigInteger(JWBase64.decode(n64));
+		BigInteger publicExponent = Common.bigInteger(JWBase64.decode(e64));
+		BigInteger privateExponent = Common.bigInteger(JWBase64.decode(d64));
 
 		RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(modulus, publicExponent);
 		RSAPrivateKeySpec privateKeySpec = new RSAPrivateKeySpec(modulus, privateExponent);

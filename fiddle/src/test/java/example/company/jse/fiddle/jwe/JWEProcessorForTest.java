@@ -23,7 +23,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.junit.Assert;
 
-import example.company.acme.v2.JWSBase64;
+import example.company.acme.jw.JWBase64;
 import example.company.tox.common.Common;
 
 public class JWEProcessorForTest {
@@ -56,7 +56,7 @@ public class JWEProcessorForTest {
 		cekEncryptionParams = input.getKeyEncryptionParams();
 		cek = input.getKey();
 		al = Common.bytes(0, 0, 0, 0, 0, 0, 1, 152);
-		header64 = JWSBase64.encode(input.getHeaderJSON().getBytes());
+		header64 = JWBase64.encode(input.getHeaderJSON().getBytes());
 		aad = header64.getBytes();
 
 		initializeCekCipher();
@@ -76,10 +76,10 @@ public class JWEProcessorForTest {
 			gcm();
 		}
 
-		String encryptedCek64 = JWSBase64.encode(encryptedCek);
-		String iv64 = JWSBase64.encode(iv);
-		String cipherText64 = JWSBase64.encode(cipherText);
-		String authenticationTag64 = JWSBase64.encode(authenticationTag);
+		String encryptedCek64 = JWBase64.encode(encryptedCek);
+		String iv64 = JWBase64.encode(iv);
+		String cipherText64 = JWBase64.encode(cipherText);
+		String authenticationTag64 = JWBase64.encode(authenticationTag);
 
 		return header64 + "." + encryptedCek64 + "." + iv64 + "." + cipherText64 + "." + authenticationTag64;
 	}
@@ -211,7 +211,7 @@ public class JWEProcessorForTest {
 
 	private void aes128KeyWrap() throws InvalidKeyException, IllegalBlockSizeException {
 
-		byte[] secretKey = JWSBase64.decode(cekEncryptionParams.get("k"));
+		byte[] secretKey = JWBase64.decode(cekEncryptionParams.get("k"));
 
 		SecretKeySpec keySpec = new SecretKeySpec(secretKey, "AES");
 
@@ -223,7 +223,7 @@ public class JWEProcessorForTest {
 	}
 
 	private BigInteger bi(String name) {
-		return Common.bigInteger(JWSBase64.decode(cekEncryptionParams.get(name)));
+		return Common.bigInteger(JWBase64.decode(cekEncryptionParams.get(name)));
 	}
 
 	private static byte[] getEncKey(byte[] key) {

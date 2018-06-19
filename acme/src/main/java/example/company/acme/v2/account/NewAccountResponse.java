@@ -1,4 +1,4 @@
-package example.company.acme.v2;
+package example.company.acme.v2.account;
 
 public class NewAccountResponse {
 

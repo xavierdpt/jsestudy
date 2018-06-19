@@ -1,8 +1,10 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.layout;
 
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+
+import xpdtr.acme.gui.layout.LayoutAdapter;
 
 public class StackedLayout extends LayoutAdapter {
 

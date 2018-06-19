@@ -1,67 +1,76 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.components;
 
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class Acme2ButtonsFactory {
+public class Acme2Buttons {
 
 	private boolean nonceEnabled;
-	private boolean accountEnabled;
+	private boolean createAccountEnabled;
 	private boolean orderEnabled;
 	private boolean changeKeyEnabled;
 	private boolean revokeCertEnabled;
+	private boolean accountDetailsEnabled;
 
 	private Runnable nonceClicked;
-	private Runnable accountClicked;
+	private Runnable createAccountClicked;
 	private Runnable orderClicked;
 	private Runnable changeKeyClicked;
 	private Runnable revokeCertClicked;
+	private Runnable accountDetailsClicked;
 
-	public void setNonceEnabled(boolean nonceEnabled) {
-		this.nonceEnabled = nonceEnabled;
+	public void setNonceEnabled(boolean enabled) {
+		this.nonceEnabled = enabled;
 	}
 
-	public void setAccountEnabled(boolean accountEnabled) {
-		this.accountEnabled = accountEnabled;
+	public void setCreateAccountEnabled(boolean enabled) {
+		this.createAccountEnabled = enabled;
 	}
 
-	public void setOrderEnabled(boolean orderEnabled) {
-		this.orderEnabled = orderEnabled;
+	public void setOrderEnabled(boolean enabled) {
+		this.orderEnabled = enabled;
 	}
 
-	public void setChangeKeyEnabled(boolean changeKeyEnabled) {
-		this.changeKeyEnabled = changeKeyEnabled;
+	public void setChangeKeyEnabled(boolean enabled) {
+		this.changeKeyEnabled = enabled;
 	}
 
-	public void setRevokeCertEnabled(boolean revokeCertEnabled) {
-		this.revokeCertEnabled = revokeCertEnabled;
+	public void setRevokeCertEnabled(boolean enabled) {
+		this.revokeCertEnabled = enabled;
 	}
 
-	public void setNonceClicked(Runnable nonceClicked) {
-		this.nonceClicked = nonceClicked;
+	public void setAccountDetailsEnabled(boolean enabled) {
+		this.accountDetailsEnabled = enabled;
 	}
 
-	public void setAccountClicked(Runnable accountClicked) {
-		this.accountClicked = accountClicked;
+	public void setNonceClicked(Runnable handler) {
+		this.nonceClicked = handler;
 	}
 
-	public void setOrderClicked(Runnable orderClicked) {
-		this.orderClicked = orderClicked;
+	public void setCreateAccountClicked(Runnable handler) {
+		this.createAccountClicked = handler;
 	}
 
-	public void setChangeKeyClicked(Runnable changeKeyClicked) {
-		this.changeKeyClicked = changeKeyClicked;
+	public void setOrderClicked(Runnable handler) {
+		this.orderClicked = handler;
 	}
 
-	public void setRevokeCertClicked(Runnable revokeCertClicked) {
-		this.revokeCertClicked = revokeCertClicked;
+	public void setChangeKeyClicked(Runnable handler) {
+		this.changeKeyClicked = handler;
+	}
+
+	public void setRevokeCertClicked(Runnable handler) {
+		this.revokeCertClicked = handler;
+	}
+
+	public void setAccountDetailsClicked(Runnable handler) {
+		this.accountDetailsClicked = handler;
 	}
 
 	public Component create() {
@@ -71,8 +80,8 @@ public class Acme2ButtonsFactory {
 		clicked(nonce, nonceClicked);
 
 		JButton account = new JButton("New Account");
-		account.setEnabled(accountEnabled);
-		clicked(account, accountClicked);
+		account.setEnabled(createAccountEnabled);
+		clicked(account, createAccountClicked);
 
 		JButton order = new JButton("New Order");
 		order.setEnabled(orderEnabled);
@@ -86,12 +95,17 @@ public class Acme2ButtonsFactory {
 		revokeCert.setEnabled(revokeCertEnabled);
 		clicked(revokeCert, revokeCertClicked);
 
+		JButton accountDetails = new JButton("Account Details");
+		accountDetails.setEnabled(accountDetailsEnabled);
+		clicked(accountDetails, accountDetailsClicked);
+
 		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		buttons.add(nonce);
 		buttons.add(account);
 		buttons.add(order);
 		buttons.add(changeKey);
 		buttons.add(revokeCert);
+		buttons.add(accountDetails);
 
 		return buttons;
 	}

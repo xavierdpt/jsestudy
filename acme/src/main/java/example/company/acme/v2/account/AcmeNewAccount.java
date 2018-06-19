@@ -1,4 +1,4 @@
-package example.company.acme.v2;
+package example.company.acme.v2.account;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,11 +23,17 @@ import org.apache.http.client.fluent.Request;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import example.company.acme.crypto.ECCurves;
+import example.company.acme.crypto.ECSignature;
+import example.company.acme.crypto.ECSigner;
+import example.company.acme.jw.JWA;
+import example.company.acme.jw.JWBase64;
+import example.company.acme.v2.AcmeDirectoryInfos2;
 import example.company.tox.common.Common;
 
 public class AcmeNewAccount {
 
-	public static Map<String, Object> newAccountJWS(AcmeDirectoryInfos2 infos, KeyPair keyPair, String nonce64,
+	public static Map<String, Object> createJWS(AcmeDirectoryInfos2 infos, KeyPair keyPair, String nonce64,
 			ObjectMapper om, Map<String, String> jwk, String contact)
 			throws JsonProcessingException, InvalidKeyException, NoSuchAlgorithmException,
 			InvalidParameterSpecException, InvalidKeySpecException, SignatureException {
@@ -39,7 +45,7 @@ public class AcmeNewAccount {
 		protekted.put("jwk", jwk);
 		protekted.put("nonce", nonce64);
 		protekted.put("url", infos.getNewAccountURL());
-		String protected64 = JWSBase64.encode(om.writeValueAsBytes(protekted));
+		String protected64 = JWBase64.encode(om.writeValueAsBytes(protekted));
 
 		List<String> contacts = new ArrayList<>();
 		String prefix = "";
@@ -51,7 +57,7 @@ public class AcmeNewAccount {
 		Map<String, Object> payload = new HashMap<>();
 		payload.put("termsOfServiceAgreed", true);
 		payload.put("contact", contacts);
-		String payload64 = JWSBase64.encode(om.writeValueAsBytes(payload));
+		String payload64 = JWBase64.encode(om.writeValueAsBytes(payload));
 
 		byte[] tbs = (protected64 + "." + payload64).getBytes();
 		BigInteger s = privateKey.getS();
@@ -59,7 +65,7 @@ public class AcmeNewAccount {
 
 		byte[] rBytes = Common.bigIntegerToBytes(signature.getR());
 		byte[] sBytes = Common.bigIntegerToBytes(signature.getS());
-		String signature64 = JWSBase64.encode(Common.concatenate(rBytes, sBytes));
+		String signature64 = JWBase64.encode(Common.concatenate(rBytes, sBytes));
 
 		Map<String, Object> jws = new HashMap<>();
 		jws.put("protected", protected64);
@@ -68,7 +74,7 @@ public class AcmeNewAccount {
 		return jws;
 	}
 
-	public static AcmeAccount newAccount(AcmeDirectoryInfos2 infos, Map<String, Object> jws, ObjectMapper om)
+	public static AcmeAccount sendRequest(AcmeDirectoryInfos2 infos, Map<String, Object> jws, ObjectMapper om)
 			throws ClientProtocolException, IOException {
 
 		String url = infos.getNewAccountURL();

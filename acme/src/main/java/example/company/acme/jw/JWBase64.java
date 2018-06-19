@@ -1,10 +1,10 @@
-package example.company.acme.v2;
+package example.company.acme.jw;
 
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Base64.Encoder;
 
-public class JWSBase64 {
+public class JWBase64 {
 
 	private static Decoder decoder = Base64.getDecoder();
 	private static Encoder encoder = Base64.getEncoder();

@@ -25,7 +25,7 @@ public class NonceButtonListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		try {
-			String nonce = Acme2.nonce64(infos);
+			String nonce = Acme2.nonce(infos);
 			contentPanel.add(new JLabel("Nonce is " + nonce));
 		} catch (Exception e) {
 			contentPanel.add(new JLabel(e.getClass().getName() + " : " + e.getMessage()));

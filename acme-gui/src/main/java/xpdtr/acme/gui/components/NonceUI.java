@@ -1,41 +1,16 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.components;
 
 import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.JLabel;
 
-import example.company.acme.v2.Acme2;
-import example.company.acme.v2.AcmeDirectoryInfos2;
-
-public class Nonce {
+public class NonceUI {
 
 	public static Component renderGetting() {
 		JLabel label = new JLabel("Getting new nonce... ");
 		label.setFont(label.getFont().deriveFont(Font.BOLD));
 		return label;
-	}
-
-	public static Promise<String> get(AcmeDirectoryInfos2 directoryInfos) {
-
-		Promise<String> promise = new Promise<>();
-
-		Thread thread = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					promise.success(Acme2.nonce64(directoryInfos));
-				} catch (Exception e) {
-					promise.failure(e);
-				}
-			}
-
-		});
-
-		promise.setThread(thread);
-
-		return promise;
 	}
 
 	public static JLabel renderSuccess(String nonce) {

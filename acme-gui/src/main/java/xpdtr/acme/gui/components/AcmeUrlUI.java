@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.components;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -12,8 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import example.company.acme.v1.AcmeUrls;
+import xpdtr.acme.gui.layout.LabelFieldButton;
 
-public class AcmeUrlQuestion {
+public class AcmeUrlUI {
 
 	public static Component create(String version, Consumer<String> consumer) {
 		switch (version) {

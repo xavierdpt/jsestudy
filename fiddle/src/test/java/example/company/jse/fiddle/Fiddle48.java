@@ -23,9 +23,9 @@ import org.junit.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import example.company.acme.jw.JWBase64;
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeDirectoryInfos2;
-import example.company.acme.v2.JWSBase64;
 import example.company.jse.fiddle.acme.AcmeAccount;
 import example.company.jse.fiddle.acme.AcmeNewAccount;
 import example.company.jse.fiddle.acme.AcmeNewOrder;
@@ -44,14 +44,14 @@ public class Fiddle48 {
 
 		AcmeDirectoryInfos2 infos = Acme2.directory(om, true);
 
-		String nonce64 = Acme2.nonce64(infos, true);
+		String nonce64 = Acme2.nonce(infos, true);
 
 		KeyPair keyPair = newKeyPair();
 
 		ECPublicKey publicKey = (ECPublicKey) keyPair.getPublic();
 
-		String x64 = JWSBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineX()));
-		String y64 = JWSBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineY()));
+		String x64 = JWBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineX()));
+		String y64 = JWBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineY()));
 
 		Map<String, Object> newAccountJWS = AcmeNewAccount.newAccountJWS(infos, keyPair, nonce64, om, getJWK(x64, y64));
 

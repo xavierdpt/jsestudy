@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 
-import xpdtr.acme.gui.LayoutAdapter;
+import xpdtr.acme.gui.layout.LayoutAdapter;
 
 public class FullWidthStacked extends LayoutAdapter {
 

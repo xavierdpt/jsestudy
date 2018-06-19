@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.utils;
 
 import java.util.function.Consumer;
 

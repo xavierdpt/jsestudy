@@ -14,7 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.acme.v2.JWSBase64;
+import example.company.acme.jw.JWBase64;
 import example.company.tox.common.Common;
 
 /** RFC 7516 A.3.3 **/
@@ -46,10 +46,10 @@ public class Fiddle41 {
 	}
 
 	private byte[] d(String s) {
-		return JWSBase64.decode(s);
+		return JWBase64.decode(s);
 	}
 
 	private Object e(byte[] bytes) {
-		return JWSBase64.encode(bytes);
+		return JWBase64.encode(bytes);
 	}
 }

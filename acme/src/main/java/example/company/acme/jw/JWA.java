@@ -1,4 +1,4 @@
-package example.company.acme.v2;
+package example.company.acme.jw;
 
 public class JWA {
 	public static final String RS256 = "RS256";

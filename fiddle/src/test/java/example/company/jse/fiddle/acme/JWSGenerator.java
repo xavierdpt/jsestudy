@@ -11,7 +11,7 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import example.company.acme.v2.JWSBase64;
+import example.company.acme.jw.JWBase64;
 import example.company.tox.common.Common;
 
 public class JWSGenerator {
@@ -21,28 +21,28 @@ public class JWSGenerator {
 			InvalidParameterSpecException, InvalidKeySpecException, SignatureException {
 
 		String headerJson = om.writeValueAsString(header);
-		String header64 = JWSBase64.encode(headerJson.getBytes());
+		String header64 = JWBase64.encode(headerJson.getBytes());
 
-		String payload64 = JWSBase64.encode(payload);
+		String payload64 = JWBase64.encode(payload);
 
 		String input64 = header64 + "." + payload64;
 
 		String signature64 = null;
 		if (JWA.ES256.equals(header.getAlg())) {
-			BigInteger d = Common.bigInteger(JWSBase64.decode(jwk.getD()));
+			BigInteger d = Common.bigInteger(JWBase64.decode(jwk.getD()));
 			String curve = javaCurve(jwk.getCrv());
 			ECSignature signature = ECSigner.sign(input64.getBytes(), curve, d);
 
-			signature64 = JWSBase64.encode(Common.concatenate(Common.bigIntegerToBytes(signature.getR()),
+			signature64 = JWBase64.encode(Common.concatenate(Common.bigIntegerToBytes(signature.getR()),
 					Common.bigIntegerToBytes(signature.getS())));
 		} else if (JWA.RS256.equals(header.getAlg())) {
 
-			BigInteger n = Common.bigInteger(JWSBase64.decode(jwk.getN()));
-			BigInteger d = Common.bigInteger(JWSBase64.decode(jwk.getD()));
+			BigInteger n = Common.bigInteger(JWBase64.decode(jwk.getN()));
+			BigInteger d = Common.bigInteger(JWBase64.decode(jwk.getD()));
 
 			byte[] signature = RSASigner.sign(input64.getBytes(), n, d);
 
-			signature64 = JWSBase64.encode(signature);
+			signature64 = JWBase64.encode(signature);
 		}
 
 		return header64 + "." + payload64 + "." + signature64;

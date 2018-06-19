@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.components;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -6,6 +6,9 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+import xpdtr.acme.gui.layout.FullWidthLayout;
+import xpdtr.acme.gui.utils.U;
 
 public class Title {
 

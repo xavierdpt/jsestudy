@@ -21,8 +21,8 @@ import org.apache.http.client.fluent.Request;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import example.company.acme.jw.JWBase64;
 import example.company.acme.v2.AcmeDirectoryInfos2;
-import example.company.acme.v2.JWSBase64;
 import example.company.tox.common.Common;
 
 public class AcmeNewOrder {
@@ -38,7 +38,7 @@ public class AcmeNewOrder {
 		protekted.put("kid", kid);
 		protekted.put("nonce", nonce);
 		protekted.put("url", url);
-		String protekted64 = JWSBase64.encode(om.writeValueAsBytes(protekted));
+		String protekted64 = JWBase64.encode(om.writeValueAsBytes(protekted));
 
 		Map<String, Object> identifier = new HashMap<>();
 		identifier.put("type", "dns");
@@ -51,12 +51,12 @@ public class AcmeNewOrder {
 		payload.put("identifiers", identifiers);
 //		payload.put("notBefore", "2018-06-01T00:00:00Z");
 //		payload.put("notAfter", "2018-09-01T00:00:00Z");
-		String payload64 = JWSBase64.encode(om.writeValueAsBytes(payload));
+		String payload64 = JWBase64.encode(om.writeValueAsBytes(payload));
 
 		byte[] tbs = (protekted64 + "." + payload64).getBytes();
 
 		ECSignature signature = ECSigner.sign(tbs, ECCurves.NIST_P_256, privateKey.getS());
-		String signature64 = JWSBase64.encode(Common.concatenate(Common.bigIntegerToBytes(signature.getR()),
+		String signature64 = JWBase64.encode(Common.concatenate(Common.bigIntegerToBytes(signature.getR()),
 				Common.bigIntegerToBytes(signature.getS())));
 
 		Map<String, Object> jws = new HashMap<>();

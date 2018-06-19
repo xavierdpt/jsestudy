@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import example.company.acme.v2.JWSBase64;
+import example.company.acme.jw.JWBase64;
 import example.company.asn.elements.AsnElement;
 import example.company.asn.utils.AsnUtils;
 import example.company.tox.asn.AsnTox;
@@ -125,9 +125,9 @@ public class Fiddle30 {
 		String yBase64Encoded = "x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0";
 		String dBase64Encoded = "jpsQnnGQmL-YBIffH1136cspYG6-0iY7X1fCE9-E9LI";
 
-		byte[] dBytes = JWSBase64.decode(dBase64Encoded);
-		byte[] xBytes = JWSBase64.decode(xBase64Encoded);
-		byte[] yBytes = JWSBase64.decode(yBase64Encoded);
+		byte[] dBytes = JWBase64.decode(dBase64Encoded);
+		byte[] xBytes = JWBase64.decode(xBase64Encoded);
+		byte[] yBytes = JWBase64.decode(yBase64Encoded);
 
 		System.out.println("dBytes=" + Common.bytesToString(dBytes));
 		System.out.println("xBytes=" + Common.bytesToString(xBytes));
@@ -185,8 +185,8 @@ public class Fiddle30 {
 
 	private ECParameterSpec getSpec(String xEncoded, String yEncoded) {
 
-		byte[] xBytes = JWSBase64.decode(xEncoded);
-		byte[] yBytes = JWSBase64.decode(yEncoded);
+		byte[] xBytes = JWBase64.decode(xEncoded);
+		byte[] yBytes = JWBase64.decode(yEncoded);
 
 		BigInteger p = new BigInteger("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F", 16);
 		ECField field = new ECFieldFp(p);

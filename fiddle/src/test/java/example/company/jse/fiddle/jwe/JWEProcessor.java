@@ -19,7 +19,7 @@ import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import example.company.acme.v2.JWSBase64;
+import example.company.acme.jw.JWBase64;
 import example.company.tox.common.Common;
 
 public class JWEProcessor {
@@ -40,7 +40,7 @@ public class JWEProcessor {
 		Map<String, String> params = input.getKeyEncryptionParams();
 		byte[] cek = input.getKey();
 		al = Common.bytes(0, 0, 0, 0, 0, 0, 1, 152);
-		header64 = JWSBase64.encode(input.getHeaderJSON().getBytes());
+		header64 = JWBase64.encode(input.getHeaderJSON().getBytes());
 		byte[] aad = header64.getBytes();
 
 		byte[] encryptedCek = encryptCek(cek, params, cekAlgorithm);
@@ -58,10 +58,10 @@ public class JWEProcessor {
 			gcm(iv, cek, aad);
 		}
 
-		String encryptedCek64 = JWSBase64.encode(encryptedCek);
-		String iv64 = JWSBase64.encode(iv);
-		String cipherText64 = JWSBase64.encode(cipherText);
-		String authenticationTag64 = JWSBase64.encode(authenticationTag);
+		String encryptedCek64 = JWBase64.encode(encryptedCek);
+		String iv64 = JWBase64.encode(iv);
+		String cipherText64 = JWBase64.encode(cipherText);
+		String authenticationTag64 = JWBase64.encode(authenticationTag);
 
 		return header64 + "." + encryptedCek64 + "." + iv64 + "." + cipherText64 + "." + authenticationTag64;
 	}
@@ -127,7 +127,7 @@ public class JWEProcessor {
 
 		switch (cekAlgorithm) {
 		case Header.A128KW:
-			return aes128KeyWrap(cipher, cek, JWSBase64.decode(params.get("k")));
+			return aes128KeyWrap(cipher, cek, JWBase64.decode(params.get("k")));
 		case Header.RSA1_5:
 		case Header.RSAOAEP:
 			return rsa(cipher, cek, params);
@@ -166,7 +166,7 @@ public class JWEProcessor {
 	}
 
 	private BigInteger bi(Map<String, String> params, String name) {
-		return Common.bigInteger(JWSBase64.decode(params.get(name)));
+		return Common.bigInteger(JWBase64.decode(params.get(name)));
 	}
 
 	private static byte[] getEncKey(byte[] key) {

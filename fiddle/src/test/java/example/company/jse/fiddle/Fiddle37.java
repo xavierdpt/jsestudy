@@ -16,7 +16,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.acme.v2.JWSBase64;
+import example.company.acme.jw.JWBase64;
 import example.company.tox.common.Common;
 
 public class Fiddle37 {
@@ -111,7 +111,7 @@ public class Fiddle37 {
 
 		String headerJson = "{\"alg\":\"RSA1_5\",\"enc\":\"A128CBC-HS256\"}";
 		String header64 = "eyJhbGciOiJSU0ExXzUiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0";
-		Assert.assertEquals(header64, JWSBase64.encode(headerJson.getBytes()));
+		Assert.assertEquals(header64, JWBase64.encode(headerJson.getBytes()));
 
 		byte[] cekBytes = Common.bytes(4, 211, 31, 197, 84, 157, 252, 254, 11, 100, 157, 250, 63, 170, 106, 206, 107,
 				124, 212, 45, 111, 107, 9, 219, 200, 177, 0, 240, 143, 156, 44, 207);
@@ -200,11 +200,11 @@ public class Fiddle37 {
 		String cipherText64 = "5eym8TW_c8SuK0ltJ3rpYIzOeDQz7TALvtu6UG9oMo4vpzs9tX_EFShS8iB7j6jiSdiwkIr3ajwQzaBtQD_A";
 		String atv64 = "XFBoMYUZodetZdvTiFvSkQ";
 
-		Assert.assertEquals(header64, JWSBase64.encode(headerBytes));
-		Assert.assertEquals(key64, JWSBase64.encode(keyBytes));
-		Assert.assertEquals(iv64, JWSBase64.encode(ivBytes));
-		Assert.assertEquals(cipherText64, JWSBase64.encode(cipherTextBytes));
-		Assert.assertEquals(atv64, JWSBase64.encode(atvBytes));
+		Assert.assertEquals(header64, JWBase64.encode(headerBytes));
+		Assert.assertEquals(key64, JWBase64.encode(keyBytes));
+		Assert.assertEquals(iv64, JWBase64.encode(ivBytes));
+		Assert.assertEquals(cipherText64, JWBase64.encode(cipherTextBytes));
+		Assert.assertEquals(atv64, JWBase64.encode(atvBytes));
 
 		String result64 = "eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkEyNTZHQ00ifQ.OKOawDo13gRp2ojaHV7LFpZcgV7T6DVZKTyKOMTYUmKoTCVJRgckCL9kiMT03JGeipsEdY3mx_etLbbWSrFr05kLzcSr4qKAq7YN7e9jwQRb23nfa6c9d-StnImGyFDbSv04uVuxIp5Zms1gNxKKK2Da14B8S4rzVRltdYwam_lDp5XnZAYpQdb76FdIKLaVmqgfwX7XWRxv2322i-vDxRfqNzo_tETKzpVLzfiwQyeyPGLBIO56YJ7eObdv0je81860ppamavo35UgoRdbYaBcoh9QcfylQr66oc6vFWXRcZ_ZT2LawVCWTIy3brGPi6UklfCpIMfIjf7iGdXKHzg.48V1_ALb6US04U3b.5eym8TW_c8SuK0ltJ3rpYIzOeDQz7TALvtu6UG9oMo4vpzs9tX_EFShS8iB7j6jiSdiwkIr3ajwQzaBtQD_A.XFBoMYUZodetZdvTiFvSkQ";
 		Assert.assertEquals(result64, header64 + "." + key64 + "." + iv64 + "." + cipherText64 + "." + atv64);

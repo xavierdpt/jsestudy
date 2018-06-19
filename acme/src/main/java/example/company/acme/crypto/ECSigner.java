@@ -1,4 +1,4 @@
-package example.company.acme.v2;
+package example.company.acme.crypto;
 
 import java.math.BigInteger;
 import java.security.AlgorithmParameters;
@@ -17,6 +17,7 @@ import java.security.spec.ECPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 
+import example.company.acme.crypto.ECSignature;
 import example.company.asn.elements.Asn;
 import example.company.asn.elements.AsnElement;
 import example.company.asn.elements.AsnSequence;
