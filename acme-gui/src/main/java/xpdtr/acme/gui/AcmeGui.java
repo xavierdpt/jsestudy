@@ -10,10 +10,10 @@ import java.security.interfaces.ECPrivateKey;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,10 +24,9 @@ import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeDirectoryInfos2;
 import example.company.acme.v2.AcmeOrderWithNonce;
 import example.company.acme.v2.account.AcmeAccount;
-import xpdtr.acme.gui.async.AccountCreationRequest;
 import xpdtr.acme.gui.async.DirectoryRequest;
 import xpdtr.acme.gui.async.NonceRequest;
-import xpdtr.acme.gui.components.AccountCreationUI;
+import xpdtr.acme.gui.async.OrderCreationRequest;
 import xpdtr.acme.gui.components.Acme2Buttons;
 import xpdtr.acme.gui.components.AcmeUrlUI;
 import xpdtr.acme.gui.components.AcmeVersionUI;
@@ -37,6 +36,7 @@ import xpdtr.acme.gui.components.ExceptionUI;
 import xpdtr.acme.gui.components.MessageUI;
 import xpdtr.acme.gui.components.NonceUI;
 import xpdtr.acme.gui.components.Title;
+import xpdtr.acme.gui.interactions.NewAccountInteraction;
 import xpdtr.acme.gui.layout.StackedLayout;
 import xpdtr.acme.gui.utils.Promise;
 import xpdtr.acme.gui.utils.U;
@@ -48,9 +48,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	private ObjectMapper om = new ObjectMapper();
 	private AcmeDirectoryInfos2 directoryInfos;
 	private String nonce;
-	private JPanel scrollView;
-	private long accountId;
-	private String accountUrl;
+	private JPanel container;
 	private AcmeAccount account;
 	private AcmeOrderWithNonce order;
 
@@ -59,24 +57,24 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	@Override
-	protected void addComponents(JPanel scrollView) {
-		this.scrollView = scrollView;
-		U.setMargins(scrollView, 10, 0);
+	protected void addComponents(JPanel container) {
+		this.container = container;
+		U.setMargins(container, 10, 0);
 
-		scrollView.add(Title.create());
-		scrollView.add(AcmeVersionUI.create(this::setVersionAndAskForUrl));
+		container.add(Title.create());
+		container.add(AcmeVersionUI.create(this::setVersionAndAskForUrl));
 
 	}
 
 	private void setVersionAndAskForUrl(String version) {
 		this.version = version;
-		scrollView.add(AcmeUrlUI.create(version, this::setUrlAndQueryDirectory));
+		container.add(AcmeUrlUI.create(version, this::setUrlAndQueryDirectory));
 		validate();
 	}
 
 	private void setUrlAndQueryDirectory(String url) {
 		this.url = url;
-		scrollView.add(DirectoryUI.renderStarting());
+		container.add(DirectoryUI.renderStarting());
 		DirectoryRequest.send(om).then(this::directorySuccess, this::directoryFailure);
 		validate();
 	}
@@ -85,19 +83,19 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		this.directoryInfos = infos;
 		List<Component> responseComponents = DirectoryUI.getSuccessComponents(infos);
 		for (Component component : responseComponents) {
-			scrollView.add(component);
+			container.add(component);
 		}
-		scrollView.add(renderNewButtons());
+		container.add(renderNewButtons());
 		validate();
 	}
 
 	private void directoryFailure(Exception exception) {
-		scrollView.add(DirectoryUI.getFailureComponent(exception));
+		container.add(DirectoryUI.getFailureComponent(exception));
 		validate();
 	}
 
 	private void nonceClicked() {
-		scrollView.add(NonceUI.renderGetting());
+		container.add(NonceUI.renderGetting());
 		validate();
 		NonceRequest.send(directoryInfos).then(this::nonceSuccess, this::nonceFailure);
 
@@ -105,48 +103,31 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	private void nonceSuccess(String nonce) {
 		this.nonce = nonce;
-		scrollView.add(NonceUI.renderSuccess(nonce));
-		scrollView.add(renderNewButtons());
+		container.add(NonceUI.renderSuccess(nonce));
+		container.add(renderNewButtons());
 		validate();
 	}
 
 	private void nonceFailure(Exception ex) {
-		scrollView.add(NonceUI.renderFailure(ex));
+		container.add(NonceUI.renderFailure(ex));
 		validate();
 	}
 
 	private void createAccountClicked() {
-		scrollView.add(AccountCreationUI.renderInput(this::createAccountProceed, this::createAccountCancel));
-		validate();
-	}
 
-	private void createAccountProceed(String contact) {
-		scrollView.add(AccountCreationUI.renderCalling());
-		AccountCreationRequest.send(directoryInfos, nonce, om, contact).then(this::createAccountSuccess,
-				this::createAccountFailure);
-		validate();
-	}
+		Consumer<AcmeAccount> finished = (account) -> {
+			if (account != null) {
+				this.account = account;
+				this.nonce = account.getNonce();
+			}
+			addM(renderNewButtons());
+		};
 
-	private void createAccountCancel() {
-		addM(new JLabel("Account creation cancelled"));
-		addM(renderNewButtons());
-		validate();
-	}
+		NewAccountInteraction interaction = new NewAccountInteraction(container, directoryInfos, nonce, om,
+				this::validate, finished);
 
-	private void createAccountSuccess(AcmeAccount account) {
-		nonce = account.getNonce();
-		accountId = account.getId();
-		accountUrl = account.getUrl();
-		this.account = account;
-		addM(AccountCreationUI.renderSuccess(account));
-		addM(renderNewButtons());
-		validate();
-	}
+		interaction.start();
 
-	private void createAccountFailure(Exception ex) {
-		addM(ExceptionUI.render(ex));
-		addM(renderNewButtons());
-		validate();
 	}
 
 	private void accountDetailsClicked() {
@@ -264,10 +245,10 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		buttonsFactory.setNonceClicked(this::nonceClicked);
 		buttonsFactory.setCreateAccountClicked(this::createAccountClicked);
 
-		buttonsFactory.setAccountDetailsEnabled(accountUrl != null);
+		buttonsFactory.setAccountDetailsEnabled(account != null);
 		buttonsFactory.setAccountDetailsClicked(this::accountDetailsClicked);
 
-		buttonsFactory.setOrderEnabled(accountUrl != null);
+		buttonsFactory.setOrderEnabled(account != null);
 		buttonsFactory.setOrderClicked(this::orderClicked);
 
 		buttonsFactory.setAuthorizationDetailsEnabled(order != null);
@@ -279,16 +260,17 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	private void addM(List<Component> components) {
 		for (Component component : components) {
-			scrollView.add(component);
+			container.add(component);
 		}
 	}
 
 	private void addM(Component component) {
-		scrollView.add(component);
+		container.add(component);
 	}
 
 	@Override
 	protected LayoutManager getLayout(Container target) {
 		return new StackedLayout(5);
 	}
+
 }

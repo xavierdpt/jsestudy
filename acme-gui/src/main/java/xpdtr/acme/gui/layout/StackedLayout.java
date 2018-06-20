@@ -50,8 +50,6 @@ public class StackedLayout extends LayoutAdapter {
 	@Override
 	public void layoutContainer(Container parent) {
 
-		System.out.println("Main height : " + parent.getSize().getHeight());
-
 		double w = 0;
 
 		for (int i = 0; i < parent.getComponentCount(); ++i) {

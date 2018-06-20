@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.async;
 
 import java.security.interfaces.ECPrivateKey;
 
