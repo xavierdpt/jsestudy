@@ -31,12 +31,12 @@ import xpdtr.acme.gui.components.AccountCreationUI;
 import xpdtr.acme.gui.components.Acme2Buttons;
 import xpdtr.acme.gui.components.AcmeUrlUI;
 import xpdtr.acme.gui.components.AcmeVersionUI;
+import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
 import xpdtr.acme.gui.components.DirectoryUI;
 import xpdtr.acme.gui.components.ExceptionUI;
 import xpdtr.acme.gui.components.MessageUI;
 import xpdtr.acme.gui.components.NonceUI;
 import xpdtr.acme.gui.components.Title;
-import xpdtr.acme.gui.fiddling.BasicFrameWithVerticalScroll;
 import xpdtr.acme.gui.layout.StackedLayout;
 import xpdtr.acme.gui.utils.Promise;
 import xpdtr.acme.gui.utils.U;
@@ -175,7 +175,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		addM(renderNewButtons());
 		validate();
 		try {
-			om.writeValue(System.out, order);
+			System.out.println(om.writeValueAsString(order));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -277,11 +277,6 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	}
 
-	@Override
-	protected LayoutManager getLayout(Container target) {
-		return new StackedLayout(5);
-	}
-
 	private void addM(List<Component> components) {
 		for (Component component : components) {
 			scrollView.add(component);
@@ -290,5 +285,10 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	private void addM(Component component) {
 		scrollView.add(component);
+	}
+
+	@Override
+	protected LayoutManager getLayout(Container target) {
+		return new StackedLayout(5);
 	}
 }

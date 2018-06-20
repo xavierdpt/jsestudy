@@ -6,6 +6,8 @@ import java.awt.LayoutManager;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
+
 public class TwoFullWidthTextAreas extends BasicFrameWithVerticalScroll {
 
 	@Override

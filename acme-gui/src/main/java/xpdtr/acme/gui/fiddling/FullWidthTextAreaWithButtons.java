@@ -7,6 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
+
 public class FullWidthTextAreaWithButtons extends BasicFrameWithVerticalScroll {
 
 	@Override

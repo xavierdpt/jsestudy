@@ -24,7 +24,7 @@ public class StackedLayout extends LayoutAdapter {
 			double cw = c.getPreferredSize().getWidth();
 			double ch = c.getPreferredSize().getHeight();
 			w = Math.max(w, cw);
-			h += ch;
+			h += ch+vspace;
 
 		}
 
@@ -50,10 +50,11 @@ public class StackedLayout extends LayoutAdapter {
 	@Override
 	public void layoutContainer(Container parent) {
 
+		System.out.println("Main height : " + parent.getSize().getHeight());
+
 		double w = 0;
 
 		for (int i = 0; i < parent.getComponentCount(); ++i) {
-			Component c = parent.getComponent(i);
 			w = Math.max(w, parent.getComponent(i).getPreferredSize().getWidth());
 		}
 
@@ -69,7 +70,7 @@ public class StackedLayout extends LayoutAdapter {
 			c.setLocation(x, (int) h);
 			c.setSize((int) w, (int) c.getPreferredSize().getHeight());
 
-			h += ch+vspace;
+			h += ch + vspace;
 		}
 
 	}

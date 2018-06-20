@@ -98,8 +98,6 @@ public class AcmeNewOrder {
 					}
 				}
 
-				;
-
 				AcmeOrderWithNonce order = new AcmeOrderWithNonce();
 				order.setContent(om.treeToValue(responseJson, AcmeOrder.class));
 				order.setNonce(response.getFirstHeader("Replay-Nonce").getValue());
