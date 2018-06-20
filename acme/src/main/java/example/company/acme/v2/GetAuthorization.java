@@ -13,22 +13,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class GetAuthorization {
 
-	public static JsonNode sendRequest(String url, ObjectMapper om) throws ClientProtocolException, IOException {
+	public static Authorization sendRequest(String url, ObjectMapper om) throws ClientProtocolException, IOException {
 
 		Request request = Request.Get(url);
 
-		ResponseHandler<JsonNode> responseHandler = new ResponseHandler<JsonNode>() {
+		ResponseHandler<Authorization> responseHandler = new ResponseHandler<Authorization>() {
 
 			@Override
-			public JsonNode handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
+			public Authorization handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
 
 				System.out.println(response.getStatusLine().getStatusCode());
 
 				InputStream content = response.getEntity().getContent();
 
-				JsonNode responseJson = om.readValue(content, JsonNode.class);
+				Authorization authorization = om.readValue(content, Authorization.class);
 
-				return responseJson;
+				return authorization;
 			}
 
 		};

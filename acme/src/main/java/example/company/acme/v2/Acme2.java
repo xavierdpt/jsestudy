@@ -125,7 +125,7 @@ public class Acme2 {
 		}
 	}
 
-	public static JsonNode getAuthorization(String url, ObjectMapper om) throws AcmeException {
+	public static Authorization getAuthorization(String url, ObjectMapper om) throws AcmeException {
 		try {
 			return GetAuthorization.sendRequest(url, om);
 		} catch (Exception ex) {

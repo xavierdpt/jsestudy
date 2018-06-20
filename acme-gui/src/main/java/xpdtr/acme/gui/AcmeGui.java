@@ -16,16 +16,16 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeDirectoryInfos2;
 import example.company.acme.v2.AcmeOrderWithNonce;
+import example.company.acme.v2.Authorization;
+import example.company.acme.v2.Challenge;
 import example.company.acme.v2.account.AcmeAccount;
 import xpdtr.acme.gui.async.DirectoryRequest;
-import xpdtr.acme.gui.async.NonceRequest;
 import xpdtr.acme.gui.async.OrderCreationRequest;
 import xpdtr.acme.gui.components.Acme2Buttons;
 import xpdtr.acme.gui.components.AcmeUrlUI;
@@ -34,9 +34,9 @@ import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
 import xpdtr.acme.gui.components.DirectoryUI;
 import xpdtr.acme.gui.components.ExceptionUI;
 import xpdtr.acme.gui.components.MessageUI;
-import xpdtr.acme.gui.components.NonceUI;
 import xpdtr.acme.gui.components.Title;
 import xpdtr.acme.gui.interactions.NewAccountInteraction;
+import xpdtr.acme.gui.interactions.NonceInteraction;
 import xpdtr.acme.gui.layout.StackedLayout;
 import xpdtr.acme.gui.utils.Promise;
 import xpdtr.acme.gui.utils.U;
@@ -51,6 +51,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	private JPanel container;
 	private AcmeAccount account;
 	private AcmeOrderWithNonce order;
+	private Authorization authorization;
 
 	public AcmeGui() {
 		om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -95,22 +96,12 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void nonceClicked() {
-		container.add(NonceUI.renderGetting());
-		validate();
-		NonceRequest.send(directoryInfos).then(this::nonceSuccess, this::nonceFailure);
-
-	}
-
-	private void nonceSuccess(String nonce) {
-		this.nonce = nonce;
-		container.add(NonceUI.renderSuccess(nonce));
-		container.add(renderNewButtons());
-		validate();
-	}
-
-	private void nonceFailure(Exception ex) {
-		container.add(NonceUI.renderFailure(ex));
-		validate();
+		new NonceInteraction(container, directoryInfos, this::validate, nonce -> {
+			if (nonce != null) {
+				this.nonce = nonce;
+				addM(renderNewButtons());
+			}
+		}).start();
 	}
 
 	private void createAccountClicked() {
@@ -207,28 +198,20 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void getAuthorizationDetails(String url) {
-		new Promise<JsonNode>((p) -> {
+		new Promise<Authorization>((p) -> {
 			try {
-				JsonNode r = Acme2.getAuthorization(url, om);
+				Authorization r = Acme2.getAuthorization(url, om);
 				p.success(r);
 			} catch (Exception e1) {
 				p.failure(e1);
 			}
 
-		}).then((o) -> {
-			try {
-				String str = o.toString();
-				Timer tim = new Timer();
-				tim.schedule(new TimerTask() {
-					@Override
-					public void run() {
-						System.out.println(str);
-					}
-				}, 1000);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
+		}).then((Authorization o) -> {
 			addM(MessageUI.render("Success : got response for " + url));
+			this.authorization = o;
+			for (Challenge c : o.getChallenges()) {
+				addM(MessageUI.render(c.getUrl()));
+			}
 			validate();
 		}, (e) -> {
 			addM(ExceptionUI.render(e));

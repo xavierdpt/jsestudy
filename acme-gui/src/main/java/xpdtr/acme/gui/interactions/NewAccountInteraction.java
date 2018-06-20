@@ -54,7 +54,7 @@ public class NewAccountInteraction {
 
 	private void createAccountSuccess(AcmeAccount account) {
 		U.addM(container, AccountCreationUI.renderSuccess(account));
-		finished.accept(null);
+		finished.accept(account);
 		validate.run();
 	}
 
