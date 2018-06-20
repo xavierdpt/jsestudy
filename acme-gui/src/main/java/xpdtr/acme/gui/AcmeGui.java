@@ -3,15 +3,26 @@ package xpdtr.acme.gui;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.security.interfaces.ECPrivateKey;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeDirectoryInfos2;
+import example.company.acme.v2.AcmeOrderWithNonce;
 import example.company.acme.v2.account.AcmeAccount;
 import xpdtr.acme.gui.async.AccountCreationRequest;
 import xpdtr.acme.gui.async.DirectoryRequest;
@@ -27,9 +38,10 @@ import xpdtr.acme.gui.components.NonceUI;
 import xpdtr.acme.gui.components.Title;
 import xpdtr.acme.gui.fiddling.BasicFrameWithVerticalScroll;
 import xpdtr.acme.gui.layout.StackedLayout;
+import xpdtr.acme.gui.utils.Promise;
 import xpdtr.acme.gui.utils.U;
 
-public class MainFrame extends BasicFrameWithVerticalScroll {
+public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	private String version;
 	private String url;
@@ -39,8 +51,10 @@ public class MainFrame extends BasicFrameWithVerticalScroll {
 	private JPanel scrollView;
 	private long accountId;
 	private String accountUrl;
+	private AcmeAccount account;
+	private AcmeOrderWithNonce order;
 
-	public MainFrame() {
+	public AcmeGui() {
 		om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 	}
 
@@ -108,7 +122,8 @@ public class MainFrame extends BasicFrameWithVerticalScroll {
 
 	private void createAccountProceed(String contact) {
 		scrollView.add(AccountCreationUI.renderCalling());
-		AccountCreationRequest.send(directoryInfos, nonce, om, contact).then(this::createAccountSuccess, this::createAccountFailure);
+		AccountCreationRequest.send(directoryInfos, nonce, om, contact).then(this::createAccountSuccess,
+				this::createAccountFailure);
 		validate();
 	}
 
@@ -122,6 +137,7 @@ public class MainFrame extends BasicFrameWithVerticalScroll {
 		nonce = account.getNonce();
 		accountId = account.getId();
 		accountUrl = account.getUrl();
+		this.account = account;
 		addM(AccountCreationUI.renderSuccess(account));
 		addM(renderNewButtons());
 		validate();
@@ -138,6 +154,107 @@ public class MainFrame extends BasicFrameWithVerticalScroll {
 		validate();
 	}
 
+	private void orderClicked() {
+		addM(MessageUI.render("New order clicked"));
+		OrderCreationRequest
+				.send(directoryInfos, "" + account.getUrl(), nonce, om, (ECPrivateKey) account.getPrivateKey())
+				.then(this::createOrderSuccess, this::createOrderFailure);
+		validate();
+	}
+
+	private void createOrderSuccess(AcmeOrderWithNonce order) {
+		this.order = order;
+		addM(MessageUI.render("Success"));
+
+		List<String> authorizations = order.getContent().getAuthorizations();
+		for (String a : authorizations) {
+			addM(MessageUI.render("Authorization " + a));
+		}
+		addM(MessageUI.render("Finalize " + order.getContent().getFinalize()));
+
+		addM(renderNewButtons());
+		validate();
+		try {
+			om.writeValue(System.out, order);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void createOrderFailure(Exception ex) {
+		addM(ExceptionUI.render(ex));
+		addM(renderNewButtons());
+		validate();
+	}
+
+	private void authorizationDetailsClicked() {
+		addM(MessageUI.render("Authorization details clicked"));
+		JComboBox<String> authorizationsCB = new JComboBox<>(
+				order.getContent().getAuthorizations().toArray(new String[] {}));
+		addM(authorizationsCB);
+		JButton choose = new JButton("Choose");
+		JButton cancel = new JButton("Cancel");
+		addM(choose);
+		addM(cancel);
+
+		choose.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				authorizationsCB.setEnabled(false);
+				choose.setEnabled(false);
+				cancel.setEnabled(false);
+				String auth = authorizationsCB.getSelectedItem().toString();
+				addM(MessageUI.render("Chosen " + auth));
+				getAuthorizationDetails(auth);
+				validate();
+			}
+		});
+
+		cancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				authorizationsCB.setEnabled(false);
+				choose.setEnabled(false);
+				cancel.setEnabled(false);
+				addM(MessageUI.render("Cancelled"));
+				addM(renderNewButtons());
+				validate();
+			}
+		});
+
+		validate();
+	}
+
+	private void getAuthorizationDetails(String url) {
+		new Promise<JsonNode>((p) -> {
+			try {
+				JsonNode r = Acme2.getAuthorization(url, om);
+				p.success(r);
+			} catch (Exception e1) {
+				p.failure(e1);
+			}
+
+		}).then((o) -> {
+			try {
+				String str = o.toString();
+				Timer tim = new Timer();
+				tim.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						System.out.println(str);
+					}
+				}, 1000);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			addM(MessageUI.render("Success : got response for " + url));
+			validate();
+		}, (e) -> {
+			addM(ExceptionUI.render(e));
+			validate();
+		});
+	}
+
 	private Component renderNewButtons() {
 		Acme2Buttons buttonsFactory = new Acme2Buttons();
 
@@ -149,6 +266,13 @@ public class MainFrame extends BasicFrameWithVerticalScroll {
 
 		buttonsFactory.setAccountDetailsEnabled(accountUrl != null);
 		buttonsFactory.setAccountDetailsClicked(this::accountDetailsClicked);
+
+		buttonsFactory.setOrderEnabled(accountUrl != null);
+		buttonsFactory.setOrderClicked(this::orderClicked);
+
+		buttonsFactory.setAuthorizationDetailsEnabled(order != null);
+		buttonsFactory.setAuthorizationDetailsClicked(this::authorizationDetailsClicked);
+
 		return buttonsFactory.create();
 
 	}

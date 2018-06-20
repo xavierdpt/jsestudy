@@ -7,11 +7,7 @@ import java.util.List;
 
 import javax.swing.JLabel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeDirectoryInfos2;
-import xpdtr.acme.gui.utils.Promise;
 
 public class DirectoryUI {
 

@@ -17,6 +17,7 @@ public class Acme2Buttons {
 	private boolean changeKeyEnabled;
 	private boolean revokeCertEnabled;
 	private boolean accountDetailsEnabled;
+	private boolean authorizationDetailsEnabled;
 
 	private Runnable nonceClicked;
 	private Runnable createAccountClicked;
@@ -24,6 +25,7 @@ public class Acme2Buttons {
 	private Runnable changeKeyClicked;
 	private Runnable revokeCertClicked;
 	private Runnable accountDetailsClicked;
+	private Runnable authorizationDetailsClicked;
 
 	public void setNonceEnabled(boolean enabled) {
 		this.nonceEnabled = enabled;
@@ -49,6 +51,10 @@ public class Acme2Buttons {
 		this.accountDetailsEnabled = enabled;
 	}
 
+	public void setAuthorizationDetailsEnabled(boolean authorizationDetailsEnabled) {
+		this.authorizationDetailsEnabled = authorizationDetailsEnabled;
+	}
+
 	public void setNonceClicked(Runnable handler) {
 		this.nonceClicked = handler;
 	}
@@ -71,6 +77,10 @@ public class Acme2Buttons {
 
 	public void setAccountDetailsClicked(Runnable handler) {
 		this.accountDetailsClicked = handler;
+	}
+
+	public void setAuthorizationDetailsClicked(Runnable authorizationDetailsClicked) {
+		this.authorizationDetailsClicked = authorizationDetailsClicked;
 	}
 
 	public Component create() {
@@ -99,6 +109,10 @@ public class Acme2Buttons {
 		accountDetails.setEnabled(accountDetailsEnabled);
 		clicked(accountDetails, accountDetailsClicked);
 
+		JButton authorizationDetails = new JButton("Authorization details");
+		authorizationDetails.setEnabled(authorizationDetailsEnabled);
+		clicked(authorizationDetails, authorizationDetailsClicked);
+
 		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		buttons.add(nonce);
 		buttons.add(account);
@@ -106,6 +120,7 @@ public class Acme2Buttons {
 		buttons.add(changeKey);
 		buttons.add(revokeCert);
 		buttons.add(accountDetails);
+		buttons.add(authorizationDetails);
 
 		return buttons;
 	}

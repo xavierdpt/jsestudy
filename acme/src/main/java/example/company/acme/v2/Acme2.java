@@ -3,6 +3,7 @@ package example.company.acme.v2;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyPair;
+import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.fluent.Request;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import example.company.acme.crypto.KPG;
@@ -87,7 +89,8 @@ public class Acme2 {
 		return JWBase64.decode(nonce(infos, false));
 	}
 
-	public static AcmeAccount newAccount(AcmeDirectoryInfos2 infos, String nonce, ObjectMapper om, String contact) throws AcmeException {
+	public static AcmeAccount newAccount(AcmeDirectoryInfos2 infos, String nonce, ObjectMapper om, String contact)
+			throws AcmeException {
 
 		try {
 			KeyPair keyPair = KPG.newECP256KeyPair();
@@ -97,20 +100,38 @@ public class Acme2 {
 			String x64 = JWBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineX()));
 			String y64 = JWBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineY()));
 
-			Map<String, Object> newAccountJWS = AcmeNewAccount.createJWS(infos, keyPair, nonce, om,
-					getJWK(x64, y64), contact);
+			Map<String, Object> newAccountJWS = AcmeNewAccount.createJWS(infos, keyPair, nonce, om, getJWK(x64, y64),
+					contact);
 
 			AcmeAccount account = AcmeNewAccount.sendRequest(infos, newAccountJWS, om);
 
 			account.setUrl(getUrl(infos, account));
 
+			account.setPrivateKey(keyPair.getPrivate());
 			return account;
 		} catch (Exception ex) {
 			throw new AcmeException(ex);
 		}
 	}
 
-	
+	public static AcmeOrderWithNonce newOrder(AcmeDirectoryInfos2 infos, String kid, String nonce, ObjectMapper om,
+			ECPrivateKey privateKey) throws AcmeException {
+		try {
+			Map<String, Object> jws = AcmeNewOrder.createJWS(infos, kid, nonce, om, privateKey);
+			return AcmeNewOrder.sendRequest(infos, om, jws);
+
+		} catch (Exception exception) {
+			throw new AcmeException(exception);
+		}
+	}
+
+	public static JsonNode getAuthorization(String url, ObjectMapper om) throws AcmeException {
+		try {
+			return GetAuthorization.sendRequest(url, om);
+		} catch (Exception ex) {
+			throw new AcmeException(ex);
+		}
+	}
 
 	private static String getUrl(AcmeDirectoryInfos2 infos, AcmeAccount account) {
 
@@ -128,4 +149,5 @@ public class Acme2 {
 		jwk.put("y", y64);
 		return jwk;
 	}
+
 }
