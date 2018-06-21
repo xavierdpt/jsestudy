@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class AcmeAccount {
 
 	private long id;
-	private String nonce;
 	private String url;
 	private PrivateKey privateKey;
 
@@ -18,14 +17,6 @@ public class AcmeAccount {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getNonce() {
-		return nonce;
-	}
-
-	public void setNonce(String nonce) {
-		this.nonce = nonce;
 	}
 
 	public String getUrl() {

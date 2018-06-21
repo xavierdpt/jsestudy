@@ -13,9 +13,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.fluent.Request;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import example.company.acme.AcmeSession;
 import example.company.acme.crypto.KPG;
 import example.company.acme.jw.JWBase64;
 import example.company.acme.v2.account.AcmeAccount;
@@ -89,8 +89,7 @@ public class Acme2 {
 		return JWBase64.decode(nonce(infos, false));
 	}
 
-	public static AcmeAccount newAccount(AcmeDirectoryInfos2 infos, String nonce, ObjectMapper om, String contact)
-			throws AcmeException {
+	public static AcmeSession newAccount(AcmeSession session, String contact) throws AcmeException {
 
 		try {
 			KeyPair keyPair = KPG.newECP256KeyPair();
@@ -100,15 +99,18 @@ public class Acme2 {
 			String x64 = JWBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineX()));
 			String y64 = JWBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineY()));
 
-			Map<String, Object> newAccountJWS = AcmeNewAccount.createJWS(infos, keyPair, nonce, om, getJWK(x64, y64),
-					contact);
+			Map<String, Object> newAccountJWS = AcmeNewAccount.createJWS(session.getInfos(), keyPair,
+					session.getNonce(), session.getOm(), getJWK(x64, y64), contact);
 
-			AcmeAccount account = AcmeNewAccount.sendRequest(infos, newAccountJWS, om);
+			AcmeAccount account = AcmeNewAccount.sendRequest(session, newAccountJWS);
 
-			account.setUrl(getUrl(infos, account));
+			account.setUrl(getUrl(session.getInfos(), account));
 
 			account.setPrivateKey(keyPair.getPrivate());
-			return account;
+
+			session.setAccount(account);
+
+			return session;
 		} catch (Exception ex) {
 			throw new AcmeException(ex);
 		}

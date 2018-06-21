@@ -8,33 +8,25 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.security.interfaces.ECPrivateKey;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
+import example.company.acme.AcmeSession;
 import example.company.acme.v2.Acme2;
-import example.company.acme.v2.AcmeDirectoryInfos2;
 import example.company.acme.v2.AcmeOrderWithNonce;
 import example.company.acme.v2.Authorization;
 import example.company.acme.v2.Challenge;
-import example.company.acme.v2.account.AcmeAccount;
-import xpdtr.acme.gui.async.DirectoryRequest;
 import xpdtr.acme.gui.async.OrderCreationRequest;
 import xpdtr.acme.gui.components.Acme2Buttons;
 import xpdtr.acme.gui.components.AcmeUrlUI;
 import xpdtr.acme.gui.components.AcmeVersionUI;
 import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
-import xpdtr.acme.gui.components.DirectoryUI;
 import xpdtr.acme.gui.components.ExceptionUI;
 import xpdtr.acme.gui.components.MessageUI;
 import xpdtr.acme.gui.components.Title;
+import xpdtr.acme.gui.interactions.DirectoryInteraction;
 import xpdtr.acme.gui.interactions.NewAccountInteraction;
 import xpdtr.acme.gui.interactions.NonceInteraction;
 import xpdtr.acme.gui.layout.StackedLayout;
@@ -43,19 +35,9 @@ import xpdtr.acme.gui.utils.U;
 
 public class AcmeGui extends BasicFrameWithVerticalScroll {
 
-	private String version;
-	private String url;
-	private ObjectMapper om = new ObjectMapper();
-	private AcmeDirectoryInfos2 directoryInfos;
-	private String nonce;
-	private JPanel container;
-	private AcmeAccount account;
-	private AcmeOrderWithNonce order;
-	private Authorization authorization;
+	private Container container;
 
-	public AcmeGui() {
-		om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-	}
+	private AcmeSession session = new AcmeSession();
 
 	@Override
 	protected void addComponents(JPanel container) {
@@ -68,106 +50,72 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void setVersionAndAskForUrl(String version) {
-		this.version = version;
+		session.setVersion(version);
 		container.add(AcmeUrlUI.create(version, this::setUrlAndQueryDirectory));
 		validate();
 	}
 
 	private void setUrlAndQueryDirectory(String url) {
-		this.url = url;
-		container.add(DirectoryUI.renderStarting());
-		DirectoryRequest.send(om).then(this::directorySuccess, this::directoryFailure);
-		validate();
-	}
-
-	private void directorySuccess(AcmeDirectoryInfos2 infos) {
-		this.directoryInfos = infos;
-		List<Component> responseComponents = DirectoryUI.getSuccessComponents(infos);
-		for (Component component : responseComponents) {
-			container.add(component);
-		}
-		container.add(renderNewButtons());
-		validate();
-	}
-
-	private void directoryFailure(Exception exception) {
-		container.add(DirectoryUI.getFailureComponent(exception));
-		validate();
+		session.setUrl(url);
+		new DirectoryInteraction(container, session, this::validate, this::addNewButtons).start();
 	}
 
 	private void nonceClicked() {
-		new NonceInteraction(container, directoryInfos, this::validate, nonce -> {
-			if (nonce != null) {
-				this.nonce = nonce;
-				addM(renderNewButtons());
-			}
-		}).start();
+		new NonceInteraction(container, session, this::validate, this::addNewButtons).start();
 	}
 
 	private void createAccountClicked() {
-
-		Consumer<AcmeAccount> finished = (account) -> {
-			if (account != null) {
-				this.account = account;
-				this.nonce = account.getNonce();
-			}
-			addM(renderNewButtons());
-		};
-
-		NewAccountInteraction interaction = new NewAccountInteraction(container, directoryInfos, nonce, om,
-				this::validate, finished);
-
-		interaction.start();
-
+		new NewAccountInteraction(container, session, this::validate, this::addNewButtons).start();
 	}
 
 	private void accountDetailsClicked() {
-		addM(MessageUI.render("Account details :)"));
+		U.addM(container, MessageUI.render("Account details :)"));
 		validate();
 	}
 
 	private void orderClicked() {
-		addM(MessageUI.render("New order clicked"));
+		U.addM(container, MessageUI.render("New order clicked"));
 		OrderCreationRequest
-				.send(directoryInfos, "" + account.getUrl(), nonce, om, (ECPrivateKey) account.getPrivateKey())
+				.send(session.getInfos(), "" + session.getAccount().getUrl(), session.getNonce(), session.getOm(),
+						(ECPrivateKey) session.getAccount().getPrivateKey())
 				.then(this::createOrderSuccess, this::createOrderFailure);
 		validate();
 	}
 
 	private void createOrderSuccess(AcmeOrderWithNonce order) {
-		this.order = order;
-		addM(MessageUI.render("Success"));
+		session.setOrder(order);
+		U.addM(container, MessageUI.render("Success"));
 
 		List<String> authorizations = order.getContent().getAuthorizations();
 		for (String a : authorizations) {
-			addM(MessageUI.render("Authorization " + a));
+			U.addM(container, MessageUI.render("Authorization " + a));
 		}
-		addM(MessageUI.render("Finalize " + order.getContent().getFinalize()));
+		U.addM(container, MessageUI.render("Finalize " + order.getContent().getFinalize()));
 
-		addM(renderNewButtons());
+		U.addM(container, createNewButtons());
 		validate();
 		try {
-			System.out.println(om.writeValueAsString(order));
+			System.out.println(session.getOm().writeValueAsString(order));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void createOrderFailure(Exception ex) {
-		addM(ExceptionUI.render(ex));
-		addM(renderNewButtons());
+		U.addM(container, ExceptionUI.render(ex));
+		U.addM(container, createNewButtons());
 		validate();
 	}
 
 	private void authorizationDetailsClicked() {
-		addM(MessageUI.render("Authorization details clicked"));
+		U.addM(container, MessageUI.render("Authorization details clicked"));
 		JComboBox<String> authorizationsCB = new JComboBox<>(
-				order.getContent().getAuthorizations().toArray(new String[] {}));
-		addM(authorizationsCB);
+				session.getOrder().getContent().getAuthorizations().toArray(new String[] {}));
+		U.addM(container, authorizationsCB);
 		JButton choose = new JButton("Choose");
 		JButton cancel = new JButton("Cancel");
-		addM(choose);
-		addM(cancel);
+		U.addM(container, choose);
+		U.addM(container, cancel);
 
 		choose.addActionListener(new ActionListener() {
 			@Override
@@ -176,7 +124,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 				choose.setEnabled(false);
 				cancel.setEnabled(false);
 				String auth = authorizationsCB.getSelectedItem().toString();
-				addM(MessageUI.render("Chosen " + auth));
+				U.addM(container, MessageUI.render("Chosen " + auth));
 				getAuthorizationDetails(auth);
 				validate();
 			}
@@ -188,8 +136,8 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 				authorizationsCB.setEnabled(false);
 				choose.setEnabled(false);
 				cancel.setEnabled(false);
-				addM(MessageUI.render("Cancelled"));
-				addM(renderNewButtons());
+				U.addM(container, MessageUI.render("Cancelled"));
+				U.addM(container, createNewButtons());
 				validate();
 			}
 		});
@@ -200,55 +148,49 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	private void getAuthorizationDetails(String url) {
 		new Promise<Authorization>((p) -> {
 			try {
-				Authorization r = Acme2.getAuthorization(url, om);
+				Authorization r = Acme2.getAuthorization(url, session.getOm());
 				p.success(r);
 			} catch (Exception e1) {
 				p.failure(e1);
 			}
 
 		}).then((Authorization o) -> {
-			addM(MessageUI.render("Success : got response for " + url));
-			this.authorization = o;
+			U.addM(container, MessageUI.render("Success : got response for " + url));
+			session.setAuthorization(o);
 			for (Challenge c : o.getChallenges()) {
-				addM(MessageUI.render(c.getUrl()));
+				U.addM(container, MessageUI.render(c.getUrl()));
 			}
 			validate();
 		}, (e) -> {
-			addM(ExceptionUI.render(e));
+			U.addM(container, ExceptionUI.render(e));
 			validate();
 		});
 	}
 
-	private Component renderNewButtons() {
+	private void addNewButtons() {
+		U.addM(container, createNewButtons());
+	}
+
+	private Component createNewButtons() {
 		Acme2Buttons buttonsFactory = new Acme2Buttons();
 
-		buttonsFactory.setNonceEnabled(url != null);
-		buttonsFactory.setCreateAccountEnabled(nonce != null);
+		buttonsFactory.setNonceEnabled(session.getUrl() != null);
+		buttonsFactory.setCreateAccountEnabled(session.getNonce() != null);
 
 		buttonsFactory.setNonceClicked(this::nonceClicked);
 		buttonsFactory.setCreateAccountClicked(this::createAccountClicked);
 
-		buttonsFactory.setAccountDetailsEnabled(account != null);
+		buttonsFactory.setAccountDetailsEnabled(session.getAccount() != null);
 		buttonsFactory.setAccountDetailsClicked(this::accountDetailsClicked);
 
-		buttonsFactory.setOrderEnabled(account != null);
+		buttonsFactory.setOrderEnabled(session.getAccount() != null);
 		buttonsFactory.setOrderClicked(this::orderClicked);
 
-		buttonsFactory.setAuthorizationDetailsEnabled(order != null);
+		buttonsFactory.setAuthorizationDetailsEnabled(session.getOrder() != null);
 		buttonsFactory.setAuthorizationDetailsClicked(this::authorizationDetailsClicked);
 
 		return buttonsFactory.create();
 
-	}
-
-	private void addM(List<Component> components) {
-		for (Component component : components) {
-			container.add(component);
-		}
-	}
-
-	private void addM(Component component) {
-		container.add(component);
 	}
 
 	@Override

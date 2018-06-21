@@ -23,6 +23,7 @@ import org.apache.http.client.fluent.Request;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import example.company.acme.AcmeSession;
 import example.company.acme.crypto.ECCurves;
 import example.company.acme.crypto.ECSignature;
 import example.company.acme.crypto.ECSigner;
@@ -74,11 +75,11 @@ public class AcmeNewAccount {
 		return jws;
 	}
 
-	public static AcmeAccount sendRequest(AcmeDirectoryInfos2 infos, Map<String, Object> jws, ObjectMapper om)
+	public static AcmeAccount sendRequest(AcmeSession session, Map<String, Object> jws)
 			throws ClientProtocolException, IOException {
 
-		String url = infos.getNewAccountURL();
-		byte[] body = om.writeValueAsBytes(jws);
+		String url = session.getInfos().getNewAccountURL();
+		byte[] body = session.getOm().writeValueAsBytes(jws);
 
 		Request request = Request.Post(url)
 
@@ -93,8 +94,10 @@ public class AcmeNewAccount {
 
 				InputStream content = response.getEntity().getContent();
 
-				AcmeAccount account = om.readValue(content, AcmeAccount.class);
-				account.setNonce(response.getFirstHeader("Replay-Nonce").getValue());
+				AcmeAccount account = session.getOm().readValue(content, AcmeAccount.class);
+
+				session.setNonce(response.getFirstHeader("Replay-Nonce").getValue());
+
 				return account;
 			}
 

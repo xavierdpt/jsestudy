@@ -3,9 +3,13 @@ package xpdtr.acme.gui.utils;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 
 public class U {
@@ -36,5 +40,14 @@ public class U {
 
 	public static void addM(Container container, Component component) {
 		container.add(component);
+	}
+
+	public static void clicked(JButton button, Consumer<ActionEvent> consumer) {
+		button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				consumer.accept(event);
+			}
+		});
 	}
 }
