@@ -39,4 +39,6 @@ public class Challenge {
 		this.token = token;
 	}
 
+	
+
 }

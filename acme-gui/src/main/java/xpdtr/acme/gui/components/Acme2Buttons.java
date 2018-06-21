@@ -18,6 +18,7 @@ public class Acme2Buttons {
 	private boolean revokeCertEnabled;
 	private boolean accountDetailsEnabled;
 	private boolean authorizationDetailsEnabled;
+	private boolean challengeEnabled;
 
 	private Runnable nonceClicked;
 	private Runnable createAccountClicked;
@@ -26,6 +27,18 @@ public class Acme2Buttons {
 	private Runnable revokeCertClicked;
 	private Runnable accountDetailsClicked;
 	private Runnable authorizationDetailsClicked;
+	private Runnable challengeClicked;
+
+	private JButton nonce;
+	private JButton account;
+	private JButton order;
+	private JButton changeKey;
+	private JButton revokeCert;
+	private JButton accountDetails;
+	private JButton authorizationDetails;
+	private JButton challenge;
+
+	private boolean created;
 
 	public void setNonceEnabled(boolean enabled) {
 		this.nonceEnabled = enabled;
@@ -53,6 +66,10 @@ public class Acme2Buttons {
 
 	public void setAuthorizationDetailsEnabled(boolean authorizationDetailsEnabled) {
 		this.authorizationDetailsEnabled = authorizationDetailsEnabled;
+	}
+
+	public void setChallengeEnabled(boolean challengeEnabled) {
+		this.challengeEnabled = challengeEnabled;
 	}
 
 	public void setNonceClicked(Runnable handler) {
@@ -83,44 +100,58 @@ public class Acme2Buttons {
 		this.authorizationDetailsClicked = authorizationDetailsClicked;
 	}
 
-	public Component create() {
+	public void setChallengeClicked(Runnable challengeClicked) {
+		this.challengeClicked = challengeClicked;
+	}
 
-		JButton nonce = new JButton("New Nonce");
+	public Component render() {
+
+		JPanel buttons = null;
+		if (!created) {
+			nonce = new JButton("New Nonce");
+			account = new JButton("New Account");
+			order = new JButton("New Order");
+			changeKey = new JButton("Change Key");
+			revokeCert = new JButton("Revoke Cert");
+			accountDetails = new JButton("Account Details");
+			authorizationDetails = new JButton("Authorization details");
+			challenge = new JButton("Challenge");
+
+			buttons = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			buttons.add(nonce);
+			buttons.add(account);
+			buttons.add(order);
+			buttons.add(changeKey);
+			buttons.add(revokeCert);
+			buttons.add(accountDetails);
+			buttons.add(authorizationDetails);
+			buttons.add(challenge);
+			created = true;
+		}
+
 		nonce.setEnabled(nonceEnabled);
 		clicked(nonce, nonceClicked);
 
-		JButton account = new JButton("New Account");
 		account.setEnabled(createAccountEnabled);
 		clicked(account, createAccountClicked);
 
-		JButton order = new JButton("New Order");
 		order.setEnabled(orderEnabled);
 		clicked(order, orderClicked);
 
-		JButton changeKey = new JButton("Change Key");
 		changeKey.setEnabled(changeKeyEnabled);
 		clicked(changeKey, changeKeyClicked);
 
-		JButton revokeCert = new JButton("Revoke Cert");
 		revokeCert.setEnabled(revokeCertEnabled);
 		clicked(revokeCert, revokeCertClicked);
 
-		JButton accountDetails = new JButton("Account Details");
 		accountDetails.setEnabled(accountDetailsEnabled);
 		clicked(accountDetails, accountDetailsClicked);
 
-		JButton authorizationDetails = new JButton("Authorization details");
 		authorizationDetails.setEnabled(authorizationDetailsEnabled);
 		clicked(authorizationDetails, authorizationDetailsClicked);
 
-		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		buttons.add(nonce);
-		buttons.add(account);
-		buttons.add(order);
-		buttons.add(changeKey);
-		buttons.add(revokeCert);
-		buttons.add(accountDetails);
-		buttons.add(authorizationDetails);
+		challenge.setEnabled(challengeEnabled);
+		clicked(challenge, challengeClicked);
 
 		return buttons;
 	}
@@ -138,6 +169,11 @@ public class Acme2Buttons {
 	}
 
 	private void clicked(JButton button, Runnable consumer) {
+
+		for (ActionListener listener : button.getActionListeners()) {
+			button.removeActionListener(listener);
+		}
+
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

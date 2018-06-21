@@ -152,4 +152,12 @@ public class Acme2 {
 		return jwk;
 	}
 
+	public static Challenge challenge(AcmeSession session, String url) throws AcmeException {
+		try {
+			return GetChallenge.sendRequest(session, url);
+		} catch (IOException e) {
+			throw new AcmeException(e);
+		}
+	}
+
 }

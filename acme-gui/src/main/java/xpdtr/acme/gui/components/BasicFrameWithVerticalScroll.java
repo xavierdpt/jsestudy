@@ -20,6 +20,8 @@ public abstract class BasicFrameWithVerticalScroll {
 
 	private JScrollPane scrollPane;
 
+	protected Container contentPane;
+
 	public BasicFrameWithVerticalScroll() {
 
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -36,7 +38,7 @@ public abstract class BasicFrameWithVerticalScroll {
 		scrollPane = new JScrollPane(scrollView);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-		Container contentPane = frame.getContentPane();
+		contentPane = frame.getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		Dimension size = frame.getSize();

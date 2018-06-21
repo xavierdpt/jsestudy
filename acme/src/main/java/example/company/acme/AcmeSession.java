@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import example.company.acme.v2.AcmeDirectoryInfos2;
 import example.company.acme.v2.AcmeOrderWithNonce;
 import example.company.acme.v2.Authorization;
+import example.company.acme.v2.Challenge;
 import example.company.acme.v2.account.AcmeAccount;
 
 public class AcmeSession {
@@ -19,6 +20,7 @@ public class AcmeSession {
 	private AcmeAccount account;
 	private AcmeOrderWithNonce order;
 	private Authorization authorization;
+	private Challenge challenge;
 
 	public AcmeSession() {
 		om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -86,6 +88,14 @@ public class AcmeSession {
 
 	public void setAuthorization(Authorization authorization) {
 		this.authorization = authorization;
+	}
+
+	public Challenge getChallenge() {
+		return challenge;
+	}
+
+	public void setChallenge(Challenge challenge) {
+		this.challenge = challenge;
 	}
 
 }

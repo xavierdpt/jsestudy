@@ -1,5 +1,6 @@
 package xpdtr.acme.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.LayoutManager;
@@ -39,6 +40,8 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	private AcmeSession session = new AcmeSession();
 
+	private Acme2Buttons buttons;
+
 	@Override
 	protected void addComponents(JPanel container) {
 		this.container = container;
@@ -57,15 +60,15 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	private void setUrlAndQueryDirectory(String url) {
 		session.setUrl(url);
-		new DirectoryInteraction(container, session, this::validate, this::addNewButtons).start();
+		new DirectoryInteraction(container, session, this::validate, this::updateButtons).start();
 	}
 
 	private void nonceClicked() {
-		new NonceInteraction(container, session, this::validate, this::addNewButtons).start();
+		new NonceInteraction(container, session, this::validate, this::updateButtons).start();
 	}
 
 	private void createAccountClicked() {
-		new NewAccountInteraction(container, session, this::validate, this::addNewButtons).start();
+		new NewAccountInteraction(container, session, this::validate, this::updateButtons).start();
 	}
 
 	private void accountDetailsClicked() {
@@ -92,7 +95,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		}
 		U.addM(container, MessageUI.render("Finalize " + order.getContent().getFinalize()));
 
-		U.addM(container, createNewButtons());
+		updateButtons();
 		validate();
 		try {
 			System.out.println(session.getOm().writeValueAsString(order));
@@ -103,7 +106,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	private void createOrderFailure(Exception ex) {
 		U.addM(container, ExceptionUI.render(ex));
-		U.addM(container, createNewButtons());
+		updateButtons();
 		validate();
 	}
 
@@ -137,7 +140,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 				choose.setEnabled(false);
 				cancel.setEnabled(false);
 				U.addM(container, MessageUI.render("Cancelled"));
-				U.addM(container, createNewButtons());
+				updateButtons();
 				validate();
 			}
 		});
@@ -160,36 +163,54 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 			for (Challenge c : o.getChallenges()) {
 				U.addM(container, MessageUI.render(c.getUrl()));
 			}
+			updateButtons();
 			validate();
 		}, (e) -> {
 			U.addM(container, ExceptionUI.render(e));
+			updateButtons();
 			validate();
 		});
 	}
 
-	private void addNewButtons() {
-		U.addM(container, createNewButtons());
+	private void challengeClicked() {
+		new ChallengeInteraction(container, session, this::validate, this::updateButtons).start();
 	}
 
-	private Component createNewButtons() {
-		Acme2Buttons buttonsFactory = new Acme2Buttons();
+	
 
-		buttonsFactory.setNonceEnabled(session.getUrl() != null);
-		buttonsFactory.setCreateAccountEnabled(session.getNonce() != null);
+	private void updateButtons() {
 
-		buttonsFactory.setNonceClicked(this::nonceClicked);
-		buttonsFactory.setCreateAccountClicked(this::createAccountClicked);
+		if (buttons == null) {
+			buttons = new Acme2Buttons();
+		}
 
-		buttonsFactory.setAccountDetailsEnabled(session.getAccount() != null);
-		buttonsFactory.setAccountDetailsClicked(this::accountDetailsClicked);
+		buttons.setNonceEnabled(session.getUrl() != null);
+		buttons.setNonceClicked(this::nonceClicked);
 
-		buttonsFactory.setOrderEnabled(session.getAccount() != null);
-		buttonsFactory.setOrderClicked(this::orderClicked);
+		buttons.setCreateAccountEnabled(session.getNonce() != null);
+		buttons.setCreateAccountClicked(this::createAccountClicked);
 
-		buttonsFactory.setAuthorizationDetailsEnabled(session.getOrder() != null);
-		buttonsFactory.setAuthorizationDetailsClicked(this::authorizationDetailsClicked);
+		buttons.setAccountDetailsEnabled(session.getAccount() != null);
+		buttons.setAccountDetailsClicked(this::accountDetailsClicked);
 
-		return buttonsFactory.create();
+		buttons.setOrderEnabled(session.getAccount() != null);
+		buttons.setOrderClicked(this::orderClicked);
+
+		buttons.setAuthorizationDetailsEnabled(session.getOrder() != null);
+		buttons.setAuthorizationDetailsClicked(this::authorizationDetailsClicked);
+
+		buttons.setChallengeEnabled(session.getAuthorization() != null);
+		buttons.setChallengeClicked(this::challengeClicked);
+		
+		Component rendered = buttons.render();
+		
+		if (rendered != null) {
+			contentPane.add(rendered, BorderLayout.SOUTH);
+		}
+		
+		validate();
+		
+
 
 	}
 

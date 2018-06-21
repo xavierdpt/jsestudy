@@ -50,4 +50,12 @@ public class U {
 			}
 		});
 	}
+
+	public static Runnable disabler(Component... components) {
+		return () -> {
+			for (Component component : components) {
+				component.setEnabled(false);
+			}
+		};
+	}
 }
