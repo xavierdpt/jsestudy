@@ -7,7 +7,7 @@ public class AcmeOrder {
 
 	private String status;
 	private String expires;
-	private List<AcmeAccountIdentifier> identifiers = new ArrayList<>();
+	private List<AcmeIdentifier> identifiers = new ArrayList<>();
 	private List<String> authorizations;
 	private String finalize;
 
@@ -27,11 +27,11 @@ public class AcmeOrder {
 		this.expires = expires;
 	}
 
-	public List<AcmeAccountIdentifier> getIdentifiers() {
+	public List<AcmeIdentifier> getIdentifiers() {
 		return identifiers;
 	}
 
-	public void setIdentifiers(List<AcmeAccountIdentifier> identifiers) {
+	public void setIdentifiers(List<AcmeIdentifier> identifiers) {
 		this.identifiers = identifiers;
 	}
 

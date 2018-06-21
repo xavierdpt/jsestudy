@@ -1,5 +1,6 @@
 package xpdtr.acme.gui;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,17 +8,13 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import example.company.acme.AcmeSession;
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeException;
 import example.company.acme.v2.Challenge;
 import xpdtr.acme.gui.components.ExceptionUI;
-import xpdtr.acme.gui.components.MessageUI;
+import xpdtr.acme.gui.components.SelectableLabelUI;
 import xpdtr.acme.gui.interactions.UIInteraction;
 import xpdtr.acme.gui.utils.Promise;
 import xpdtr.acme.gui.utils.U;
@@ -34,7 +31,7 @@ public class ChallengeInteraction extends UIInteraction {
 	@Override
 	public void start() {
 
-		JLabel label = MessageUI.render("Which challenge ?");
+		Component label = SelectableLabelUI.render("Which challenge ?");
 
 		JComboBox<String> cb = new JComboBox<>();
 
@@ -75,7 +72,7 @@ public class ChallengeInteraction extends UIInteraction {
 	}
 
 	private void next(String url) {
-		U.addM(container, MessageUI.render("Sending..."));
+		U.addM(container, SelectableLabelUI.render("Sending..."));
 		new Promise<Challenge>((Promise<Challenge> p) -> {
 			try {
 				p.success(Acme2.challenge(session, url));

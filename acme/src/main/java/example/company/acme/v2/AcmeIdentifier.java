@@ -1,6 +1,6 @@
 package example.company.acme.v2;
 
-public class AcmeAccountIdentifier {
+public class AcmeIdentifier {
 
 	private String type;
 	private String value;

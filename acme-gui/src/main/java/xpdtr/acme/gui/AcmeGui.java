@@ -10,8 +10,10 @@ import java.io.IOException;
 import java.security.interfaces.ECPrivateKey;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import example.company.acme.AcmeSession;
@@ -25,7 +27,8 @@ import xpdtr.acme.gui.components.AcmeUrlUI;
 import xpdtr.acme.gui.components.AcmeVersionUI;
 import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
 import xpdtr.acme.gui.components.ExceptionUI;
-import xpdtr.acme.gui.components.MessageUI;
+import xpdtr.acme.gui.components.SelectableLabelUI;
+import xpdtr.acme.gui.components.SessionUI;
 import xpdtr.acme.gui.components.Title;
 import xpdtr.acme.gui.interactions.DirectoryInteraction;
 import xpdtr.acme.gui.interactions.NewAccountInteraction;
@@ -36,48 +39,62 @@ import xpdtr.acme.gui.utils.U;
 
 public class AcmeGui extends BasicFrameWithVerticalScroll {
 
-	private Container container;
+	private Container sessionContainer;
 
 	private AcmeSession session = new AcmeSession();
 
 	private Acme2Buttons buttons;
 
-	@Override
-	protected void addComponents(JPanel container) {
-		this.container = container;
-		U.setMargins(container, 10, 0);
+	private JComponent stateContainer;
 
-		container.add(Title.create());
-		container.add(AcmeVersionUI.create(this::setVersionAndAskForUrl));
+	@Override
+	public void init() {
+		super.init();
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+		panel.add(Title.create());
+
+		contentPane.add(panel, BorderLayout.NORTH);
+	}
+
+	@Override
+	protected void addComponents(JComponent sessionContainer, JComponent stateContainer) {
+
+		this.sessionContainer = sessionContainer;
+		this.stateContainer = stateContainer;
+
+		U.setMargins(sessionContainer, 10, 0);
+		new AcmeVersionUI(sessionContainer, session, this::validate, this::setVersionAndAskForUrl).start();
 
 	}
 
-	private void setVersionAndAskForUrl(String version) {
-		session.setVersion(version);
-		container.add(AcmeUrlUI.create(version, this::setUrlAndQueryDirectory));
+	private void setVersionAndAskForUrl() {
+		sessionChanged();
+		sessionContainer.add(AcmeUrlUI.create(session.getVersion(), this::setUrlAndQueryDirectory));
 		validate();
 	}
 
 	private void setUrlAndQueryDirectory(String url) {
 		session.setUrl(url);
-		new DirectoryInteraction(container, session, this::validate, this::updateButtons).start();
+		sessionChanged();
+		new DirectoryInteraction(sessionContainer, session, this::validate, this::updateButtons).start();
 	}
 
 	private void nonceClicked() {
-		new NonceInteraction(container, session, this::validate, this::updateButtons).start();
+		new NonceInteraction(sessionContainer, session, this::validate, this::updateButtons).start();
 	}
 
 	private void createAccountClicked() {
-		new NewAccountInteraction(container, session, this::validate, this::updateButtons).start();
+		new NewAccountInteraction(sessionContainer, session, this::validate, this::updateButtons).start();
 	}
 
 	private void accountDetailsClicked() {
-		U.addM(container, MessageUI.render("Account details :)"));
+		U.addM(sessionContainer, SelectableLabelUI.render("Account details :)"));
 		validate();
 	}
 
 	private void orderClicked() {
-		U.addM(container, MessageUI.render("New order clicked"));
+		U.addM(sessionContainer, SelectableLabelUI.render("New order clicked"));
 		OrderCreationRequest
 				.send(session.getInfos(), "" + session.getAccount().getUrl(), session.getNonce(), session.getOm(),
 						(ECPrivateKey) session.getAccount().getPrivateKey())
@@ -87,13 +104,13 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	private void createOrderSuccess(AcmeOrderWithNonce order) {
 		session.setOrder(order);
-		U.addM(container, MessageUI.render("Success"));
+		U.addM(sessionContainer, SelectableLabelUI.render("Success"));
 
 		List<String> authorizations = order.getContent().getAuthorizations();
 		for (String a : authorizations) {
-			U.addM(container, MessageUI.render("Authorization " + a));
+			U.addM(sessionContainer, SelectableLabelUI.render("Authorization " + a));
 		}
-		U.addM(container, MessageUI.render("Finalize " + order.getContent().getFinalize()));
+		U.addM(sessionContainer, SelectableLabelUI.render("Finalize " + order.getContent().getFinalize()));
 
 		updateButtons();
 		validate();
@@ -105,20 +122,20 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void createOrderFailure(Exception ex) {
-		U.addM(container, ExceptionUI.render(ex));
+		U.addM(sessionContainer, ExceptionUI.render(ex));
 		updateButtons();
 		validate();
 	}
 
 	private void authorizationDetailsClicked() {
-		U.addM(container, MessageUI.render("Authorization details clicked"));
+		U.addM(sessionContainer, SelectableLabelUI.render("Authorization details clicked"));
 		JComboBox<String> authorizationsCB = new JComboBox<>(
 				session.getOrder().getContent().getAuthorizations().toArray(new String[] {}));
-		U.addM(container, authorizationsCB);
+		U.addM(sessionContainer, authorizationsCB);
 		JButton choose = new JButton("Choose");
 		JButton cancel = new JButton("Cancel");
-		U.addM(container, choose);
-		U.addM(container, cancel);
+		U.addM(sessionContainer, choose);
+		U.addM(sessionContainer, cancel);
 
 		choose.addActionListener(new ActionListener() {
 			@Override
@@ -127,7 +144,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 				choose.setEnabled(false);
 				cancel.setEnabled(false);
 				String auth = authorizationsCB.getSelectedItem().toString();
-				U.addM(container, MessageUI.render("Chosen " + auth));
+				U.addM(sessionContainer, SelectableLabelUI.render("Chosen " + auth));
 				getAuthorizationDetails(auth);
 				validate();
 			}
@@ -139,7 +156,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 				authorizationsCB.setEnabled(false);
 				choose.setEnabled(false);
 				cancel.setEnabled(false);
-				U.addM(container, MessageUI.render("Cancelled"));
+				U.addM(sessionContainer, SelectableLabelUI.render("Cancelled"));
 				updateButtons();
 				validate();
 			}
@@ -158,27 +175,27 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 			}
 
 		}).then((Authorization o) -> {
-			U.addM(container, MessageUI.render("Success : got response for " + url));
+			U.addM(sessionContainer, SelectableLabelUI.render("Success : got response for " + url));
 			session.setAuthorization(o);
 			for (Challenge c : o.getChallenges()) {
-				U.addM(container, MessageUI.render(c.getUrl()));
+				U.addM(sessionContainer, SelectableLabelUI.render(c.getUrl()));
 			}
 			updateButtons();
 			validate();
 		}, (e) -> {
-			U.addM(container, ExceptionUI.render(e));
+			U.addM(sessionContainer, ExceptionUI.render(e));
 			updateButtons();
 			validate();
 		});
 	}
 
 	private void challengeClicked() {
-		new ChallengeInteraction(container, session, this::validate, this::updateButtons).start();
+		new ChallengeInteraction(sessionContainer, session, this::validate, this::updateButtons).start();
 	}
 
-	
-
 	private void updateButtons() {
+
+		sessionChanged();
 
 		if (buttons == null) {
 			buttons = new Acme2Buttons();
@@ -201,17 +218,20 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 		buttons.setChallengeEnabled(session.getAuthorization() != null);
 		buttons.setChallengeClicked(this::challengeClicked);
-		
+
 		Component rendered = buttons.render();
-		
+
 		if (rendered != null) {
 			contentPane.add(rendered, BorderLayout.SOUTH);
 		}
-		
+
 		validate();
-		
 
+	}
 
+	private void sessionChanged() {
+		stateContainer.removeAll();
+		SessionUI.render(session, stateContainer);
 	}
 
 	@Override

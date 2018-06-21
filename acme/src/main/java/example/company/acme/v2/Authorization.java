@@ -5,16 +5,16 @@ import java.util.List;
 
 public class Authorization {
 
-	private AcmeAccountIdentifier identifier;
+	private AcmeIdentifier identifier;
 	private String status;
 	private String expires;
 	private List<Challenge> challenges = new ArrayList<>();
 
-	public AcmeAccountIdentifier getIdentifier() {
+	public AcmeIdentifier getIdentifier() {
 		return identifier;
 	}
 
-	public void setIdentifier(AcmeAccountIdentifier identifier) {
+	public void setIdentifier(AcmeIdentifier identifier) {
 		this.identifier = identifier;
 	}
 

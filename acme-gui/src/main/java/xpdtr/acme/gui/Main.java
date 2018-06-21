@@ -26,7 +26,9 @@ public class Main {
 				public void run() {
 
 					JFrame.setDefaultLookAndFeelDecorated(true);
-					new AcmeGui().setVisible(true);
+					AcmeGui gui = new AcmeGui();
+					gui.init();
+					gui.setVisible(true);
 				}
 			});
 			Thread.currentThread().join();
