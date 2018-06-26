@@ -1,5 +1,7 @@
 package example.company.acme;
 
+import java.security.KeyPair;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -21,6 +23,8 @@ public class AcmeSession {
 	private AcmeOrderWithNonce order;
 	private Authorization authorization;
 	private Challenge challenge;
+
+	private KeyPair keyPair;
 
 	public AcmeSession() {
 		om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -98,4 +102,11 @@ public class AcmeSession {
 		this.challenge = challenge;
 	}
 
+	public KeyPair getKeyPair() {
+		return keyPair;
+	}
+
+	public void setKeyPair(KeyPair keyPair) {
+		this.keyPair = keyPair;
+	}
 }

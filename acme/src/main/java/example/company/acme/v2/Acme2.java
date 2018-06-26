@@ -93,6 +93,7 @@ public class Acme2 {
 
 		try {
 			KeyPair keyPair = KPG.newECP256KeyPair();
+			keyPair = session.getKeyPair();
 
 			ECPublicKey publicKey = (ECPublicKey) keyPair.getPublic();
 

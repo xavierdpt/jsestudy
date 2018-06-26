@@ -82,4 +82,7 @@ public abstract class BasicFrameWithVerticalScroll {
 
 	abstract protected LayoutManager getLayout(Container target);
 
+	protected final JFrame getFrame() {
+		return frame;
+	}
 }

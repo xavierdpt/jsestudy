@@ -6,23 +6,46 @@ import java.awt.Container;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.security.KeyPair;
+import java.security.KeyStore;
 import java.security.interfaces.ECPrivateKey;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.annotation.processing.Filer;
+import javax.lang.model.element.Element;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+import javax.tools.FileObject;
+import javax.tools.JavaFileObject;
+import javax.tools.JavaFileManager.Location;
+
+import org.omg.CORBA.INV_FLAG;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import example.company.acme.AcmeSession;
+import example.company.acme.crypto.KPG;
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeOrderWithNonce;
 import example.company.acme.v2.Authorization;
 import example.company.acme.v2.Challenge;
 import xpdtr.acme.gui.async.OrderCreationRequest;
 import xpdtr.acme.gui.components.Acme2Buttons;
+import xpdtr.acme.gui.components.Acme2Buttons.Action;
 import xpdtr.acme.gui.components.AcmeUrlUI;
 import xpdtr.acme.gui.components.AcmeVersionUI;
 import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
@@ -193,6 +216,76 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		new ChallengeInteraction(sessionContainer, session, this::validate, this::updateButtons).start();
 	}
 
+	private void createKeyPair() {
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() throws Exception {
+				session.setKeyPair(KPG.newECP256KeyPair());
+				return null;
+			}
+
+			protected void done() {
+				try {
+					get();
+					U.addM(sessionContainer, SelectableLabelUI.render("New key pair created"));
+				} catch (Exception e) {
+					U.addM(sessionContainer, ExceptionUI.render(e));
+				}
+				updateButtons();
+			};
+		}.execute();
+	}
+
+	private void saveKeyPair() {
+
+		JFileChooser jfc = new JFileChooser();
+		int r = jfc.showOpenDialog(getFrame());
+		U.addM(sessionContainer, SelectableLabelUI.render("Returned value : " + r));
+		if (r == JFileChooser.APPROVE_OPTION) {
+			File file = jfc.getSelectedFile();
+			U.addM(sessionContainer, SelectableLabelUI.render(file.getAbsolutePath()));
+			try {
+				FileWriter fw = new FileWriter(file);
+				KeyPair kp = session.getKeyPair();
+				Map<String, Object> map = new HashMap<>();
+				map.put("public", kp.getPublic().getEncoded());
+				map.put("private", kp.getPublic().getEncoded());
+				session.getOm().writeValue(fw, map);
+				fw.close();
+				U.addM(sessionContainer, SelectableLabelUI.render("Key pair saved"));
+			} catch (IOException e) {
+				U.addM(sessionContainer, ExceptionUI.render(e));
+			}
+		} else {
+			U.addM(sessionContainer, SelectableLabelUI.render("Cancelled"));
+		}
+		updateButtons();
+
+	}
+
+	private void loadKeyPair() {
+		JFileChooser jfc = new JFileChooser();
+		int r = jfc.showOpenDialog(getFrame());
+		U.addM(sessionContainer, SelectableLabelUI.render("Returned value : " + r));
+		if (r == JFileChooser.APPROVE_OPTION) {
+			File file = jfc.getSelectedFile();
+			U.addM(sessionContainer, SelectableLabelUI.render(file.getAbsolutePath()));
+			if (!file.exists() || !file.isFile() || !file.canRead()) {
+				U.addM(sessionContainer, SelectableLabelUI.render("File is not a readable existing file"));
+			} else {
+				try {
+					JsonNode tree = session.getOm().readTree(new FileReader(file));
+					U.addM(sessionContainer, SelectableLabelUI.render("Public key : "+tree.get("public")));
+				} catch (Exception e) {
+					U.addM(sessionContainer, ExceptionUI.render(e));
+				}
+			}
+		} else {
+			U.addM(sessionContainer, SelectableLabelUI.render("Cancelled"));
+		}
+		updateButtons();
+	}
+
 	private void updateButtons() {
 
 		sessionChanged();
@@ -201,28 +294,38 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 			buttons = new Acme2Buttons();
 		}
 
-		buttons.setNonceEnabled(session.getUrl() != null);
-		buttons.setNonceClicked(this::nonceClicked);
+		buttons.setEnabled(Action.CREATE_KEY_PAIR, true);
+		buttons.setClicked(Action.CREATE_KEY_PAIR, this::createKeyPair);
 
-		buttons.setCreateAccountEnabled(session.getNonce() != null);
-		buttons.setCreateAccountClicked(this::createAccountClicked);
+		buttons.setEnabled(Action.SAVE_KEY_PAIR, session.getKeyPair() != null);
+		buttons.setClicked(Action.SAVE_KEY_PAIR, this::saveKeyPair);
 
-		buttons.setAccountDetailsEnabled(session.getAccount() != null);
-		buttons.setAccountDetailsClicked(this::accountDetailsClicked);
+		buttons.setEnabled(Action.LOAD_KEY_PAIR, session.getAccount() == null);
+		buttons.setClicked(Action.LOAD_KEY_PAIR, this::loadKeyPair);
 
-		buttons.setOrderEnabled(session.getAccount() != null);
-		buttons.setOrderClicked(this::orderClicked);
+		buttons.setEnabled(Action.NONCE, session.getUrl() != null);
+		buttons.setClicked(Action.NONCE, this::nonceClicked);
 
-		buttons.setAuthorizationDetailsEnabled(session.getOrder() != null);
-		buttons.setAuthorizationDetailsClicked(this::authorizationDetailsClicked);
+		buttons.setEnabled(Action.CREATE_ACCOUNT, session.getNonce() != null && session.getKeyPair() != null);
+		buttons.setClicked(Action.CREATE_ACCOUNT, this::createAccountClicked);
 
-		buttons.setChallengeEnabled(session.getAuthorization() != null);
-		buttons.setChallengeClicked(this::challengeClicked);
+		buttons.setEnabled(Action.ACCOUNT_DETAILS, session.getAccount() != null);
+		buttons.setClicked(Action.ACCOUNT_DETAILS, this::accountDetailsClicked);
+
+		buttons.setEnabled(Action.ORDER, session.getAccount() != null);
+		buttons.setClicked(Action.ORDER, this::orderClicked);
+
+		buttons.setEnabled(Action.AUTHORIZATION_DETAILS, session.getOrder() != null);
+		buttons.setClicked(Action.AUTHORIZATION_DETAILS, this::authorizationDetailsClicked);
+
+		buttons.setEnabled(Action.CHALLENGE, session.getAuthorization() != null);
+		buttons.setClicked(Action.CHALLENGE, this::challengeClicked);
 
 		Component rendered = buttons.render();
 
 		if (rendered != null) {
 			contentPane.add(rendered, BorderLayout.SOUTH);
+		} else {
 		}
 
 		validate();
