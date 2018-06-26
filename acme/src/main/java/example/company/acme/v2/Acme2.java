@@ -16,7 +16,6 @@ import org.apache.http.client.fluent.Request;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import example.company.acme.AcmeSession;
-import example.company.acme.crypto.KPG;
 import example.company.acme.jw.JWBase64;
 import example.company.acme.v2.account.AcmeAccount;
 import example.company.acme.v2.account.AcmeNewAccount;
@@ -92,8 +91,8 @@ public class Acme2 {
 	public static AcmeSession newAccount(AcmeSession session, String contact) throws AcmeException {
 
 		try {
-			KeyPair keyPair = KPG.newECP256KeyPair();
-			keyPair = session.getKeyPair();
+			
+			KeyPair keyPair = session.getKeyPair();
 
 			ECPublicKey publicKey = (ECPublicKey) keyPair.getPublic();
 
