@@ -12,14 +12,14 @@ import xpdtr.acme.gui.utils.Promise;
 public class OrderCreationRequest {
 
 	public static Promise<AcmeOrderWithNonce> send(AcmeDirectoryInfos2 infos, String kid, String nonce, ObjectMapper om,
-			ECPrivateKey privateKey) {
+			ECPrivateKey privateKey, String site) {
 		Promise<AcmeOrderWithNonce> p = new Promise<>();
 
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					AcmeOrderWithNonce response = Acme2.newOrder(infos, kid, nonce, om, privateKey);
+					AcmeOrderWithNonce response = Acme2.newOrder(infos, kid, nonce, om, privateKey,site);
 					p.success(response);
 				} catch (Exception ex) {
 					p.failure(ex);

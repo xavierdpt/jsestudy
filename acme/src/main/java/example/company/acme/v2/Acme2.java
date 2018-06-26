@@ -106,9 +106,9 @@ public class Acme2 {
 	}
 
 	public static AcmeOrderWithNonce newOrder(AcmeDirectoryInfos2 infos, String kid, String nonce, ObjectMapper om,
-			ECPrivateKey privateKey) throws AcmeException {
+			ECPrivateKey privateKey, String site) throws AcmeException {
 		try {
-			Map<String, Object> jws = AcmeNewOrder.createJWS(infos, kid, nonce, om, privateKey);
+			Map<String, Object> jws = AcmeNewOrder.createJWS(infos, kid, nonce, om, privateKey,site);
 			return AcmeNewOrder.sendRequest(infos, om, jws);
 
 		} catch (Exception exception) {
