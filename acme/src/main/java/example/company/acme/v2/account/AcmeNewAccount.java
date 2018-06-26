@@ -21,7 +21,6 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.fluent.Request;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import example.company.acme.AcmeSession;
 import example.company.acme.crypto.ECCurves;
@@ -29,24 +28,24 @@ import example.company.acme.crypto.ECSignature;
 import example.company.acme.crypto.ECSigner;
 import example.company.acme.jw.JWA;
 import example.company.acme.jw.JWBase64;
-import example.company.acme.v2.AcmeDirectoryInfos2;
 import example.company.tox.common.Common;
 
 public class AcmeNewAccount {
 
-	public static Map<String, Object> createJWS(AcmeDirectoryInfos2 infos, KeyPair keyPair, String nonce64,
-			ObjectMapper om, Map<String, String> jwk, String contact)
+	public static Map<String, Object> createJWS(AcmeSession session, String contact)
 			throws JsonProcessingException, InvalidKeyException, NoSuchAlgorithmException,
 			InvalidParameterSpecException, InvalidKeySpecException, SignatureException {
+
+		KeyPair keyPair = session.getKeyPairWithJWK().getKeyPair();
 
 		ECPrivateKey privateKey = (ECPrivateKey) keyPair.getPrivate();
 
 		Map<String, Object> protekted = new HashMap<>();
 		protekted.put("alg", JWA.ES256);
-		protekted.put("jwk", jwk);
-		protekted.put("nonce", nonce64);
-		protekted.put("url", infos.getNewAccountURL());
-		String protected64 = JWBase64.encode(om.writeValueAsBytes(protekted));
+		protekted.put("jwk", session.getKeyPairWithJWK().getPublicJwk());
+		protekted.put("nonce", session.getNonce());
+		protekted.put("url", session.getInfos().getNewAccountURL());
+		String protected64 = JWBase64.encode(session.getOm().writeValueAsBytes(protekted));
 
 		List<String> contacts = new ArrayList<>();
 		String prefix = "";
@@ -58,7 +57,7 @@ public class AcmeNewAccount {
 		Map<String, Object> payload = new HashMap<>();
 		payload.put("termsOfServiceAgreed", true);
 		payload.put("contact", contacts);
-		String payload64 = JWBase64.encode(om.writeValueAsBytes(payload));
+		String payload64 = JWBase64.encode(session.getOm().writeValueAsBytes(payload));
 
 		byte[] tbs = (protected64 + "." + payload64).getBytes();
 		BigInteger s = privateKey.getS();

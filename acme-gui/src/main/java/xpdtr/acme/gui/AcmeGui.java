@@ -10,35 +10,23 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.security.KeyPair;
-import java.security.KeyStore;
 import java.security.interfaces.ECPrivateKey;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import javax.annotation.processing.Filer;
-import javax.lang.model.element.Element;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-import javax.tools.FileObject;
-import javax.tools.JavaFileObject;
-import javax.tools.JavaFileManager.Location;
-
-import org.omg.CORBA.INV_FLAG;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import example.company.acme.AcmeSession;
 import example.company.acme.crypto.KPG;
+import example.company.acme.jw.KeyPairWithJWK;
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeOrderWithNonce;
 import example.company.acme.v2.Authorization;
@@ -220,7 +208,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() throws Exception {
-				session.setKeyPair(KPG.newECP256KeyPair());
+				session.setKeyPairWithJWK(KeyPairWithJWK.fromKeyPair(KPG.newECP256KeyPair()));
 				return null;
 			}
 
@@ -246,10 +234,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 			U.addM(sessionContainer, SelectableLabelUI.render(file.getAbsolutePath()));
 			try {
 				FileWriter fw = new FileWriter(file);
-				KeyPair kp = session.getKeyPair();
-				Map<String, Object> map = new HashMap<>();
-				map.put("public", kp.getPublic().getEncoded());
-				map.put("private", kp.getPublic().getEncoded());
+				Map<String, String> map = session.getKeyPairWithJWK().getFullJWK();
 				session.getOm().writeValue(fw, map);
 				fw.close();
 				U.addM(sessionContainer, SelectableLabelUI.render("Key pair saved"));
@@ -275,7 +260,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 			} else {
 				try {
 					JsonNode tree = session.getOm().readTree(new FileReader(file));
-					U.addM(sessionContainer, SelectableLabelUI.render("Public key : "+tree.get("public")));
+					U.addM(sessionContainer, SelectableLabelUI.render("Public key : " + tree.get("public")));
 				} catch (Exception e) {
 					U.addM(sessionContainer, ExceptionUI.render(e));
 				}
@@ -297,7 +282,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		buttons.setEnabled(Action.CREATE_KEY_PAIR, true);
 		buttons.setClicked(Action.CREATE_KEY_PAIR, this::createKeyPair);
 
-		buttons.setEnabled(Action.SAVE_KEY_PAIR, session.getKeyPair() != null);
+		buttons.setEnabled(Action.SAVE_KEY_PAIR, session.getKeyPairWithJWK() != null);
 		buttons.setClicked(Action.SAVE_KEY_PAIR, this::saveKeyPair);
 
 		buttons.setEnabled(Action.LOAD_KEY_PAIR, session.getAccount() == null);
@@ -306,7 +291,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		buttons.setEnabled(Action.NONCE, session.getUrl() != null);
 		buttons.setClicked(Action.NONCE, this::nonceClicked);
 
-		buttons.setEnabled(Action.CREATE_ACCOUNT, session.getNonce() != null && session.getKeyPair() != null);
+		buttons.setEnabled(Action.CREATE_ACCOUNT, session.getNonce() != null && session.getKeyPairWithJWK() != null);
 		buttons.setClicked(Action.CREATE_ACCOUNT, this::createAccountClicked);
 
 		buttons.setEnabled(Action.ACCOUNT_DETAILS, session.getAccount() != null);

@@ -1,10 +1,9 @@
 package example.company.acme;
 
-import java.security.KeyPair;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import example.company.acme.jw.KeyPairWithJWK;
 import example.company.acme.v2.AcmeDirectoryInfos2;
 import example.company.acme.v2.AcmeOrderWithNonce;
 import example.company.acme.v2.Authorization;
@@ -24,7 +23,7 @@ public class AcmeSession {
 	private Authorization authorization;
 	private Challenge challenge;
 
-	private KeyPair keyPair;
+	private KeyPairWithJWK keyPairWithJWK;
 
 	public AcmeSession() {
 		om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -102,11 +101,11 @@ public class AcmeSession {
 		this.challenge = challenge;
 	}
 
-	public KeyPair getKeyPair() {
-		return keyPair;
+	public KeyPairWithJWK getKeyPairWithJWK() {
+		return keyPairWithJWK;
 	}
 
-	public void setKeyPair(KeyPair keyPair) {
-		this.keyPair = keyPair;
+	public void setKeyPairWithJWK(KeyPairWithJWK keyPairWithJWK) {
+		this.keyPairWithJWK = keyPairWithJWK;
 	}
 }

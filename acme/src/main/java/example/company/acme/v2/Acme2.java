@@ -2,10 +2,7 @@ package example.company.acme.v2;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.KeyPair;
 import java.security.interfaces.ECPrivateKey;
-import java.security.interfaces.ECPublicKey;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.HttpResponse;
@@ -16,7 +13,6 @@ import org.apache.http.client.fluent.Request;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import example.company.acme.AcmeSession;
-import example.company.acme.crypto.KPG;
 import example.company.acme.jw.JWBase64;
 import example.company.acme.v2.account.AcmeAccount;
 import example.company.acme.v2.account.AcmeNewAccount;
@@ -92,22 +88,14 @@ public class Acme2 {
 	public static AcmeSession newAccount(AcmeSession session, String contact) throws AcmeException {
 
 		try {
-			KeyPair keyPair = KPG.newECP256KeyPair();
-			keyPair = session.getKeyPair();
 
-			ECPublicKey publicKey = (ECPublicKey) keyPair.getPublic();
-
-			String x64 = JWBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineX()));
-			String y64 = JWBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineY()));
-
-			Map<String, Object> newAccountJWS = AcmeNewAccount.createJWS(session.getInfos(), keyPair,
-					session.getNonce(), session.getOm(), getJWK(x64, y64), contact);
+			Map<String, Object> newAccountJWS = AcmeNewAccount.createJWS(session, contact);
 
 			AcmeAccount account = AcmeNewAccount.sendRequest(session, newAccountJWS);
 
 			account.setUrl(getUrl(session.getInfos(), account));
 
-			account.setPrivateKey(keyPair.getPrivate());
+			account.setPrivateKey(session.getKeyPairWithJWK().getKeyPair().getPrivate());
 
 			session.setAccount(account);
 
@@ -142,15 +130,6 @@ public class Acme2 {
 		int lastSlash = url.lastIndexOf('/');
 
 		return url.substring(0, lastSlash) + "/acct/" + account.getId();
-	}
-
-	private static Map<String, String> getJWK(String x64, String y64) {
-		Map<String, String> jwk = new HashMap<>();
-		jwk.put("kty", "EC");
-		jwk.put("crv", "P-256");
-		jwk.put("x", x64);
-		jwk.put("y", y64);
-		return jwk;
 	}
 
 	public static Challenge challenge(AcmeSession session, String url) throws AcmeException {
