@@ -33,7 +33,7 @@ import example.company.tox.common.Common;
 public class AcmeNewOrder {
 
 	public static Map<String, Object> createJWS(AcmeDirectoryInfos2 infos, String kid, String nonce, ObjectMapper om,
-			ECPrivateKey privateKey) throws JsonProcessingException, InvalidKeyException, NoSuchAlgorithmException,
+			ECPrivateKey privateKey, String value) throws JsonProcessingException, InvalidKeyException, NoSuchAlgorithmException,
 			InvalidParameterSpecException, InvalidKeySpecException, SignatureException {
 
 		Map<String, Object> protekted = new HashMap<>();
@@ -45,7 +45,7 @@ public class AcmeNewOrder {
 
 		Map<String, String> identifier = new HashMap<>();
 		identifier.put("type", "dns");
-		identifier.put("value", "example.com");
+		identifier.put("value", value);
 
 		List<Map<String, String>> identifiers = new ArrayList<>();
 		identifiers.add(identifier);
