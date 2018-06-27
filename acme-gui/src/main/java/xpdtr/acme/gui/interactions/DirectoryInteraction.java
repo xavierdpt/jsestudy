@@ -23,7 +23,7 @@ public class DirectoryInteraction extends UIInteraction {
 	public void start() {
 		container.add(DirectoryUI.renderStarting());
 		validate();
-		DirectoryRequest.send(session.getOm()).then(this::success, this::failure);
+		DirectoryRequest.send(session.getUrl(),session.getOm()).then(this::success, this::failure);
 	}
 
 	private void success(AcmeDirectoryInfos2 infos) {

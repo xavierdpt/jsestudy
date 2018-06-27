@@ -39,7 +39,7 @@ public class Fiddle28 {
 		
 		ObjectMapper om = new ObjectMapper();
 
-		AcmeDirectoryInfos2 infos = Acme2.directory(om);
+		AcmeDirectoryInfos2 infos = Acme2.directory(Acme2.ACME_STAGING_V2,om);
 
 		Assert.assertEquals("https://acme-staging-v02.api.letsencrypt.org/acme/key-change", infos.getKeyChange());
 		Assert.assertEquals("https://acme-staging-v02.api.letsencrypt.org/acme/new-acct", infos.getNewAccountURL());

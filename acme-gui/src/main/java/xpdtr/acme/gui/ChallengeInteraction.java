@@ -14,7 +14,7 @@ import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeException;
 import example.company.acme.v2.Challenge;
 import xpdtr.acme.gui.components.ExceptionUI;
-import xpdtr.acme.gui.components.SelectableLabelUI;
+import xpdtr.acme.gui.components.MessageUI;
 import xpdtr.acme.gui.interactions.UIInteraction;
 import xpdtr.acme.gui.utils.Promise;
 import xpdtr.acme.gui.utils.U;
@@ -31,7 +31,7 @@ public class ChallengeInteraction extends UIInteraction {
 	@Override
 	public void start() {
 
-		Component label = SelectableLabelUI.render("Which challenge ?");
+		Component label = MessageUI.render("Which challenge ?");
 
 		JComboBox<String> cb = new JComboBox<>();
 
@@ -72,7 +72,7 @@ public class ChallengeInteraction extends UIInteraction {
 	}
 
 	private void next(String url) {
-		U.addM(container, SelectableLabelUI.render("Sending..."));
+		U.addM(container, MessageUI.render("Sending..."));
 		new Promise<Challenge>((Promise<Challenge> p) -> {
 			try {
 				p.success(Acme2.challenge(session, url));

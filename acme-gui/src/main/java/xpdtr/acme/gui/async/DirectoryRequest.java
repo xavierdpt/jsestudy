@@ -8,7 +8,7 @@ import xpdtr.acme.gui.utils.Promise;
 
 public class DirectoryRequest {
 
-	public static Promise<AcmeDirectoryInfos2> send(ObjectMapper om) {
+	public static Promise<AcmeDirectoryInfos2> send(String url, ObjectMapper om) {
 
 		Promise<AcmeDirectoryInfos2> promise = new Promise<>();
 
@@ -16,7 +16,7 @@ public class DirectoryRequest {
 			@Override
 			public void run() {
 				try {
-					AcmeDirectoryInfos2 infos = Acme2.directory(om);
+					AcmeDirectoryInfos2 infos = Acme2.directory(url, om);
 					promise.success(infos);
 				} catch (Exception e) {
 					promise.failure(e);

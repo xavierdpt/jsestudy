@@ -16,38 +16,38 @@ import example.company.acme.v2.AcmeOrder;
 import example.company.acme.v2.AcmeOrderWithNonce;
 import example.company.acme.v2.Authorization;
 import example.company.acme.v2.Challenge;
-import xpdtr.acme.gui.components.SelectableLabelUI;
+import xpdtr.acme.gui.components.MessageUI;
 import xpdtr.acme.gui.utils.U;
 
 public class SessionUI {
 
 	public static void render(AcmeSession session, JComponent stateContainer) {
 		if (session.getVersion() != null) {
-			U.addM(stateContainer, SelectableLabelUI.render("ACME Version : " + session.getVersion()));
+			U.addM(stateContainer, MessageUI.render("ACME Version : " + session.getVersion()));
 		}
 		if (session.getUrl() != null) {
-			U.addM(stateContainer, SelectableLabelUI.render("Server URL : " + session.getUrl()));
+			U.addM(stateContainer, MessageUI.render("Server URL : " + session.getUrl()));
 		}
 		if (session.getInfos() != null) {
 			AcmeDirectoryInfos2 i = session.getInfos();
 			JPanel directoryPanel = titledVPanel("Directory");
-			U.addM(directoryPanel, SelectableLabelUI.render("New Nonce URL : " + i.getNewNonce()));
-			U.addM(directoryPanel, SelectableLabelUI.render("New Account URL : " + i.getNewAccountURL()));
-			U.addM(directoryPanel, SelectableLabelUI.render("New Order URL : " + i.getNewOrder()));
-			U.addM(directoryPanel, SelectableLabelUI.render("Key Change URL : " + i.getKeyChange()));
-			U.addM(directoryPanel, SelectableLabelUI.render("Revoke Cert URL : " + i.getRevokeCert()));
+			U.addM(directoryPanel, MessageUI.render("New Nonce URL : " + i.getNewNonce()));
+			U.addM(directoryPanel, MessageUI.render("New Account URL : " + i.getNewAccountURL()));
+			U.addM(directoryPanel, MessageUI.render("New Order URL : " + i.getNewOrder()));
+			U.addM(directoryPanel, MessageUI.render("Key Change URL : " + i.getKeyChange()));
+			U.addM(directoryPanel, MessageUI.render("Revoke Cert URL : " + i.getRevokeCert()));
 			U.addM(stateContainer, directoryPanel);
 		}
 		if (session.getNonce() != null) {
 			JPanel noncePanel = titledVPanel("Nonce");
-			U.addM(noncePanel, SelectableLabelUI.render(session.getNonce()));
+			U.addM(noncePanel, MessageUI.render(session.getNonce()));
 			U.addM(stateContainer, noncePanel);
 
 		}
 		if (session.getAccount() != null) {
 
 			JPanel accountPanel = titledVPanel("Account");
-			U.addM(accountPanel, SelectableLabelUI.render("URL : " + session.getAccount().getUrl()));
+			U.addM(accountPanel, MessageUI.render("URL : " + session.getAccount().getUrl()));
 			U.addM(stateContainer, accountPanel);
 		}
 		AcmeOrderWithNonce order = session.getOrder();
@@ -56,14 +56,14 @@ public class SessionUI {
 			AcmeOrder oorder = order.getContent();
 			for (AcmeIdentifier identifier : oorder.getIdentifiers()) {
 				U.addM(orderPanel,
-						SelectableLabelUI.render("Identifier : " + identifier.getType() + " " + identifier.getValue()));
+						MessageUI.render("Identifier : " + identifier.getType() + " " + identifier.getValue()));
 			}
-			U.addM(orderPanel, SelectableLabelUI.render("Status : " + oorder.getStatus()));
-			U.addM(orderPanel, SelectableLabelUI.render("Expires : " + oorder.getStatus()));
+			U.addM(orderPanel, MessageUI.render("Status : " + oorder.getStatus()));
+			U.addM(orderPanel, MessageUI.render("Expires : " + oorder.getStatus()));
 			for (String authorizationURL : oorder.getAuthorizations()) {
-				U.addM(orderPanel, SelectableLabelUI.render("Authorization URL : " + authorizationURL));
+				U.addM(orderPanel, MessageUI.render("Authorization URL : " + authorizationURL));
 			}
-			U.addM(orderPanel, SelectableLabelUI.render("Finalize URL : " + oorder.getFinalize()));
+			U.addM(orderPanel, MessageUI.render("Finalize URL : " + oorder.getFinalize()));
 			U.addM(stateContainer, orderPanel);
 		}
 		if (session.getAuthorization() != null) {
@@ -73,15 +73,15 @@ public class SessionUI {
 
 			AcmeIdentifier identifier = a.getIdentifier();
 			U.addM(authorizationPanel,
-					SelectableLabelUI.render("Authorization : " + identifier.getType() + " " + identifier.getValue()));
-			U.addM(authorizationPanel, SelectableLabelUI.render("Status: " + a.getStatus()));
-			U.addM(authorizationPanel, SelectableLabelUI.render("Expires: " + a.getExpires()));
+					MessageUI.render("Authorization : " + identifier.getType() + " " + identifier.getValue()));
+			U.addM(authorizationPanel, MessageUI.render("Status: " + a.getStatus()));
+			U.addM(authorizationPanel, MessageUI.render("Expires: " + a.getExpires()));
 			for (Challenge challenge : challenges) {
 				JPanel challengePanel = titledVPanel("Challenge");
-				U.addM(challengePanel, SelectableLabelUI.render("URL : " + challenge.getUrl()));
-				U.addM(challengePanel, SelectableLabelUI.render("Type : " + challenge.getType()));
-				U.addM(challengePanel, SelectableLabelUI.render("Status : " + challenge.getStatus()));
-				U.addM(challengePanel, SelectableLabelUI.render("Token : " + challenge.getToken()));
+				U.addM(challengePanel, MessageUI.render("URL : " + challenge.getUrl()));
+				U.addM(challengePanel, MessageUI.render("Type : " + challenge.getType()));
+				U.addM(challengePanel, MessageUI.render("Status : " + challenge.getStatus()));
+				U.addM(challengePanel, MessageUI.render("Token : " + challenge.getToken()));
 				U.addM(authorizationPanel, challengePanel);
 			}
 			U.addM(stateContainer, authorizationPanel);

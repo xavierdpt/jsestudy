@@ -42,7 +42,7 @@ public class Fiddle48 {
 		ObjectMapper om = new ObjectMapper();
 		om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
-		AcmeDirectoryInfos2 infos = Acme2.directory(om, true);
+		AcmeDirectoryInfos2 infos = Acme2.directory(Acme2.ACME_STAGING_V2, om, true);
 
 		String nonce64 = Acme2.nonce(infos, true);
 

@@ -24,7 +24,7 @@ public class AcmeVersionUI extends UIInteraction {
 
 	@Override
 	public void start() {
-		JTextField question = SelectableLabelUI.render("Which version of ACME do you want to use ?");
+		JTextField question = MessageUI.render("Which version of ACME do you want to use ?");
 		U.setFont(question, Font.BOLD);
 
 		JComboBox<String> list = new JComboBox<String>(new String[] { "Version 1", "Version 2" });

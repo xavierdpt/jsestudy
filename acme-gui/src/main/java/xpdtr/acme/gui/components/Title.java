@@ -14,7 +14,7 @@ public class Title {
 
 	public static Component create() {
 
-		JTextField component = SelectableLabelUI.render("xdptdr's Acme GUI");
+		JTextField component = MessageUI.render("xdptdr's Acme GUI");
 		U.setFont(component, Font.BOLD, 1.3);
 		U.setMargins(component, 0, 20);
 		component.setHorizontalAlignment(SwingConstants.CENTER);

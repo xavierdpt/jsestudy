@@ -25,10 +25,10 @@ public class Acme2 {
 	private static final String DIRECTORY = "/directory";
 	public static final String ACME_STAGING_V2 = "https://acme-staging-v02.api.letsencrypt.org";
 
-	public static AcmeDirectoryInfos2 directory(ObjectMapper om, boolean debug)
+	public static AcmeDirectoryInfos2 directory(String url, ObjectMapper om, boolean debug)
 			throws ClientProtocolException, IOException {
 
-		Request request = Request.Get(ACME_STAGING_V2 + "/" + DIRECTORY).setHeader("Accept", "application/json");
+		Request request = Request.Get(url + "/" + DIRECTORY).setHeader("Accept", "application/json");
 
 		ResponseHandler<AcmeDirectoryInfos2> responseHandler = new ResponseHandler<AcmeDirectoryInfos2>() {
 			@Override
@@ -45,8 +45,8 @@ public class Acme2 {
 		return request.execute().handleResponse(responseHandler);
 	}
 
-	public static AcmeDirectoryInfos2 directory(ObjectMapper om) throws ClientProtocolException, IOException {
-		return directory(om, false);
+	public static AcmeDirectoryInfos2 directory(String url, ObjectMapper om) throws ClientProtocolException, IOException {
+		return directory(url, om, false);
 	}
 
 	public static String nonce(AcmeDirectoryInfos2 infos, boolean debug) throws ClientProtocolException, IOException {

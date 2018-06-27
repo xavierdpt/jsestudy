@@ -51,7 +51,7 @@ public class DirectoriesReaction implements ActionListener {
 
 		AcmeDirectoryInfos2 directories = null;
 		try {
-			directories = Acme2.directory(om);
+			directories = Acme2.directory((String) serversList.getSelectedItem(),om);
 			directoriesTA.setText(om.writeValueAsString(directories));
 		} catch (Exception e) {
 			directoriesTA.setText(e.getClass().getName() + " : " + e.getMessage());

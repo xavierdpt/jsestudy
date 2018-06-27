@@ -2,7 +2,7 @@ package xpdtr.acme.gui.components;
 
 import javax.swing.JTextField;
 
-public class SelectableLabelUI {
+public class MessageUI {
 
 	public static JTextField render(String message) {
 		JTextField component = new JTextField(message);
