@@ -13,43 +13,39 @@ import xpdtr.acme.gui.utils.U;
 public class NewAccountInteraction extends UIInteraction {
 
 	private AcmeSession session;
+	private Runnable finished;
 
-	public NewAccountInteraction(Container container, AcmeSession session, Runnable validate, Runnable finished) {
-		super(container, validate, finished);
+	public NewAccountInteraction(Interacter interacter, Container container, AcmeSession session, Runnable finished) {
+		super(interacter, container);
 		this.session = session;
+		this.finished = finished;
 	}
 
-	public void start() {
+	public void perform() {
 		container.add(AccountCreationUI.renderInput(this::createAccountProceed, this::createAccountCancel));
-		validate();
 	}
 
 	private void createAccountProceed(String contact) {
 		container.add(AccountCreationUI.renderCalling());
 		AccountCreationRequest.send(session, contact).then(this::createAccountSuccess, this::createAccountFailure);
-		validate();
 	}
 
 	private void createAccountCancel() {
 		U.class.getName();
 		U.addM(container, new JLabel("Account creation cancelled"));
-		finished();
-		validate();
+		finished.run();
 	}
 
 	private void createAccountSuccess(AcmeSession session) {
 		U.addM(container, AccountCreationUI.renderSuccess(session));
 		session.setAccount(session.getAccount());
 		session.setNonce(session.getNonce());
-		finished();
-		;
-		validate();
+		finished.run();
 	}
 
 	private void createAccountFailure(Exception ex) {
 		U.addM(container, ExceptionUI.render(ex));
-		finished();
-		validate();
+		finished.run();
 	}
 
 }

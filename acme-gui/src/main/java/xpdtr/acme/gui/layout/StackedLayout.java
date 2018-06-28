@@ -9,6 +9,7 @@ import xpdtr.acme.gui.layout.LayoutAdapter;
 public class StackedLayout extends LayoutAdapter {
 
 	private int vspace;
+	private int topPadding;
 
 	public StackedLayout(int vspace) {
 		this.vspace = vspace;
@@ -18,13 +19,13 @@ public class StackedLayout extends LayoutAdapter {
 	public Dimension preferredLayoutSize(Container parent) {
 
 		double w = 0;
-		double h = 0;
+		double h = topPadding;
 		for (int i = 0; i < parent.getComponentCount(); ++i) {
 			Component c = parent.getComponent(i);
 			double cw = c.getPreferredSize().getWidth();
 			double ch = c.getPreferredSize().getHeight();
 			w = Math.max(w, cw);
-			h += ch+vspace;
+			h += ch + vspace;
 
 		}
 
@@ -34,7 +35,7 @@ public class StackedLayout extends LayoutAdapter {
 	@Override
 	public Dimension minimumLayoutSize(Container parent) {
 		double w = 0;
-		double h = 0;
+		double h = topPadding;
 		for (int i = 0; i < parent.getComponentCount(); ++i) {
 			Component c = parent.getComponent(i);
 			double cw = c.getMinimumSize().getWidth();
@@ -60,7 +61,7 @@ public class StackedLayout extends LayoutAdapter {
 
 		int x = parent.getInsets().left;
 
-		double h = 0;
+		double h = topPadding;
 		for (int i = 0; i < parent.getComponentCount(); ++i) {
 			Component c = parent.getComponent(i);
 			double ch = c.getMinimumSize().getHeight();
@@ -70,6 +71,11 @@ public class StackedLayout extends LayoutAdapter {
 
 			h += ch + vspace;
 		}
+
+	}
+
+	public void setTopPadding(int topPadding) {
+		this.topPadding = topPadding;
 
 	}
 

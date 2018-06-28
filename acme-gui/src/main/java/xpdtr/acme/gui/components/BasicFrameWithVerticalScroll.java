@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -25,6 +24,9 @@ public abstract class BasicFrameWithVerticalScroll {
 
 	protected Container contentPane;
 
+	protected JPanel sessionContainer;
+	protected JPanel stateContainer;
+
 	public BasicFrameWithVerticalScroll() {
 
 	}
@@ -37,18 +39,16 @@ public abstract class BasicFrameWithVerticalScroll {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("xdptdr's Acme Maven Plugin Gui");
 
-		JPanel sessionScrollView = new JPanel();
-		sessionScrollView.setLayout(getLayout(sessionScrollView));
+		sessionContainer = new JPanel();
+		sessionContainer.setLayout(getLayout(sessionContainer));
 
-		JPanel stateScrollView = new JPanel();
-		stateScrollView.setLayout(getLayout(stateScrollView));
+		stateContainer = new JPanel();
+		stateContainer.setLayout(getLayout(stateContainer));
 
-		addComponents(sessionScrollView, stateScrollView);
-
-		sessionScrollPane = new JScrollPane(sessionScrollView);
+		sessionScrollPane = new JScrollPane(sessionContainer);
 		sessionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-		stateScrollPane = new JScrollPane(stateScrollView);
+		stateScrollPane = new JScrollPane(stateContainer);
 		stateScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 		JTabbedPane tabbedPane = new JTabbedPane();
@@ -78,7 +78,6 @@ public abstract class BasicFrameWithVerticalScroll {
 		}
 	}
 
-	abstract protected void addComponents(JComponent scrollView, JComponent container2);
 
 	abstract protected LayoutManager getLayout(Container target);
 

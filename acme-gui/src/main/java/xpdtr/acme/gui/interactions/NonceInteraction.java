@@ -9,29 +9,28 @@ import xpdtr.acme.gui.components.NonceUI;
 public class NonceInteraction extends UIInteraction {
 
 	private AcmeSession session;
+	private Runnable finished;
 
-	public NonceInteraction(Container container, AcmeSession session, Runnable validate, Runnable finish) {
-		super(container, validate, finish);
+	public NonceInteraction(Interacter interacter, Container container, AcmeSession session, Runnable finished) {
+		super(interacter, container);
 		this.session = session;
+		this.finished = finished;
 	}
 
-	public void start() {
+	public void perform() {
 		container.add(NonceUI.renderGetting());
-		validate();
 		NonceRequest.send(session.getInfos()).then(this::nonceSuccess, this::nonceFailure);
 	}
 
 	private void nonceSuccess(String nonce) {
 		container.add(NonceUI.renderSuccess(nonce));
 		session.setNonce(nonce);
-		finished();
-		validate();
+		finished.run();
 	}
 
 	private void nonceFailure(Exception ex) {
 		container.add(NonceUI.renderFailure(ex));
-		finished();
-		validate();
+		finished.run();
 	}
 
 }

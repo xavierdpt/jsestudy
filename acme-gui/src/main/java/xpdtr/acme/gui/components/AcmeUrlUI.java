@@ -1,65 +1,67 @@
 package xpdtr.acme.gui.components;
 
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.FlowLayout;
 import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import example.company.acme.AcmeSession;
 import example.company.acme.v1.AcmeUrls;
-import xpdtr.acme.gui.layout.LabelFieldButton;
+import xpdtr.acme.gui.interactions.Interacter;
+import xpdtr.acme.gui.interactions.UIInteraction;
+import xpdtr.acme.gui.utils.U;
 
-public class AcmeUrlUI {
+public class AcmeUrlUI extends UIInteraction {
 
-	public static Component create(String version, Consumer<String> consumer) {
-		switch (version) {
+	private UILogger logger;
+	private Consumer<String> consumer;
+	private AcmeSession session;
+
+	public AcmeUrlUI(Interacter interacter, JPanel container, UILogger logger, AcmeSession session,
+			Consumer<String> consumer) {
+		super(interacter, container);
+		this.logger = logger;
+		this.session = session;
+		this.consumer = consumer;
+	}
+
+	@Override
+	protected void perform() {
+		switch (session.getVersion()) {
 		case "Version 1":
-			return create1();
+			logger.important("Sorry, support for Acme v1 is not available");
+			break;
 		case "Version 2":
 		default:
-			return create2(consumer);
-		}
-	}
+			
+			logger.important("Which URL do you want to use ?");
 
-	private static Component create1() {
-		JLabel label = new JLabel("Sorry, support for Acme v1 is not available");
-		label.setFont(label.getFont().deriveFont(Font.BOLD));
-		return label;
-	}
+			JComboBox<String> list = new JComboBox<String>(
+					new String[] { AcmeUrls.LETS_ENCRYPT_V2, AcmeUrls.LETS_ENCRYPT_V2_STAGING });
+			list.setSelectedItem(AcmeUrls.LETS_ENCRYPT_V2_STAGING);
 
-	private static Component create2(Consumer<String> consumer) {
-
-		JLabel label = new JLabel("Which URL do you want to use ?");
-		label.setFont(label.getFont().deriveFont(Font.BOLD));
-
-		JComboBox<String> list = new JComboBox<String>(
-				new String[] { AcmeUrls.LETS_ENCRYPT_V2, AcmeUrls.LETS_ENCRYPT_V2_STAGING });
-		list.setSelectedItem(AcmeUrls.LETS_ENCRYPT_V2_STAGING);
-
-		JButton button = new JButton("OK");
-		button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent event) {
-
+			JButton button = new JButton("OK");
+			U.clicked(button, (e) -> {
 				list.setEnabled(false);
 				button.setEnabled(false);
-
 				consumer.accept((String) list.getSelectedItem());
-			}
-		});
+			});
 
-		JPanel panel = new JPanel();
-		panel.setLayout(new LabelFieldButton(5));
-		panel.add(label);
-		panel.add(list);
-		panel.add(button);
-
-		return panel;
+			JPanel panel = new JPanel();
+			panel.setLayout(new FlowLayout(FlowLayout.LEADING));
+			panel.add(list);
+			panel.add(button);
+			container.add(panel);
+		}
 
 	}
+
+	public static void perform(Interacter interacter, JPanel sessionContainer, UILogger logger, AcmeSession session,
+			Consumer<String> consumer) {
+		new AcmeUrlUI(interacter, sessionContainer, logger, session, consumer).start();
+
+	}
+
 }

@@ -3,17 +3,15 @@ package xpdtr.acme.gui.fiddling;
 import java.awt.Container;
 import java.awt.LayoutManager;
 
-import javax.swing.JComponent;
 import javax.swing.JTextField;
 
 import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
 
 public class TwoFullWidthTextAreas extends BasicFrameWithVerticalScroll {
 
-	@Override
-	protected void addComponents(JComponent scrollView, JComponent container2) {
-		scrollView.add(new JTextField());
-		scrollView.add(new JTextField());
+	protected void start() {
+		sessionContainer.add(new JTextField());
+		sessionContainer.add(new JTextField());
 	}
 
 	@Override

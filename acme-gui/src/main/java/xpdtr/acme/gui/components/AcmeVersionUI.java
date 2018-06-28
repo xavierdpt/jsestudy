@@ -1,52 +1,56 @@
 package xpdtr.acme.gui.components;
 
 import java.awt.Container;
-import java.awt.Font;
+import java.awt.FlowLayout;
+import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
-import example.company.acme.AcmeSession;
+import xpdtr.acme.gui.interactions.Interacter;
 import xpdtr.acme.gui.interactions.UIInteraction;
-import xpdtr.acme.gui.layout.LabelFieldButton;
 import xpdtr.acme.gui.utils.U;
 
 public class AcmeVersionUI extends UIInteraction {
 
-	private AcmeSession session;
+	private UILogger logger;
+	private Consumer<String> consumer;
 
-	public AcmeVersionUI(Container container, AcmeSession session, Runnable validate, Runnable finished) {
-		super(container, validate, finished);
-		this.session = session;
+	public AcmeVersionUI(Interacter interacter, Container container, UILogger logger, Consumer<String> consumer) {
+		super(interacter, container);
+		this.logger = logger;
+		this.consumer = consumer;
 	}
 
 	@Override
-	public void start() {
-		JTextField question = MessageUI.render("Which version of ACME do you want to use ?");
-		U.setFont(question, Font.BOLD);
+	protected void perform() {
+
+		logger.important("Which version of ACME do you want to use ?");
 
 		JComboBox<String> list = new JComboBox<String>(new String[] { "Version 1", "Version 2" });
 		list.setSelectedItem("Version 2");
 
 		JButton button = new JButton("OK");
 		U.clicked(button, (e) -> {
-			list.setEnabled(false);
-			button.setEnabled(false);
-			session.setVersion((String) list.getSelectedItem());
-			finished();
-			validate();
+			interacter.perform(() -> {
+				list.setEnabled(false);
+				button.setEnabled(false);
+				consumer.accept((String) list.getSelectedItem());
+
+			});
 		});
 
 		JPanel panel = new JPanel();
-		panel.setLayout(new LabelFieldButton(5));
-		panel.add(question);
+		panel.setLayout(new FlowLayout(FlowLayout.LEADING));
 		panel.add(list);
 		panel.add(button);
+		container.add(panel);
 
-		U.addM(container, panel);
+	}
 
+	public static void perform(Interacter interacter, JPanel container, UILogger logger, Consumer<String> consumer) {
+		new AcmeVersionUI(interacter, container, logger, consumer).start();
 	}
 
 }

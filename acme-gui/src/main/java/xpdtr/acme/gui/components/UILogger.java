@@ -39,10 +39,14 @@ public class UILogger {
 	public void message(String message) {
 		destination.add(MessageUI.render(message));
 	}
-	
+
+	public void exception(Exception exception) {
+		destination.add(ExceptionUI.render(exception));
+	}
+
 	public void endGroup() {
 		container.add(destination);
-		destination=container;
+		destination = container;
 	}
 
 }

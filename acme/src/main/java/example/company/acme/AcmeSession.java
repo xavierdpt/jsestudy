@@ -22,7 +22,6 @@ public class AcmeSession {
 	private AcmeOrderWithNonce order;
 	private Authorization authorization;
 	private Challenge challenge;
-
 	private KeyPairWithJWK keyPairWithJWK;
 
 	public AcmeSession() {

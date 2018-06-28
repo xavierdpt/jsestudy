@@ -15,6 +15,7 @@ import example.company.acme.v2.AcmeException;
 import example.company.acme.v2.Challenge;
 import xpdtr.acme.gui.components.ExceptionUI;
 import xpdtr.acme.gui.components.MessageUI;
+import xpdtr.acme.gui.interactions.Interacter;
 import xpdtr.acme.gui.interactions.UIInteraction;
 import xpdtr.acme.gui.utils.Promise;
 import xpdtr.acme.gui.utils.U;
@@ -22,14 +23,16 @@ import xpdtr.acme.gui.utils.U;
 public class ChallengeInteraction extends UIInteraction {
 
 	private AcmeSession session;
+	private Runnable finished;
 
-	public ChallengeInteraction(Container container, AcmeSession session, Runnable validate, Runnable finished) {
-		super(container, validate, finished);
+	public ChallengeInteraction(Interacter interacter, Container container, AcmeSession session, Runnable finished) {
+		super(interacter, container);
 		this.session = session;
+		this.finished = finished;
 	}
 
 	@Override
-	public void start() {
+	public void perform() {
 
 		Component label = MessageUI.render("Which challenge ?");
 
@@ -54,21 +57,18 @@ public class ChallengeInteraction extends UIInteraction {
 
 		U.clicked(cancelButton, (e) -> {
 			disabler.run();
-			finished();
-			validate();
+			finished.run();
 		});
 
 		U.clicked(chooseButton, (e) -> {
 			disabler.run();
 			next((String) cb.getSelectedItem());
-			validate();
 		});
 
 		U.addM(container, label);
 		U.addM(container, cb);
 		U.addM(container, chooseButton);
 		U.addM(container, cancelButton);
-		validate();
 	}
 
 	private void next(String url) {
@@ -81,12 +81,10 @@ public class ChallengeInteraction extends UIInteraction {
 			}
 		}).then((challenge) -> {
 			session.setChallenge(challenge);
-			finished();
-			validate();
+			finished.run();
 		}, (e) -> {
 			U.addM(container, ExceptionUI.render(e));
-			finished();
-			validate();
+			finished.run();
 		});
 
 	}

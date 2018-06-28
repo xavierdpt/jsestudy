@@ -5,23 +5,17 @@ import java.awt.Container;
 public abstract class UIInteraction {
 
 	protected Container container;
-	private Runnable validate;
-	private Runnable finished;
+	protected Interacter interacter;
 
-	public UIInteraction(Container container, Runnable validate, Runnable finished) {
+	public UIInteraction(Interacter interacter, Container container) {
+		this.interacter = interacter;
 		this.container = container;
-		this.validate = validate;
-		this.finished = finished;
 	}
 
-	public abstract void start();
-
-	protected final void validate() {
-		validate.run();
+	public final void start() {
+		interacter.perform(this::perform);
 	}
 
-	protected final void finished() {
-		finished.run();
-	}
+	protected abstract void perform();
 
 }

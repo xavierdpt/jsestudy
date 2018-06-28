@@ -3,6 +3,8 @@ package xpdtr.acme.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +15,6 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import example.company.acme.AcmeSession;
@@ -29,7 +30,6 @@ import xpdtr.acme.gui.components.AcmeVersionUI;
 import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
 import xpdtr.acme.gui.components.ExceptionUI;
 import xpdtr.acme.gui.components.MessageUI;
-import xpdtr.acme.gui.components.SessionUI;
 import xpdtr.acme.gui.components.Title;
 import xpdtr.acme.gui.components.UILogger;
 import xpdtr.acme.gui.interactions.DirectoryInteraction;
@@ -42,13 +42,9 @@ import xpdtr.acme.gui.utils.U;
 
 public class AcmeGui extends BasicFrameWithVerticalScroll {
 
-	private Container sessionContainer;
-
 	private AcmeSession session = new AcmeSession();
 
 	private Acme2Buttons buttons;
-
-	private JComponent stateContainer;
 
 	private KeyPairManager kpm;
 
@@ -58,7 +54,9 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	@Override
 	public void init() {
+
 		super.init();
+
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		panel.add(Title.create());
@@ -71,37 +69,42 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 		logger = new UILogger(sessionContainer);
 
-	}
-
-	@Override
-	protected void addComponents(JComponent sessionContainer, JComponent stateContainer) {
-
-		this.sessionContainer = sessionContainer;
-		this.stateContainer = stateContainer;
-
 		U.setMargins(sessionContainer, 10, 0);
-		new AcmeVersionUI(sessionContainer, session, this::validate, this::setVersionAndAskForUrl).start();
+
+		askForVersion();
 
 	}
 
-	private void setVersionAndAskForUrl() {
-		sessionChanged();
-		sessionContainer.add(AcmeUrlUI.create(session.getVersion(), this::setUrlAndQueryDirectory));
-		validate();
+	private void askForVersion() {
+		AcmeVersionUI.perform(interacter, sessionContainer, logger, (String version) -> {
+			session.setVersion(version);
+			askForUrl();
+		});
+
 	}
 
-	private void setUrlAndQueryDirectory(String url) {
-		session.setUrl(url);
-		sessionChanged();
-		new DirectoryInteraction(sessionContainer, session, this::validate, this::updateButtons).start();
+	private void askForUrl() {
+
+		AcmeUrlUI.perform(interacter, sessionContainer, logger, session, (String url) -> {
+			session.setUrl(url);
+			queryDirectory();
+		});
+
+	}
+
+	private void queryDirectory() {
+		new DirectoryInteraction(interacter, sessionContainer, logger, session, (infos) -> {
+			session.setInfos(infos);
+			updateButtons();
+		}).start();
 	}
 
 	private void nonceClicked() {
-		new NonceInteraction(sessionContainer, session, this::validate, this::updateButtons).start();
+		new NonceInteraction(interacter, sessionContainer, session, this::updateButtons).start();
 	}
 
 	private void createAccountClicked() {
-		new NewAccountInteraction(sessionContainer, session, this::validate, this::updateButtons).start();
+		new NewAccountInteraction(interacter, sessionContainer, session, this::updateButtons).start();
 	}
 
 	private void accountDetailsClicked() {
@@ -206,7 +209,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void challengeClicked() {
-		new ChallengeInteraction(sessionContainer, session, this::validate, this::updateButtons).start();
+		new ChallengeInteraction(interacter, sessionContainer, session, this::updateButtons).start();
 	}
 
 	private void accountDetails() {
@@ -219,8 +222,6 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void updateButtons() {
-
-		sessionChanged();
 
 		if (buttons == null) {
 			buttons = new Acme2Buttons();
@@ -267,14 +268,11 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	}
 
-	private void sessionChanged() {
-		stateContainer.removeAll();
-		SessionUI.render(session, stateContainer);
-	}
-
 	@Override
 	protected LayoutManager getLayout(Container target) {
-		return new StackedLayout(5);
+		StackedLayout sl = new StackedLayout(5);
+		sl.setTopPadding(5);
+		return sl;
 	}
 
 }
