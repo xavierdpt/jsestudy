@@ -13,10 +13,8 @@ import example.company.acme.AcmeSession;
 import example.company.acme.v2.AcmeDirectoryInfos2;
 import example.company.acme.v2.AcmeIdentifier;
 import example.company.acme.v2.AcmeOrder;
-import example.company.acme.v2.AcmeOrderWithNonce;
 import example.company.acme.v2.Authorization;
 import example.company.acme.v2.Challenge;
-import xpdtr.acme.gui.components.MessageUI;
 import xpdtr.acme.gui.utils.U;
 
 public class SessionUI {
@@ -50,20 +48,19 @@ public class SessionUI {
 			U.addM(accountPanel, MessageUI.render("URL : " + session.getAccount().getUrl()));
 			U.addM(stateContainer, accountPanel);
 		}
-		AcmeOrderWithNonce order = session.getOrder();
+		AcmeOrder order = session.getOrder();
 		if (order != null) {
 			JPanel orderPanel = titledVPanel("Order");
-			AcmeOrder oorder = order.getContent();
-			for (AcmeIdentifier identifier : oorder.getIdentifiers()) {
+			for (AcmeIdentifier identifier : order.getIdentifiers()) {
 				U.addM(orderPanel,
 						MessageUI.render("Identifier : " + identifier.getType() + " " + identifier.getValue()));
 			}
-			U.addM(orderPanel, MessageUI.render("Status : " + oorder.getStatus()));
-			U.addM(orderPanel, MessageUI.render("Expires : " + oorder.getStatus()));
-			for (String authorizationURL : oorder.getAuthorizations()) {
+			U.addM(orderPanel, MessageUI.render("Status : " + order.getStatus()));
+			U.addM(orderPanel, MessageUI.render("Expires : " + order.getStatus()));
+			for (String authorizationURL : order.getAuthorizations()) {
 				U.addM(orderPanel, MessageUI.render("Authorization URL : " + authorizationURL));
 			}
-			U.addM(orderPanel, MessageUI.render("Finalize URL : " + oorder.getFinalize()));
+			U.addM(orderPanel, MessageUI.render("Finalize URL : " + order.getFinalize()));
 			U.addM(stateContainer, orderPanel);
 		}
 		if (session.getAuthorization() != null) {

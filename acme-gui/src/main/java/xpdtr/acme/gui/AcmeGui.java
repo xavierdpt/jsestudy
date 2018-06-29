@@ -6,9 +6,6 @@ import java.awt.Container;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.security.interfaces.ECPrivateKey;
-import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -17,10 +14,8 @@ import javax.swing.JPanel;
 
 import example.company.acme.AcmeSession;
 import example.company.acme.v2.Acme2;
-import example.company.acme.v2.AcmeOrderWithNonce;
 import example.company.acme.v2.Authorization;
 import example.company.acme.v2.Challenge;
-import xpdtr.acme.gui.async.OrderCreationRequest;
 import xpdtr.acme.gui.components.Acme2Buttons;
 import xpdtr.acme.gui.components.Acme2Buttons.Action;
 import xpdtr.acme.gui.components.AcmeUrlInteraction;
@@ -132,43 +127,19 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void orderClicked() {
-		U.addM(sessionContainer, MessageUI.render("New order clicked"));
-		OrderCreationRequest
-				.send(session.getInfos(), "" + session.getAccount().getUrl(), session.getNonce(), session.getOm(),
-						(ECPrivateKey) session.getKeyPairWithJWK().getKeyPair().getPrivate(), "example.com")
-				.then(this::createOrderSuccess, this::createOrderFailure);
-		validate();
-	}
-
-	private void createOrderSuccess(AcmeOrderWithNonce order) {
-		session.setOrder(order);
-		U.addM(sessionContainer, MessageUI.render("Success"));
-
-		List<String> authorizations = order.getContent().getAuthorizations();
-		for (String a : authorizations) {
-			U.addM(sessionContainer, MessageUI.render("Authorization " + a));
-		}
-		U.addM(sessionContainer, MessageUI.render("Finalize " + order.getContent().getFinalize()));
-
-		updateButtons();
-		validate();
-		try {
-			System.out.println(session.getOm().writeValueAsString(order));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void createOrderFailure(Exception ex) {
-		U.addM(sessionContainer, ExceptionUI.render(ex));
-		updateButtons();
-		validate();
+		NewOrderInteraction.perform(interacter, sessionContainer, logger, session, (orderWithNonce) -> {
+			if (orderWithNonce != null) {
+				session.setNonce(orderWithNonce.getNonce());
+				session.setOrder(orderWithNonce.getContent());
+			}
+			updateButtons();
+		});
 	}
 
 	private void authorizationDetailsClicked() {
 		U.addM(sessionContainer, MessageUI.render("Authorization details clicked"));
 		JComboBox<String> authorizationsCB = new JComboBox<>(
-				session.getOrder().getContent().getAuthorizations().toArray(new String[] {}));
+				session.getOrder().getAuthorizations().toArray(new String[] {}));
 		U.addM(sessionContainer, authorizationsCB);
 		JButton choose = new JButton("Choose");
 		JButton cancel = new JButton("Cancel");

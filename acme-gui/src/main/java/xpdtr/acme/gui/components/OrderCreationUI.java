@@ -13,18 +13,19 @@ import javax.swing.JPanel;
 
 import xpdtr.acme.gui.utils.U;
 
-public class AccountCreationUI {
+public class OrderCreationUI {
 
-	private static final String KNOWN_CONTACTS = "knownContacts";
-	
-	private JComboBox<String> contactInput;
+	private static final String KNOWN_SITES = "knownSites";
+
+	private JComboBox<String> siteInput;
 	private JButton createButton;
 	private JButton cancelButton;
 	private Consumer<String> onCreate;
 	private Runnable onCancel;
-	private List<String> knownContacts;
 
-	public AccountCreationUI(Consumer<String> onCreate, Runnable onCancel) {
+	private List<String> knownSites;
+
+	public OrderCreationUI(Consumer<String> onCreate, Runnable onCancel) {
 		this.onCreate = onCreate;
 		this.onCancel = onCancel;
 	}
@@ -36,17 +37,17 @@ public class AccountCreationUI {
 
 	private void addFields(Container container) {
 		JPanel fieldsPanel = new JPanel(new LabelsAndFields(5, 15));
-		fieldsPanel.add(new JLabel("Contact"));
+		fieldsPanel.add(new JLabel("Site"));
 		addContactInput(fieldsPanel);
 		container.add(fieldsPanel);
 	}
 
 	private void addContactInput(JPanel fieldsPanel) {
-		contactInput = new JComboBox<>();
-		contactInput.setEditable(true);
-		knownContacts = LinesPersister.getLines(KNOWN_CONTACTS);
-		addKnownContacts(knownContacts, contactInput);
-		fieldsPanel.add(contactInput);
+		siteInput = new JComboBox<>();
+		siteInput.setEditable(true);
+		knownSites = LinesPersister.getLines(KNOWN_SITES);
+		addKnownSites(knownSites, siteInput);
+		fieldsPanel.add(siteInput);
 
 	}
 
@@ -65,15 +66,15 @@ public class AccountCreationUI {
 	}
 
 	private void disable() {
-		contactInput.setEnabled(false);
+		siteInput.setEnabled(false);
 		createButton.setEnabled(false);
 		cancelButton.setEnabled(false);
 	};
 
 	private void create(ActionEvent e) {
 		disable();
-		String selected = contactInput.getSelectedItem().toString();
-		LinesPersister.saveLines(KNOWN_CONTACTS, knownContacts, selected);
+		String selected = siteInput.getSelectedItem().toString();
+		LinesPersister.saveLines(KNOWN_SITES, knownSites, selected);
 		onCreate.accept(selected);
 	}
 
@@ -82,11 +83,10 @@ public class AccountCreationUI {
 		onCancel.run();
 	}
 
-
-
-	private void addKnownContacts(List<String> knownContacts, JComboBox<String> contactInput) {
-		for (String contact : knownContacts) {
-			contactInput.addItem(contact);
+	private void addKnownSites(List<String> knownSites, JComboBox<String> siteInput) {
+		for (String contact : knownSites) {
+			siteInput.addItem(contact);
 		}
 	}
+
 }

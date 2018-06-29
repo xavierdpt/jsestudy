@@ -20,21 +20,28 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.fluent.Request;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import example.company.acme.AcmeSession;
 import example.company.acme.crypto.ECCurves;
 import example.company.acme.crypto.ECSignature;
 import example.company.acme.crypto.ECSigner;
 import example.company.acme.jw.JWA;
 import example.company.acme.jw.JWBase64;
+import example.company.acme.v2.account.AcmeError;
 import example.company.tox.common.Common;
 
 public class AcmeNewOrder {
 
-	public static Map<String, Object> createJWS(AcmeDirectoryInfos2 infos, String kid, String nonce, ObjectMapper om,
-			ECPrivateKey privateKey, String value) throws JsonProcessingException, InvalidKeyException, NoSuchAlgorithmException,
+	public static Map<String, Object> createJWS(AcmeSession session, String site)
+			throws JsonProcessingException, InvalidKeyException, NoSuchAlgorithmException,
 			InvalidParameterSpecException, InvalidKeySpecException, SignatureException {
+
+		AcmeDirectoryInfos2 infos = session.getInfos();
+		String kid = session.getAccount().getUrl();
+		String nonce = session.getNonce();
+		ObjectMapper om = session.getOm();
+		ECPrivateKey privateKey = (ECPrivateKey) session.getKeyPairWithJWK().getKeyPair().getPrivate();
 
 		Map<String, Object> protekted = new HashMap<>();
 		protekted.put("alg", JWA.ES256);
@@ -45,7 +52,7 @@ public class AcmeNewOrder {
 
 		Map<String, String> identifier = new HashMap<>();
 		identifier.put("type", "dns");
-		identifier.put("value", value);
+		identifier.put("value", site);
 
 		List<Map<String, String>> identifiers = new ArrayList<>();
 		identifiers.add(identifier);
@@ -70,8 +77,11 @@ public class AcmeNewOrder {
 
 	}
 
-	public static AcmeOrderWithNonce sendRequest(AcmeDirectoryInfos2 infos, ObjectMapper om, Map<String, Object> jws)
+	public static AcmeResponse<AcmeOrder> sendRequest(AcmeSession session, Map<String, Object> jws)
 			throws ClientProtocolException, IOException {
+
+		AcmeDirectoryInfos2 infos = session.getInfos();
+		ObjectMapper om = session.getOm();
 
 		String url = infos.getNewOrder();
 		byte[] body = om.writeValueAsBytes(jws);
@@ -82,26 +92,29 @@ public class AcmeNewOrder {
 
 				.bodyByteArray(body);
 
-		ResponseHandler<AcmeOrderWithNonce> responseHandler = new ResponseHandler<AcmeOrderWithNonce>() {
+		ResponseHandler<AcmeResponse<AcmeOrder>> responseHandler = new ResponseHandler<AcmeResponse<AcmeOrder>>() {
 
 			@Override
-			public AcmeOrderWithNonce handleResponse(HttpResponse response)
+			public AcmeResponse<AcmeOrder> handleResponse(HttpResponse response)
 					throws ClientProtocolException, IOException {
 
+				AcmeResponse<AcmeOrder> acmeResponse = new AcmeResponse<AcmeOrder>();
+
+				int code = response.getStatusLine().getStatusCode();
 				InputStream content = response.getEntity().getContent();
 
-				JsonNode responseJson = om.readValue(content, JsonNode.class);
+				String nonce = response.getFirstHeader("Replay-Nonce").getValue();
+				acmeResponse.setNonce(nonce);
 
-				if (response.getStatusLine().getStatusCode() != 200) {
-					if (responseJson.has("detail")) {
-						throw new ClientProtocolException(responseJson.get("detail").asText());
-					}
+				if (code == 201) {
+					AcmeOrder order = om.readValue(content, AcmeOrder.class);
+					acmeResponse.setContent(order);
+				} else {
+					acmeResponse.setFailed(true);
+					AcmeError error = om.readValue(content, AcmeError.class);
+					acmeResponse.setFailureDetails(error.getDetail());
 				}
-
-				AcmeOrderWithNonce order = new AcmeOrderWithNonce();
-				order.setContent(om.treeToValue(responseJson, AcmeOrder.class));
-				order.setNonce(response.getFirstHeader("Replay-Nonce").getValue());
-				return order;
+				return acmeResponse;
 			}
 
 		};

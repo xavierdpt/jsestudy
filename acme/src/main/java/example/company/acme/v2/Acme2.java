@@ -2,7 +2,6 @@ package example.company.acme.v2;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.interfaces.ECPrivateKey;
 import java.util.Map;
 
 import org.apache.http.HttpResponse;
@@ -87,11 +86,9 @@ public class Acme2 {
 		return JWBase64.decode(nonce(infos, false));
 	}
 
-	public static WithNonce<AcmeAccount> newAccount(AcmeSession session, String contact) throws AcmeException {
+	public static AcmeResponse<AcmeAccount> newAccount(AcmeSession session, String contact) throws AcmeException {
 
 		try {
-
-			KeyPairWithJWK keyPair = session.getKeyPairWithJWK();
 
 			Map<String, Object> newAccountJWS = AcmeNewAccount.createJWS(session, contact);
 
@@ -102,11 +99,10 @@ public class Acme2 {
 		}
 	}
 
-	public static AcmeOrderWithNonce newOrder(AcmeDirectoryInfos2 infos, String kid, String nonce, ObjectMapper om,
-			ECPrivateKey privateKey, String site) throws AcmeException {
+	public static AcmeResponse<AcmeOrder> newOrder(AcmeSession session, String site) throws AcmeException {
 		try {
-			Map<String, Object> jws = AcmeNewOrder.createJWS(infos, kid, nonce, om, privateKey, site);
-			return AcmeNewOrder.sendRequest(infos, om, jws);
+			Map<String, Object> jws = AcmeNewOrder.createJWS(session, site);
+			return AcmeNewOrder.sendRequest(session, jws);
 
 		} catch (Exception exception) {
 			throw new AcmeException(exception);

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import example.company.acme.jw.KeyPairWithJWK;
 import example.company.acme.v2.AcmeDirectoryInfos2;
-import example.company.acme.v2.AcmeOrderWithNonce;
+import example.company.acme.v2.AcmeOrder;
 import example.company.acme.v2.Authorization;
 import example.company.acme.v2.Challenge;
 import example.company.acme.v2.account.AcmeAccount;
@@ -19,7 +19,7 @@ public class AcmeSession {
 	private AcmeDirectoryInfos2 infos;
 	private String nonce;
 	private AcmeAccount account;
-	private AcmeOrderWithNonce order;
+	private AcmeOrder order;
 	private Authorization authorization;
 	private Challenge challenge;
 	private KeyPairWithJWK keyPairWithJWK;
@@ -76,11 +76,11 @@ public class AcmeSession {
 		this.account = account;
 	}
 
-	public AcmeOrderWithNonce getOrder() {
+	public AcmeOrder getOrder() {
 		return order;
 	}
 
-	public void setOrder(AcmeOrderWithNonce order) {
+	public void setOrder(AcmeOrder order) {
 		this.order = order;
 	}
 

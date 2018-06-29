@@ -29,7 +29,7 @@ import example.company.acme.crypto.ECSigner;
 import example.company.acme.jw.JWA;
 import example.company.acme.jw.JWBase64;
 import example.company.acme.v2.AcmeDirectoryInfos2;
-import example.company.acme.v2.WithNonce;
+import example.company.acme.v2.AcmeResponse;
 import example.company.tox.common.Common;
 
 public class AcmeNewAccount {
@@ -44,7 +44,7 @@ public class AcmeNewAccount {
 
 		Map<String, Object> protekted = new HashMap<>();
 		protekted.put("alg", JWA.ES256);
-		protekted.put("jwk", session.getKeyPairWithJWK().getPublicJwk());
+		protekted.put("jwk", session.getKeyPairWithJWK().getPublicJwk().getJwk());
 		protekted.put("nonce", session.getNonce());
 		protekted.put("url", session.getInfos().getNewAccountURL());
 		String protected64 = JWBase64.encode(session.getOm().writeValueAsBytes(protekted));
@@ -76,7 +76,7 @@ public class AcmeNewAccount {
 		return jws;
 	}
 
-	public static WithNonce<AcmeAccount> sendRequest(AcmeSession session, Map<String, Object> jws)
+	public static AcmeResponse<AcmeAccount> sendRequest(AcmeSession session, Map<String, Object> jws)
 			throws ClientProtocolException, IOException {
 
 		String url = session.getInfos().getNewAccountURL();
@@ -88,20 +88,27 @@ public class AcmeNewAccount {
 
 				.bodyByteArray(body);
 
-		ResponseHandler<WithNonce<AcmeAccount>> responseHandler = new ResponseHandler<WithNonce<AcmeAccount>>() {
+		ResponseHandler<AcmeResponse<AcmeAccount>> responseHandler = new ResponseHandler<AcmeResponse<AcmeAccount>>() {
 
 			@Override
-			public WithNonce<AcmeAccount> handleResponse(HttpResponse response)
+			public AcmeResponse<AcmeAccount> handleResponse(HttpResponse response)
 					throws ClientProtocolException, IOException {
 
 				String nonce = response.getFirstHeader("Replay-Nonce").getValue();
 
+				int code = response.getStatusLine().getStatusCode();
 				InputStream content = response.getEntity().getContent();
-				AcmeAccount account = session.getOm().readValue(content, AcmeAccount.class);
-				
-				account.setUrl(getUrl(session.getInfos(), account));
 
-				return new WithNonce<AcmeAccount>(nonce, account);
+				if (code == 400) {
+					AcmeError error = session.getOm().readValue(content, AcmeError.class);
+					throw new ClientProtocolException(error.getDetail());
+				} else {
+					AcmeAccount account = session.getOm().readValue(content, AcmeAccount.class);
+
+					account.setUrl(getUrl(session.getInfos(), account));
+
+					return new AcmeResponse<AcmeAccount>(nonce, account);
+				}
 			}
 
 		};

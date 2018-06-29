@@ -8,4 +8,8 @@ public class AcmeException extends Exception {
 		super(ex);
 	}
 
+	public AcmeException(String message) {
+		super(message);
+	}
+
 }
