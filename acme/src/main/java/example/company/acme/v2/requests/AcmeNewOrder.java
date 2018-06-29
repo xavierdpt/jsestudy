@@ -1,4 +1,4 @@
-package example.company.acme.v2;
+package example.company.acme.v2.requests;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +28,9 @@ import example.company.acme.crypto.ECSignature;
 import example.company.acme.crypto.ECSigner;
 import example.company.acme.jw.JWA;
 import example.company.acme.jw.JWBase64;
+import example.company.acme.v2.AcmeDirectoryInfos2;
+import example.company.acme.v2.AcmeOrder;
+import example.company.acme.v2.AcmeResponse;
 import example.company.acme.v2.account.AcmeError;
 import example.company.tox.common.Common;
 

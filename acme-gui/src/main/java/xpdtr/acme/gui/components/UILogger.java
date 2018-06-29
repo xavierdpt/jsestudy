@@ -41,6 +41,10 @@ public class UILogger {
 		destination.add(MessageUI.render(message));
 	}
 
+	public void message(String message, boolean multiline) {
+		destination.add(MessageUI.render(message,multiline));
+	}
+
 	public void exception(Exception exception) {
 		destination.add(ExceptionUI.render(exception));
 	}

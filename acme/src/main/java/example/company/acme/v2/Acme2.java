@@ -13,9 +13,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import example.company.acme.AcmeSession;
 import example.company.acme.jw.JWBase64;
-import example.company.acme.jw.KeyPairWithJWK;
 import example.company.acme.v2.account.AcmeAccount;
 import example.company.acme.v2.account.AcmeNewAccount;
+import example.company.acme.v2.requests.AcmeAccountDetails;
+import example.company.acme.v2.requests.AcmeNewOrder;
 import example.company.tox.common.Common;
 import example.company.tox.common.JsonUtils;
 
@@ -120,6 +121,14 @@ public class Acme2 {
 	public static Challenge challenge(AcmeSession session, String url) throws AcmeException {
 		try {
 			return GetChallenge.sendRequest(session, url);
+		} catch (IOException e) {
+			throw new AcmeException(e);
+		}
+	}
+
+	public static AcmeResponse<String> accountDetails(AcmeSession session) throws AcmeException {
+		try {
+			return AcmeAccountDetails.sendRequest(session);
 		} catch (IOException e) {
 			throw new AcmeException(e);
 		}

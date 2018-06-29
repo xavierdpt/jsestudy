@@ -122,8 +122,14 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void accountDetailsClicked() {
-		U.addM(sessionContainer, MessageUI.render("Account details :)"));
-		validate();
+		AccountDetailsInteraction.perform(interacter, sessionContainer, logger, session, (response) -> {
+			if (response != null) {
+				if (response.getNonce() != null) {
+					session.setNonce(response.getNonce());
+				}
+			}
+			updateButtons();
+		});
 	}
 
 	private void orderClicked() {
@@ -202,15 +208,6 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		new ChallengeInteraction(interacter, sessionContainer, session, this::updateButtons).start();
 	}
 
-	private void accountDetails() {
-		interacter.perform(() -> {
-			logger.beginGroup("Account details");
-			logger.message("Account details clicked");
-			logger.message(session.getAccount().getUrl());
-			logger.endGroup();
-		});
-	}
-
 	private void updateButtons() {
 
 		if (buttons == null) {
@@ -243,9 +240,6 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 		buttons.setEnabled(Action.CHALLENGE, session.getAuthorization() != null);
 		buttons.setClicked(Action.CHALLENGE, this::challengeClicked);
-
-		buttons.setEnabled(Action.ACCOUNT_DETAILS, session.getAccount() != null);
-		buttons.setClicked(Action.ACCOUNT_DETAILS, this::accountDetails);
 
 		Component rendered = buttons.render();
 
