@@ -28,6 +28,8 @@ import example.company.acme.crypto.ECSignature;
 import example.company.acme.crypto.ECSigner;
 import example.company.acme.jw.JWA;
 import example.company.acme.jw.JWBase64;
+import example.company.acme.v2.AcmeDirectoryInfos2;
+import example.company.acme.v2.WithNonce;
 import example.company.tox.common.Common;
 
 public class AcmeNewAccount {
@@ -74,7 +76,7 @@ public class AcmeNewAccount {
 		return jws;
 	}
 
-	public static AcmeAccount sendRequest(AcmeSession session, Map<String, Object> jws)
+	public static WithNonce<AcmeAccount> sendRequest(AcmeSession session, Map<String, Object> jws)
 			throws ClientProtocolException, IOException {
 
 		String url = session.getInfos().getNewAccountURL();
@@ -86,18 +88,20 @@ public class AcmeNewAccount {
 
 				.bodyByteArray(body);
 
-		ResponseHandler<AcmeAccount> responseHandler = new ResponseHandler<AcmeAccount>() {
+		ResponseHandler<WithNonce<AcmeAccount>> responseHandler = new ResponseHandler<WithNonce<AcmeAccount>>() {
 
 			@Override
-			public AcmeAccount handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
+			public WithNonce<AcmeAccount> handleResponse(HttpResponse response)
+					throws ClientProtocolException, IOException {
+
+				String nonce = response.getFirstHeader("Replay-Nonce").getValue();
 
 				InputStream content = response.getEntity().getContent();
-
 				AcmeAccount account = session.getOm().readValue(content, AcmeAccount.class);
+				
+				account.setUrl(getUrl(session.getInfos(), account));
 
-				session.setNonce(response.getFirstHeader("Replay-Nonce").getValue());
-
-				return account;
+				return new WithNonce<AcmeAccount>(nonce, account);
 			}
 
 		};
@@ -106,4 +110,11 @@ public class AcmeNewAccount {
 
 	}
 
+	private static String getUrl(AcmeDirectoryInfos2 infos, AcmeAccount account) {
+
+		String url = infos.getNewAccountURL();
+		int lastSlash = url.lastIndexOf('/');
+
+		return url.substring(0, lastSlash) + "/acct/" + account.getId();
+	}
 }

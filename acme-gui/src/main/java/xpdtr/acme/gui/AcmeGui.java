@@ -3,8 +3,6 @@ package xpdtr.acme.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,8 +23,8 @@ import example.company.acme.v2.Challenge;
 import xpdtr.acme.gui.async.OrderCreationRequest;
 import xpdtr.acme.gui.components.Acme2Buttons;
 import xpdtr.acme.gui.components.Acme2Buttons.Action;
-import xpdtr.acme.gui.components.AcmeUrlUI;
-import xpdtr.acme.gui.components.AcmeVersionUI;
+import xpdtr.acme.gui.components.AcmeUrlInteraction;
+import xpdtr.acme.gui.components.AcmeVersionInteraction;
 import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
 import xpdtr.acme.gui.components.ExceptionUI;
 import xpdtr.acme.gui.components.MessageUI;
@@ -76,7 +74,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void askForVersion() {
-		AcmeVersionUI.perform(interacter, sessionContainer, logger, (String version) -> {
+		AcmeVersionInteraction.perform(interacter, sessionContainer, logger, (String version) -> {
 			session.setVersion(version);
 			askForUrl();
 		});
@@ -84,27 +82,48 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void askForUrl() {
-
-		AcmeUrlUI.perform(interacter, sessionContainer, logger, session, (String url) -> {
+		AcmeUrlInteraction.perform(interacter, sessionContainer, logger, session, (String url) -> {
 			session.setUrl(url);
 			queryDirectory();
+		});
+	}
+
+	private void queryDirectory() {
+		DirectoryInteraction.perform(interacter, sessionContainer, logger, session, (infos) -> {
+			session.setInfos(infos);
+			updateButtons();
+		});
+	}
+
+	private void nonceClicked() {
+		NonceInteraction.perform(interacter, sessionContainer, logger, session, (nonce) -> {
+			if (nonce != null) {
+				session.setNonce(nonce);
+			}
+			updateButtons();
 		});
 
 	}
 
-	private void queryDirectory() {
-		new DirectoryInteraction(interacter, sessionContainer, logger, session, (infos) -> {
-			session.setInfos(infos);
+	private void createKeyPair() {
+		CreateKeyPairInteraction.perform(interacter, sessionContainer, logger, (keyPair) -> {
+			if (keyPair != null) {
+				session.setKeyPairWithJWK(keyPair);
+			}
 			updateButtons();
-		}).start();
-	}
-
-	private void nonceClicked() {
-		new NonceInteraction(interacter, sessionContainer, session, this::updateButtons).start();
+		});
 	}
 
 	private void createAccountClicked() {
-		new NewAccountInteraction(interacter, sessionContainer, session, this::updateButtons).start();
+
+		NewAccountInteraction.perform(interacter, sessionContainer, logger, session, (accountWithNonce) -> {
+			if (accountWithNonce != null) {
+				session.setNonce(accountWithNonce.getNonce());
+				session.setAccount(accountWithNonce.getContent());
+			}
+			updateButtons();
+		});
+
 	}
 
 	private void accountDetailsClicked() {
@@ -116,7 +135,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		U.addM(sessionContainer, MessageUI.render("New order clicked"));
 		OrderCreationRequest
 				.send(session.getInfos(), "" + session.getAccount().getUrl(), session.getNonce(), session.getOm(),
-						(ECPrivateKey) session.getAccount().getPrivateKey(), "example.com")
+						(ECPrivateKey) session.getKeyPairWithJWK().getKeyPair().getPrivate(), "example.com")
 				.then(this::createOrderSuccess, this::createOrderFailure);
 		validate();
 	}
@@ -228,7 +247,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		}
 
 		buttons.setEnabled(Action.CREATE_KEY_PAIR, true);
-		buttons.setClicked(Action.CREATE_KEY_PAIR, kpm::createKeyPair);
+		buttons.setClicked(Action.CREATE_KEY_PAIR, this::createKeyPair);
 
 		buttons.setEnabled(Action.SAVE_KEY_PAIR, session.getKeyPairWithJWK() != null);
 		buttons.setClicked(Action.SAVE_KEY_PAIR, kpm::saveKeyPair);

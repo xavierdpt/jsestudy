@@ -1,7 +1,8 @@
 package xpdtr.acme.gui.components;
 
-import java.awt.Component;
+import java.awt.Container;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,71 +22,76 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import example.company.acme.AcmeSession;
-import xpdtr.acme.gui.layout.LabelFieldButton;
 import xpdtr.acme.gui.utils.U;
 
 public class AccountCreationUI {
 
-	public static Component renderCalling() {
-		JLabel label = new JLabel("Calling account create");
-		return label;
+	private JComboBox<String> contactInput;
+	private JButton createButton;
+	private JButton cancelButton;
+	private Consumer<String> onCreate;
+	private Runnable onCancel;
+	private List<String> knownContacts;
+
+	public AccountCreationUI(Consumer<String> onCreate, Runnable onCancel) {
+		this.onCreate = onCreate;
+		this.onCancel = onCancel;
 	}
 
-	public static List<Component> renderSuccess(AcmeSession session) {
-
-		List<Component> components = new ArrayList<>();
-
-		JLabel nonceLabel = new JLabel("New nonce : " + session.getNonce());
-		JLabel accountUrlLabel = new JLabel(session.getAccount().getUrl());
-
-		components.add(nonceLabel);
-		components.add(accountUrlLabel);
-
-		return components;
+	public void renderInput(Container container) {
+		addFields(container);
+		addButtons(container);
 	}
 
-	public static Component renderInput(Consumer<String> onCreate, Runnable onCancel) {
+	private void addFields(Container container) {
+		JPanel fieldsPanel = new JPanel(new LabelsAndFields(5,15));
+		fieldsPanel.add(new JLabel("Contact"));
+		addContactInput(fieldsPanel);
+		container.add(fieldsPanel);
+	}
 
-		JLabel label = new JLabel("Provide account contact");
-
-		JComboBox<String> contactInput = new JComboBox<>();
+	private void addContactInput(JPanel fieldsPanel) {
+		contactInput = new JComboBox<>();
 		contactInput.setEditable(true);
-		List<String> knownContacts = getKnownContacts();
+		knownContacts = getKnownContacts();
 		addKnownContacts(knownContacts, contactInput);
-		JButton createButton = new JButton("Create");
-		JButton cancelButton = new JButton("Cancel");
+		fieldsPanel.add(contactInput);
 
-		Runnable disable = () -> {
-			contactInput.setEnabled(false);
-			createButton.setEnabled(false);
-			cancelButton.setEnabled(false);
-		};
+	}
 
-		U.clicked(createButton, (e) -> {
-			disable.run();
-			String selected = contactInput.getSelectedItem().toString();
-			saveKnownContact(knownContacts, selected);
-			onCreate.accept(selected);
-		});
+	private void addButtons(Container container) {
+		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
-		U.clicked(cancelButton, (e) -> {
-			disable.run();
-			onCancel.run();
-		});
+		createButton = new JButton("Create");
+		U.clicked(createButton, this::create);
 
-		JPanel panel = new JPanel(new LabelFieldButton(5));
-		panel.add(label);
-		panel.add(contactInput);
-		JPanel buttons = new JPanel(new FlowLayout());
+		cancelButton = new JButton("Cancel");
+		U.clicked(cancelButton, this::cancel);
+
 		buttons.add(createButton);
 		buttons.add(cancelButton);
-		panel.add(buttons);
-		return panel;
-
+		container.add(buttons);
 	}
 
-	private static boolean saveKnownContact(List<String> contacts, String selected) {
+	private void disable() {
+		contactInput.setEnabled(false);
+		createButton.setEnabled(false);
+		cancelButton.setEnabled(false);
+	};
+
+	private void create(ActionEvent e) {
+		disable();
+		String selected = contactInput.getSelectedItem().toString();
+		saveKnownContact(knownContacts, selected);
+		onCreate.accept(selected);
+	}
+
+	private void cancel(ActionEvent e) {
+		disable();
+		onCancel.run();
+	}
+
+	private boolean saveKnownContact(List<String> contacts, String selected) {
 		for (String contact : contacts) {
 			if (contact.equals(selected)) {
 				return false;
@@ -106,7 +112,7 @@ public class AccountCreationUI {
 		return true;
 	}
 
-	private static List<String> getKnownContacts() {
+	private List<String> getKnownContacts() {
 
 		List<String> knownContacts = new ArrayList<>();
 
@@ -128,7 +134,7 @@ public class AccountCreationUI {
 
 	}
 
-	private static Path getPath() throws IOException {
+	private Path getPath() throws IOException {
 		String userDirectory = System.getProperty("user.home");
 		Path path = FileSystems.getDefault().getPath(userDirectory, ".acme-gui");
 		File pathFile = path.toFile();
@@ -142,7 +148,7 @@ public class AccountCreationUI {
 		return path.resolve("knownContacts");
 	}
 
-	private static void addKnownContacts(List<String> knownContacts, JComboBox<String> contactInput) {
+	private void addKnownContacts(List<String> knownContacts, JComboBox<String> contactInput) {
 		for (String contact : knownContacts) {
 			contactInput.addItem(contact);
 		}

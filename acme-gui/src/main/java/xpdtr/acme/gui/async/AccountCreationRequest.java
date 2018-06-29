@@ -2,13 +2,15 @@ package xpdtr.acme.gui.async;
 
 import example.company.acme.AcmeSession;
 import example.company.acme.v2.Acme2;
+import example.company.acme.v2.WithNonce;
+import example.company.acme.v2.account.AcmeAccount;
 import xpdtr.acme.gui.utils.Promise;
 
 public class AccountCreationRequest {
 
-	public static Promise<AcmeSession> send(AcmeSession session, String contact) {
+	public static Promise<WithNonce<AcmeAccount>> send(AcmeSession session, String contact) {
 
-		Promise<AcmeSession> promise = new Promise<>();
+		Promise<WithNonce<AcmeAccount>> promise = new Promise<>();
 
 		Thread thread = new Thread(new Runnable() {
 			@Override

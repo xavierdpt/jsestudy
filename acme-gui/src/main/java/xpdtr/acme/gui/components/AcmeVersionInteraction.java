@@ -12,12 +12,12 @@ import xpdtr.acme.gui.interactions.Interacter;
 import xpdtr.acme.gui.interactions.UIInteraction;
 import xpdtr.acme.gui.utils.U;
 
-public class AcmeVersionUI extends UIInteraction {
+public class AcmeVersionInteraction extends UIInteraction {
 
 	private UILogger logger;
 	private Consumer<String> consumer;
 
-	public AcmeVersionUI(Interacter interacter, Container container, UILogger logger, Consumer<String> consumer) {
+	public AcmeVersionInteraction(Interacter interacter, Container container, UILogger logger, Consumer<String> consumer) {
 		super(interacter, container);
 		this.logger = logger;
 		this.consumer = consumer;
@@ -50,7 +50,7 @@ public class AcmeVersionUI extends UIInteraction {
 	}
 
 	public static void perform(Interacter interacter, JPanel container, UILogger logger, Consumer<String> consumer) {
-		new AcmeVersionUI(interacter, container, logger, consumer).start();
+		new AcmeVersionInteraction(interacter, container, logger, consumer).start();
 	}
 
 }

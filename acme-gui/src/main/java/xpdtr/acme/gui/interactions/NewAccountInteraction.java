@@ -1,51 +1,75 @@
 package xpdtr.acme.gui.interactions;
 
 import java.awt.Container;
+import java.util.function.Consumer;
 
-import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import example.company.acme.AcmeSession;
+import example.company.acme.v2.WithNonce;
+import example.company.acme.v2.account.AcmeAccount;
 import xpdtr.acme.gui.async.AccountCreationRequest;
 import xpdtr.acme.gui.components.AccountCreationUI;
-import xpdtr.acme.gui.components.ExceptionUI;
-import xpdtr.acme.gui.utils.U;
+import xpdtr.acme.gui.components.UILogger;
 
 public class NewAccountInteraction extends UIInteraction {
 
 	private AcmeSession session;
-	private Runnable finished;
+	private UILogger logger;
+	private Consumer<WithNonce<AcmeAccount>> consumer;
+	private Container destination;
 
-	public NewAccountInteraction(Interacter interacter, Container container, AcmeSession session, Runnable finished) {
+	public NewAccountInteraction(Interacter interacter, JPanel container, UILogger logger, AcmeSession session,
+			Consumer<WithNonce<AcmeAccount>> consumer) {
 		super(interacter, container);
+		this.logger = logger;
 		this.session = session;
-		this.finished = finished;
+		this.consumer = consumer;
 	}
 
 	public void perform() {
-		container.add(AccountCreationUI.renderInput(this::createAccountProceed, this::createAccountCancel));
+		logger.beginGroup("New Account");
+		destination = logger.getDestination();
+		new AccountCreationUI(this::createAccountProceed, this::createAccountCancel).renderInput(destination);
 	}
 
 	private void createAccountProceed(String contact) {
-		container.add(AccountCreationUI.renderCalling());
-		AccountCreationRequest.send(session, contact).then(this::createAccountSuccess, this::createAccountFailure);
+		interacter.perform(() -> {
+			logger.message("Calling account create");
+			AccountCreationRequest.send(session, contact).then(this::createAccountSuccess, this::createAccountFailure);
+		});
 	}
 
 	private void createAccountCancel() {
-		U.class.getName();
-		U.addM(container, new JLabel("Account creation cancelled"));
-		finished.run();
+		interacter.perform(() -> {
+			logger.message("Account creation cancelled");
+			logger.endGroup();
+			consumer.accept(null);
+		});
 	}
 
-	private void createAccountSuccess(AcmeSession session) {
-		U.addM(container, AccountCreationUI.renderSuccess(session));
-		session.setAccount(session.getAccount());
-		session.setNonce(session.getNonce());
-		finished.run();
+	private void createAccountSuccess(WithNonce<AcmeAccount> accountWithNonce) {
+
+		interacter.perform(() -> {
+
+			logger.message("New nonce : " + accountWithNonce.getNonce());
+			logger.message(accountWithNonce.getContent().getUrl());
+			logger.endGroup();
+			consumer.accept(accountWithNonce);
+		});
+
 	}
 
 	private void createAccountFailure(Exception ex) {
-		U.addM(container, ExceptionUI.render(ex));
-		finished.run();
+		interacter.perform(() -> {
+			logger.exception(ex);
+			consumer.accept(null);
+		});
+	}
+
+	public static void perform(Interacter interacter, JPanel container, UILogger logger, AcmeSession session,
+			Consumer<WithNonce<AcmeAccount>> consumer) {
+		new NewAccountInteraction(interacter, container, logger, session, consumer).start();
 	}
 
 }

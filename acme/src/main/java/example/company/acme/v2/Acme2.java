@@ -45,7 +45,8 @@ public class Acme2 {
 		return request.execute().handleResponse(responseHandler);
 	}
 
-	public static AcmeDirectoryInfos2 directory(String url, ObjectMapper om) throws ClientProtocolException, IOException {
+	public static AcmeDirectoryInfos2 directory(String url, ObjectMapper om)
+			throws ClientProtocolException, IOException {
 		return directory(url, om, false);
 	}
 
@@ -86,23 +87,16 @@ public class Acme2 {
 		return JWBase64.decode(nonce(infos, false));
 	}
 
-	public static AcmeSession newAccount(AcmeSession session, String contact) throws AcmeException {
+	public static WithNonce<AcmeAccount> newAccount(AcmeSession session, String contact) throws AcmeException {
 
 		try {
-			
+
 			KeyPairWithJWK keyPair = session.getKeyPairWithJWK();
 
 			Map<String, Object> newAccountJWS = AcmeNewAccount.createJWS(session, contact);
 
-			AcmeAccount account = AcmeNewAccount.sendRequest(session, newAccountJWS);
+			return AcmeNewAccount.sendRequest(session, newAccountJWS);
 
-			account.setUrl(getUrl(session.getInfos(), account));
-
-			account.setPrivateKey(session.getKeyPairWithJWK().getKeyPair().getPrivate());
-
-			session.setAccount(account);
-
-			return session;
 		} catch (Exception ex) {
 			throw new AcmeException(ex);
 		}
@@ -111,7 +105,7 @@ public class Acme2 {
 	public static AcmeOrderWithNonce newOrder(AcmeDirectoryInfos2 infos, String kid, String nonce, ObjectMapper om,
 			ECPrivateKey privateKey, String site) throws AcmeException {
 		try {
-			Map<String, Object> jws = AcmeNewOrder.createJWS(infos, kid, nonce, om, privateKey,site);
+			Map<String, Object> jws = AcmeNewOrder.createJWS(infos, kid, nonce, om, privateKey, site);
 			return AcmeNewOrder.sendRequest(infos, om, jws);
 
 		} catch (Exception exception) {
@@ -125,14 +119,6 @@ public class Acme2 {
 		} catch (Exception ex) {
 			throw new AcmeException(ex);
 		}
-	}
-
-	private static String getUrl(AcmeDirectoryInfos2 infos, AcmeAccount account) {
-
-		String url = infos.getNewAccountURL();
-		int lastSlash = url.lastIndexOf('/');
-
-		return url.substring(0, lastSlash) + "/acct/" + account.getId();
 	}
 
 	public static Challenge challenge(AcmeSession session, String url) throws AcmeException {

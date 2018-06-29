@@ -28,6 +28,7 @@ public class UILogger {
 		bf.setTitleFont(bf.getTitleFont().deriveFont(Font.BOLD));
 		panel.setBorder(bf);
 		destination = panel;
+		container.add(destination);
 	}
 
 	public void important(String message) {
@@ -45,8 +46,11 @@ public class UILogger {
 	}
 
 	public void endGroup() {
-		container.add(destination);
 		destination = container;
+	}
+
+	public Container getDestination() {
+		return destination;
 	}
 
 }

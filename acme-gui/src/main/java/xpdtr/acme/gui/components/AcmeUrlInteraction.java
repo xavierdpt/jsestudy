@@ -13,13 +13,13 @@ import xpdtr.acme.gui.interactions.Interacter;
 import xpdtr.acme.gui.interactions.UIInteraction;
 import xpdtr.acme.gui.utils.U;
 
-public class AcmeUrlUI extends UIInteraction {
+public class AcmeUrlInteraction extends UIInteraction {
 
 	private UILogger logger;
 	private Consumer<String> consumer;
 	private AcmeSession session;
 
-	public AcmeUrlUI(Interacter interacter, JPanel container, UILogger logger, AcmeSession session,
+	public AcmeUrlInteraction(Interacter interacter, JPanel container, UILogger logger, AcmeSession session,
 			Consumer<String> consumer) {
 		super(interacter, container);
 		this.logger = logger;
@@ -60,7 +60,7 @@ public class AcmeUrlUI extends UIInteraction {
 
 	public static void perform(Interacter interacter, JPanel sessionContainer, UILogger logger, AcmeSession session,
 			Consumer<String> consumer) {
-		new AcmeUrlUI(interacter, sessionContainer, logger, session, consumer).start();
+		new AcmeUrlInteraction(interacter, sessionContainer, logger, session, consumer).start();
 
 	}
 

@@ -8,12 +8,10 @@ import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.SwingWorker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import example.company.acme.AcmeSession;
-import example.company.acme.crypto.KPG;
 import example.company.acme.jw.JWK;
 import example.company.acme.jw.KeyPairWithJWK;
 import xpdtr.acme.gui.components.ExceptionUI;
@@ -32,26 +30,6 @@ public class KeyPairManager {
 		this.sessionContainer = sessionContainer;
 		this.frame = frame;
 		this.after = after;
-	}
-
-	public  void createKeyPair() {
-		new SwingWorker<Void, Void>() {
-			@Override
-			protected Void doInBackground() throws Exception {
-				session.setKeyPairWithJWK(KeyPairWithJWK.fromKeyPair(KPG.newECP256KeyPair()));
-				return null;
-			}
-
-			protected void done() {
-				try {
-					get();
-					U.addM(sessionContainer, MessageUI.render("New key pair created"));
-				} catch (Exception e) {
-					U.addM(sessionContainer, ExceptionUI.render(e));
-				}
-				after.run();
-			};
-		}.execute();
 	}
 
 	public void saveKeyPair() {
@@ -78,7 +56,7 @@ public class KeyPairManager {
 
 	}
 
-	public  void loadKeyPair() {
+	public void loadKeyPair() {
 		JFileChooser jfc = new JFileChooser();
 		int r = jfc.showOpenDialog(frame);
 		U.addM(sessionContainer, MessageUI.render("Returned value : " + r));
@@ -103,8 +81,4 @@ public class KeyPairManager {
 		after.run();
 	}
 
-	
-
-	
-	
 }
