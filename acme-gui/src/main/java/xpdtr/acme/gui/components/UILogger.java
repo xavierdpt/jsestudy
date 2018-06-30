@@ -1,6 +1,8 @@
 package xpdtr.acme.gui.components;
 
+import java.awt.Component;
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
@@ -21,7 +23,7 @@ public class UILogger {
 		this.destination = container;
 	}
 
-	public void beginGroup(String title) {
+	public Container beginGroup(String title) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		TitledBorder bf = BorderFactory.createTitledBorder(title);
@@ -29,6 +31,7 @@ public class UILogger {
 		panel.setBorder(bf);
 		destination = panel;
 		container.add(destination);
+		return destination;
 	}
 
 	public void important(String message) {
@@ -42,7 +45,7 @@ public class UILogger {
 	}
 
 	public void message(String message, boolean multiline) {
-		destination.add(MessageUI.render(message,multiline));
+		destination.add(MessageUI.render(message, multiline));
 	}
 
 	public void exception(Exception exception) {
@@ -55,6 +58,12 @@ public class UILogger {
 
 	public Container getDestination() {
 		return destination;
+	}
+
+	public void leading(Component component) {
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+		panel.add(component);
+		destination.add(panel);
 	}
 
 }

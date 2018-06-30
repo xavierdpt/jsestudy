@@ -2,77 +2,100 @@ package xpdtr.acme.gui.interactions;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
+import javax.swing.JPanel;
 
 import example.company.acme.AcmeSession;
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeException;
 import example.company.acme.v2.Challenge;
-import xpdtr.acme.gui.components.ExceptionUI;
-import xpdtr.acme.gui.components.MessageUI;
-import xpdtr.acme.gui.interactions.Interacter;
-import xpdtr.acme.gui.interactions.UIInteraction;
+import xpdtr.acme.gui.SameWidthLayout;
+import xpdtr.acme.gui.components.UILogger;
 import xpdtr.acme.gui.utils.Promise;
 import xpdtr.acme.gui.utils.U;
 
 public class ChallengeInteraction extends UIInteraction {
 
 	private AcmeSession session;
-	private Runnable finished;
+	private Consumer<Challenge> consumer;
+	private UILogger logger;
+	private Container destination;
+	private List<Component> buttons = new ArrayList<>();
 
-	public ChallengeInteraction(Interacter interacter, Container container, AcmeSession session, Runnable finished) {
+	public ChallengeInteraction(Interacter interacter, Container container, UILogger logger, AcmeSession session,
+			Consumer<Challenge> finished) {
 		super(interacter, container);
+		this.logger = logger;
 		this.session = session;
-		this.finished = finished;
+		this.consumer = finished;
 	}
 
 	@Override
 	public void perform() {
 
-		Component label = MessageUI.render("Which challenge ?");
+		destination = logger.beginGroup("Challenge");
 
-		JComboBox<String> cb = new JComboBox<>();
+		logger.message("Which challenge ?");
 
 		List<String> urls = new ArrayList<>();
 
 		for (Challenge challenge : session.getAuthorization().getChallenges()) {
-			urls.add(challenge.getUrl());
+
+			String url = challenge.getUrl();
+
+			urls.add(url);
 
 		}
 		Collections.sort(urls);
 
+		JPanel choices = new JPanel(new SameWidthLayout(5));
 		for (String url : urls) {
-			cb.addItem(url);
+			JButton button = new JButton(url);
+			U.clicked(button, (e) -> {
+				select(url);
+			});
+			choices.add(button);
+			buttons.add(button);
 		}
 
-		JButton chooseButton = new JButton("Choose");
 		JButton cancelButton = new JButton("Cancel");
+		buttons.add(cancelButton);
 
-		Runnable disabler = U.disabler(cancelButton, chooseButton, cb);
+		U.clicked(cancelButton, this::cancel);
 
-		U.clicked(cancelButton, (e) -> {
-			disabler.run();
-			finished.run();
+		destination.add(choices);
+		
+		logger.leading(cancelButton);
+	}
+
+	private void select(String url) {
+		disable();
+		next(url);
+	}
+
+	private void cancel(ActionEvent e) {
+		interacter.perform(() -> {
+			disable();
+			logger.message("Cancelled");
+			logger.endGroup();
+			consumer.accept(null);
 		});
+	}
 
-		U.clicked(chooseButton, (e) -> {
-			disabler.run();
-			next((String) cb.getSelectedItem());
-		});
-
-		U.addM(container, label);
-		U.addM(container, cb);
-		U.addM(container, chooseButton);
-		U.addM(container, cancelButton);
+	private void disable() {
+		for (Component button : buttons) {
+			button.setEnabled(false);
+		}
 	}
 
 	private void next(String url) {
-		U.addM(container, MessageUI.render("Sending..."));
+		logger.message("Sending...");
 		new Promise<Challenge>((Promise<Challenge> p) -> {
 			try {
 				p.success(Acme2.challenge(session, url));
@@ -80,12 +103,25 @@ public class ChallengeInteraction extends UIInteraction {
 				p.failure(e);
 			}
 		}).then((challenge) -> {
-			session.setChallenge(challenge);
-			finished.run();
+			interacter.perform(() -> {
+				logger.endGroup();
+				consumer.accept(challenge);
+			});
+
 		}, (e) -> {
-			U.addM(container, ExceptionUI.render(e));
-			finished.run();
+			interacter.perform(() -> {
+				logger.exception(e);
+				logger.endGroup();
+				consumer.accept(null);
+			});
+
 		});
+
+	}
+
+	public static void perform(Interacter interacter, JPanel container, UILogger logger, AcmeSession session,
+			Consumer<Challenge> consumer) {
+		new ChallengeInteraction(interacter, container, logger, session, consumer).start();
 
 	}
 }

@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.LayoutManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -150,7 +148,12 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void challengeClicked() {
-		new ChallengeInteraction(interacter, sessionContainer, session, this::updateButtons).start();
+		ChallengeInteraction.perform(interacter, sessionContainer, logger, session, (challenge) -> {
+			if (challenge != null) {
+				session.setChallenge(challenge);
+			}
+			updateButtons();
+		});
 	}
 
 	private void updateButtons() {
