@@ -8,29 +8,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import example.company.acme.AcmeSession;
-import example.company.acme.v2.Acme2;
-import example.company.acme.v2.Authorization;
-import example.company.acme.v2.Challenge;
 import xpdtr.acme.gui.components.Acme2Buttons;
 import xpdtr.acme.gui.components.Acme2Buttons.Action;
 import xpdtr.acme.gui.components.AcmeUrlInteraction;
 import xpdtr.acme.gui.components.AcmeVersionInteraction;
 import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
-import xpdtr.acme.gui.components.ExceptionUI;
-import xpdtr.acme.gui.components.MessageUI;
 import xpdtr.acme.gui.components.Title;
 import xpdtr.acme.gui.components.UILogger;
+import xpdtr.acme.gui.interactions.AccountDetailsInteraction;
+import xpdtr.acme.gui.interactions.ChallengeInteraction;
+import xpdtr.acme.gui.interactions.CreateKeyPairInteraction;
 import xpdtr.acme.gui.interactions.DirectoryInteraction;
 import xpdtr.acme.gui.interactions.Interacter;
 import xpdtr.acme.gui.interactions.NewAccountInteraction;
+import xpdtr.acme.gui.interactions.NewOrderInteraction;
 import xpdtr.acme.gui.interactions.NonceInteraction;
 import xpdtr.acme.gui.layout.StackedLayout;
-import xpdtr.acme.gui.utils.Promise;
 import xpdtr.acme.gui.utils.U;
 
 public class AcmeGui extends BasicFrameWithVerticalScroll {
@@ -143,65 +139,14 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void authorizationDetailsClicked() {
-		U.addM(sessionContainer, MessageUI.render("Authorization details clicked"));
-		JComboBox<String> authorizationsCB = new JComboBox<>(
-				session.getOrder().getAuthorizations().toArray(new String[] {}));
-		U.addM(sessionContainer, authorizationsCB);
-		JButton choose = new JButton("Choose");
-		JButton cancel = new JButton("Cancel");
-		U.addM(sessionContainer, choose);
-		U.addM(sessionContainer, cancel);
 
-		choose.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				authorizationsCB.setEnabled(false);
-				choose.setEnabled(false);
-				cancel.setEnabled(false);
-				String auth = authorizationsCB.getSelectedItem().toString();
-				U.addM(sessionContainer, MessageUI.render("Chosen " + auth));
-				getAuthorizationDetails(auth);
-				validate();
-			}
-		});
-
-		cancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				authorizationsCB.setEnabled(false);
-				choose.setEnabled(false);
-				cancel.setEnabled(false);
-				U.addM(sessionContainer, MessageUI.render("Cancelled"));
-				updateButtons();
-				validate();
-			}
-		});
-
-		validate();
-	}
-
-	private void getAuthorizationDetails(String url) {
-		new Promise<Authorization>((p) -> {
-			try {
-				Authorization r = Acme2.getAuthorization(url, session.getOm());
-				p.success(r);
-			} catch (Exception e1) {
-				p.failure(e1);
-			}
-
-		}).then((Authorization o) -> {
-			U.addM(sessionContainer, MessageUI.render("Success : got response for " + url));
-			session.setAuthorization(o);
-			for (Challenge c : o.getChallenges()) {
-				U.addM(sessionContainer, MessageUI.render(c.getUrl()));
+		AuthorizationDetailsInteraction.perform(interacter, sessionContainer, logger, session, (auth) -> {
+			if (auth != null) {
+				session.setAuthorization(auth);
 			}
 			updateButtons();
-			validate();
-		}, (e) -> {
-			U.addM(sessionContainer, ExceptionUI.render(e));
-			updateButtons();
-			validate();
 		});
+
 	}
 
 	private void challengeClicked() {
