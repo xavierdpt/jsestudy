@@ -1,7 +1,6 @@
 package xpdtr.acme.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.LayoutManager;
 
@@ -9,11 +8,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import example.company.acme.AcmeSession;
-import xpdtr.acme.gui.components.Acme2Buttons;
-import xpdtr.acme.gui.components.Acme2Buttons.Action;
+import xpdtr.acme.gui.components.AcmeGuiActions;
 import xpdtr.acme.gui.components.AcmeUrlInteraction;
 import xpdtr.acme.gui.components.AcmeVersionInteraction;
 import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
+import xpdtr.acme.gui.components.ButtonsFactory;
 import xpdtr.acme.gui.components.Title;
 import xpdtr.acme.gui.components.UILogger;
 import xpdtr.acme.gui.interactions.AccountDetailsInteraction;
@@ -31,13 +30,13 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	private AcmeSession session = new AcmeSession();
 
-	private Acme2Buttons buttons;
-
 	private KeyPairManager kpm;
 
 	private Interacter interacter;
 
 	private UILogger logger;
+
+	private Buttons buttons;
 
 	@Override
 	public void init() {
@@ -52,7 +51,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 		kpm = new KeyPairManager(session, sessionContainer, getFrame(), this::updateButtons);
 
-		interacter = new Interacter(getFrame());
+		interacter = new Interacter(getFrame(), this::autoscroll);
 
 		logger = new UILogger(sessionContainer);
 
@@ -156,47 +155,50 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		});
 	}
 
+	public void deactivateAccount() {
+
+		AccountDeactivationInteraction.perform(interacter, sessionContainer, logger, session, (deactivated) -> {
+			if (deactivated) {
+				session.setAccount(null);
+				session.setAuthorization(null);
+				session.setChallenge(null);
+				session.setOrder(null);
+			}
+			updateButtons();
+		});
+	}
+
 	private void updateButtons() {
 
 		if (buttons == null) {
-			buttons = new Acme2Buttons();
+			ButtonsFactory buttonsFactory = new ButtonsFactory();
+			buttonsFactory.setClicked(AcmeGuiActions.CREATE_KEY_PAIR, this::createKeyPair);
+			buttonsFactory.setClicked(AcmeGuiActions.SAVE_KEY_PAIR, kpm::saveKeyPair);
+			buttonsFactory.setClicked(AcmeGuiActions.LOAD_KEY_PAIR, kpm::loadKeyPair);
+			buttonsFactory.setClicked(AcmeGuiActions.NONCE, this::nonceClicked);
+			buttonsFactory.setClicked(AcmeGuiActions.CREATE_ACCOUNT, this::createAccountClicked);
+			buttonsFactory.setClicked(AcmeGuiActions.ACCOUNT_DETAILS, this::accountDetailsClicked);
+			buttonsFactory.setClicked(AcmeGuiActions.ORDER, this::orderClicked);
+			buttonsFactory.setClicked(AcmeGuiActions.AUTHORIZATION_DETAILS, this::authorizationDetailsClicked);
+			buttonsFactory.setClicked(AcmeGuiActions.CHALLENGE, this::challengeClicked);
+			buttonsFactory.setClicked(AcmeGuiActions.DEACTIVATE_ACCOUNT, this::deactivateAccount);
+
+			buttons = buttonsFactory.render(contentPane);
 		}
 
-		buttons.setEnabled(Action.CREATE_KEY_PAIR, true);
-		buttons.setClicked(Action.CREATE_KEY_PAIR, this::createKeyPair);
+		buttons.setEnabled(AcmeGuiActions.CREATE_KEY_PAIR, true);
+		buttons.setEnabled(AcmeGuiActions.SAVE_KEY_PAIR, session.getKeyPairWithJWK() != null);
+		buttons.setEnabled(AcmeGuiActions.LOAD_KEY_PAIR, session.getAccount() == null);
+		buttons.setEnabled(AcmeGuiActions.NONCE, session.getUrl() != null);
+		buttons.setEnabled(AcmeGuiActions.CREATE_ACCOUNT,
+				session.getNonce() != null && session.getKeyPairWithJWK() != null);
+		buttons.setEnabled(AcmeGuiActions.ACCOUNT_DETAILS, session.getAccount() != null);
+		buttons.setEnabled(AcmeGuiActions.ORDER, session.getAccount() != null);
+		buttons.setEnabled(AcmeGuiActions.AUTHORIZATION_DETAILS, session.getOrder() != null);
+		buttons.setEnabled(AcmeGuiActions.CHALLENGE, session.getAuthorization() != null);
+		buttons.setEnabled(AcmeGuiActions.DEACTIVATE_ACCOUNT, session.getAccount() != null);
 
-		buttons.setEnabled(Action.SAVE_KEY_PAIR, session.getKeyPairWithJWK() != null);
-		buttons.setClicked(Action.SAVE_KEY_PAIR, kpm::saveKeyPair);
-
-		buttons.setEnabled(Action.LOAD_KEY_PAIR, session.getAccount() == null);
-		buttons.setClicked(Action.LOAD_KEY_PAIR, kpm::loadKeyPair);
-
-		buttons.setEnabled(Action.NONCE, session.getUrl() != null);
-		buttons.setClicked(Action.NONCE, this::nonceClicked);
-
-		buttons.setEnabled(Action.CREATE_ACCOUNT, session.getNonce() != null && session.getKeyPairWithJWK() != null);
-		buttons.setClicked(Action.CREATE_ACCOUNT, this::createAccountClicked);
-
-		buttons.setEnabled(Action.ACCOUNT_DETAILS, session.getAccount() != null);
-		buttons.setClicked(Action.ACCOUNT_DETAILS, this::accountDetailsClicked);
-
-		buttons.setEnabled(Action.ORDER, session.getAccount() != null);
-		buttons.setClicked(Action.ORDER, this::orderClicked);
-
-		buttons.setEnabled(Action.AUTHORIZATION_DETAILS, session.getOrder() != null);
-		buttons.setClicked(Action.AUTHORIZATION_DETAILS, this::authorizationDetailsClicked);
-
-		buttons.setEnabled(Action.CHALLENGE, session.getAuthorization() != null);
-		buttons.setClicked(Action.CHALLENGE, this::challengeClicked);
-
-		Component rendered = buttons.render();
-
-		if (rendered != null) {
-			contentPane.add(rendered, BorderLayout.SOUTH);
-		} else {
-		}
-
-		validate();
+		buttons.update();
 
 	}
 

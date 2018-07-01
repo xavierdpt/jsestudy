@@ -44,7 +44,7 @@ public class AcmeNewAccount {
 
 		Map<String, Object> protekted = new HashMap<>();
 		protekted.put("alg", JWA.ES256);
-		protekted.put("jwk", session.getKeyPairWithJWK().getPublicJwk().getJwk());
+		protekted.put("jwk", session.getKeyPairWithJWK().getPublicJwk());
 		protekted.put("nonce", session.getNonce());
 		protekted.put("url", session.getInfos().getNewAccountURL());
 		String protected64 = JWBase64.encode(session.getOm().writeValueAsBytes(protekted));

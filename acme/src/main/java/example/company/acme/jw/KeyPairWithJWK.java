@@ -23,28 +23,28 @@ import example.company.tox.common.Common;
 public class KeyPairWithJWK {
 
 	private KeyPair keyPair;
-	private JWK publicJwk = new JWK();
-	private JWK privateJwk = new JWK();
+	private Map<String, String> publicJwk = new HashMap<>();
+	private Map<String, String> privateJwk = new HashMap<>();
 
 	private KeyPairWithJWK(KeyPair keyPair, Map<String, String> publicJwk, Map<String, String> privateJwk) {
 		this.keyPair = keyPair;
-		this.publicJwk = new JWK(publicJwk);
-		this.privateJwk = new JWK(privateJwk);
+		this.publicJwk = publicJwk;
+		this.privateJwk = privateJwk;
 	}
 
 	public KeyPairWithJWK(Map<String, String> jwk) {
-		this.publicJwk = new JWK(jwk);
+		this.publicJwk = jwk;
 	}
 
 	public KeyPair getKeyPair() {
 		return keyPair;
 	}
 
-	public JWK getPublicJwk() {
+	public Map<String, String> getPublicJwk() {
 		return publicJwk;
 	}
 
-	public JWK getPrivateJwk() {
+	public Map<String, String> getPrivateJwk() {
 		return privateJwk;
 	}
 
@@ -56,12 +56,12 @@ public class KeyPairWithJWK {
 		return new KeyPairWithJWK(keyPair, publicJwk, privateJwk);
 	}
 
-	public static KeyPairWithJWK fromJWK(JWK jwk) throws AcmeException {
+	public static KeyPairWithJWK fromJWK(Map<String, String> jwk) throws AcmeException {
 
 		Map<String, String> publicProps = new HashMap<>();
 		Map<String, String> privateProps = new HashMap<>();
 
-		jwk.getJwk().forEach((p, v) -> {
+		jwk.forEach((p, v) -> {
 			if ("x".equals(p) || "y".equals(p)) {
 				publicProps.put(p, v);
 			} else if ("d".equals(p)) {
@@ -99,20 +99,20 @@ public class KeyPairWithJWK {
 		return jwk;
 	}
 
-	public JWK getFullJWK() {
+	public Map<String, String> getFullJWK() {
 		Map<String, String> map = new HashMap<>();
-		map.putAll(publicJwk.getJwk());
-		map.putAll(privateJwk.getJwk());
-		return new JWK(map);
+		map.putAll(publicJwk);
+		map.putAll(privateJwk);
+		return map;
 	}
 
-	private static KeyPair createKeyPair(JWK jwk) throws AcmeException {
+	private static KeyPair createKeyPair(Map<String, String> jwk) throws AcmeException {
 		try {
 
-			BigInteger d = Common.bigInteger(JWBase64.decode(jwk.getJwk().get("d")));
-			BigInteger x = Common.bigInteger(JWBase64.decode(jwk.getJwk().get("x")));
-			BigInteger y = Common.bigInteger(JWBase64.decode(jwk.getJwk().get("y")));
-			
+			BigInteger d = Common.bigInteger(JWBase64.decode(jwk.get("d")));
+			BigInteger x = Common.bigInteger(JWBase64.decode(jwk.get("x")));
+			BigInteger y = Common.bigInteger(JWBase64.decode(jwk.get("y")));
+
 			AlgorithmParameters parametersFactory = AlgorithmParameters.getInstance("EC");
 			parametersFactory.init(new ECGenParameterSpec(ECCurves.NIST_P_256));
 			ECParameterSpec parameters = parametersFactory.getParameterSpec(ECParameterSpec.class);

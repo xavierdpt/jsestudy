@@ -85,4 +85,54 @@ public class AcmeNetwork {
 		return request.execute().handleResponse(responseHandler);
 	}
 
+	private static AcmeResponse<Boolean> parseResponse(HttpResponse response, ObjectMapper om) throws IOException {
+
+		int code = response.getStatusLine().getStatusCode();
+		InputStream is = response.getEntity().getContent();
+
+		AcmeResponse<Boolean> r = new AcmeResponse<Boolean>();
+		r.setContent(false);
+
+		Header nonceHeader = response.getFirstHeader("Replay-Nonce");
+		if (nonceHeader != null) {
+			String nonce = nonceHeader.getValue();
+			r.setNonce(nonce);
+		}
+
+		if (code >= 200 && code < 300) {
+			r.setContent(true);
+		} else {
+			r.setFailed(true);
+			try {
+				AcmeError error = om.readValue(is, AcmeError.class);
+				r.setFailureDetails(error.getDetail());
+			} catch (Exception ex) {
+				r.setFailureDetails(ex.getClass().getName() + " : " + ex.getMessage());
+			}
+		}
+
+		return r;
+	}
+
+	public static AcmeResponse<Boolean> post(String url, byte[] body, ObjectMapper om) throws Exception {
+
+		Request request = Request.Post(url)
+
+				.setHeader("Content-Type", "application/jose+json")
+
+				.bodyByteArray(body);
+
+		ResponseHandler<AcmeResponse<Boolean>> responseHandler = new ResponseHandler<AcmeResponse<Boolean>>() {
+
+			@Override
+			public AcmeResponse<Boolean> handleResponse(HttpResponse response)
+					throws ClientProtocolException, IOException {
+				return AcmeNetwork.parseResponse(response, om);
+			}
+
+		};
+
+		return request.execute().handleResponse(responseHandler);
+	}
+
 }

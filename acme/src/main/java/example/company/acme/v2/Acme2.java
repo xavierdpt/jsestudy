@@ -121,7 +121,7 @@ public class Acme2 {
 	public static Challenge challenge(AcmeSession session, String url) throws AcmeException {
 		try {
 			return GetChallenge.sendRequest(session, url);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new AcmeException(e);
 		}
 	}
@@ -129,7 +129,15 @@ public class Acme2 {
 	public static AcmeResponse<String> accountDetails(AcmeSession session) throws AcmeException {
 		try {
 			return AcmeAccountDetails.sendRequest(session);
-		} catch (IOException e) {
+		} catch (Exception e) {
+			throw new AcmeException(e);
+		}
+	}
+
+	public static AcmeResponse<Boolean> deactivateAccount(AcmeSession session) throws AcmeException {
+		try {
+			return AcmeDeactivateAccount.sendRequest(session);
+		} catch (Exception e) {
 			throw new AcmeException(e);
 		}
 	}

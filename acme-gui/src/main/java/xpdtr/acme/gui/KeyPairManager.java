@@ -5,14 +5,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import example.company.acme.AcmeSession;
-import example.company.acme.jw.JWK;
 import example.company.acme.jw.KeyPairWithJWK;
 import xpdtr.acme.gui.components.ExceptionUI;
 import xpdtr.acme.gui.components.MessageUI;
@@ -42,7 +43,7 @@ public class KeyPairManager {
 			U.addM(sessionContainer, MessageUI.render(file.getAbsolutePath()));
 			try {
 				FileWriter fw = new FileWriter(file);
-				JWK jwk = session.getKeyPairWithJWK().getFullJWK();
+				Map<String, String> jwk = session.getKeyPairWithJWK().getFullJWK();
 				session.getOm().writeValue(fw, jwk);
 				fw.close();
 				U.addM(sessionContainer, MessageUI.render("Key pair saved"));
@@ -68,7 +69,9 @@ public class KeyPairManager {
 			} else {
 				try {
 					ObjectMapper om = session.getOm();
-					JWK jwk = om.readValue(new FileReader(file), JWK.class);
+					Map<String, String> jwk = om.readValue(new FileReader(file),
+							new TypeReference<Map<String, String>>() {
+							});
 					session.setKeyPairWithJWK(KeyPairWithJWK.fromJWK(jwk));
 					U.addM(sessionContainer, MessageUI.render("Key loaded"));
 				} catch (Exception e) {

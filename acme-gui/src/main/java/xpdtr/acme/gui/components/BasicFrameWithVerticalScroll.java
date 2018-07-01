@@ -72,12 +72,14 @@ public abstract class BasicFrameWithVerticalScroll {
 
 	protected final void validate() {
 		frame.validate();
+	}
+
+	protected void autoscroll() {
 		JScrollBar vsb = sessionScrollPane.getVerticalScrollBar();
 		if (vsb != null) {
 			vsb.setValue(vsb.getMaximum());
 		}
 	}
-
 
 	abstract protected LayoutManager getLayout(Container target);
 

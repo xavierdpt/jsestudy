@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -19,7 +18,6 @@ import example.company.acme.v2.Challenge;
 import xpdtr.acme.gui.components.UILogger;
 import xpdtr.acme.gui.interactions.Interacter;
 import xpdtr.acme.gui.interactions.UIInteraction;
-import xpdtr.acme.gui.layout.FullWidthLayout;
 import xpdtr.acme.gui.utils.Promise;
 import xpdtr.acme.gui.utils.U;
 
