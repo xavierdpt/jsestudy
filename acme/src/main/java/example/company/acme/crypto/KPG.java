@@ -1,19 +1,15 @@
 package example.company.acme.crypto;
 
 import java.security.AlgorithmParameters;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.ECGenParameterSpec;
 import java.security.spec.ECParameterSpec;
-import java.security.spec.InvalidParameterSpecException;
 
 public class KPG {
-	
-	public static KeyPair newECP256KeyPair()
-			throws NoSuchAlgorithmException, InvalidParameterSpecException, InvalidAlgorithmParameterException {
+
+	public static KeyPair newECP256KeyPair() throws Exception {
 		AlgorithmParameterSpec algorithmParameterSpec = new ECGenParameterSpec(ECCurves.NIST_P_256);
 
 		AlgorithmParameters algorithmParameters = AlgorithmParameters.getInstance("EC");
@@ -24,5 +20,10 @@ public class KPG {
 		keyPairGenerator.initialize(ecParameterSpec);
 		return keyPairGenerator.generateKeyPair();
 	}
-	
+
+	public static KeyPair newRSAKeyPair() throws Exception {
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+		return keyPairGenerator.generateKeyPair();
+	}
+
 }

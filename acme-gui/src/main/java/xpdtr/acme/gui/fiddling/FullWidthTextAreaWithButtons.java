@@ -11,9 +11,9 @@ import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
 public class FullWidthTextAreaWithButtons extends BasicFrameWithVerticalScroll {
 
 	protected void start() {
-		sessionContainer.add(new JTextField());
-		sessionContainer.add(new JButton("Hello"));
-		sessionContainer.add(new JButton("There"));
+		container.add(new JTextField());
+		container.add(new JButton("Hello"));
+		container.add(new JButton("There"));
 	}
 
 	@Override

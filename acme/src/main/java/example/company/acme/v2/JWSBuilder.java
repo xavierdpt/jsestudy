@@ -1,7 +1,9 @@
 package example.company.acme.v2;
 
 import java.math.BigInteger;
+import java.security.PrivateKey;
 import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.RSAPrivateKey;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +13,7 @@ import example.company.acme.AcmeSession;
 import example.company.acme.crypto.ECCurves;
 import example.company.acme.crypto.ECSignature;
 import example.company.acme.crypto.ECSigner;
+import example.company.acme.crypto.RSASigner;
 import example.company.acme.jw.JWA;
 import example.company.acme.jw.JWBase64;
 import example.company.tox.common.Common;
@@ -21,10 +24,10 @@ public class JWSBuilder {
 
 		String nonce = session.getNonce();
 		ObjectMapper om = session.getOm();
-		ECPrivateKey privateKey = (ECPrivateKey) session.getKeyPairWithJWK().getKeyPair().getPrivate();
+		PrivateKey privateKey = session.getKeyPairWithJWK().getKeyPair().getPrivate();
 
 		Map<String, Object> protekted = new HashMap<>();
-		protekted.put("alg", JWA.ES256);
+		protekted.put("alg", getAlg(privateKey));
 		if (session.getAccount() == null) {
 			protekted.put("jwk", session.getKeyPairWithJWK().getPublicJwk());
 		} else {
@@ -38,12 +41,10 @@ public class JWSBuilder {
 		String payload64 = JWBase64.encode(om.writeValueAsBytes(payload));
 
 		byte[] tbs = (protected64 + "." + payload64).getBytes();
-		BigInteger s = privateKey.getS();
-		ECSignature signature = ECSigner.sign(tbs, ECCurves.NIST_P_256, s);
 
-		byte[] rBytes = Common.bigIntegerToBytes(signature.getR());
-		byte[] sBytes = Common.bigIntegerToBytes(signature.getS());
-		String signature64 = JWBase64.encode(Common.concatenate(rBytes, sBytes));
+		byte[] signatureBytes = sign(privateKey, tbs);
+
+		String signature64 = JWBase64.encode(signatureBytes);
 
 		Map<String, Object> jws = new HashMap<>();
 		jws.put("protected", protected64);
@@ -52,4 +53,34 @@ public class JWSBuilder {
 		return jws;
 	}
 
+	private static String getAlg(PrivateKey privateKey) {
+		if (privateKey instanceof ECPrivateKey) {
+			return JWA.ES256;
+		} else if (privateKey instanceof RSAPrivateKey) {
+			return JWA.RS256;
+		} else {
+			throw new IllegalArgumentException(
+					"Unknown private key type : " + (privateKey == null ? "null" : privateKey.getClass().getName()));
+		}
+	}
+
+	private static byte[] sign(PrivateKey privateKey, byte[] tbs) throws Exception {
+		if (privateKey instanceof ECPrivateKey) {
+			ECPrivateKey key = (ECPrivateKey) privateKey;
+
+			BigInteger s = key.getS();
+			ECSignature signature = ECSigner.sign(tbs, ECCurves.NIST_P_256, s);
+
+			byte[] rBytes = Common.bigIntegerToBytes(signature.getR());
+			byte[] sBytes = Common.bigIntegerToBytes(signature.getS());
+
+			return Common.concatenate(rBytes, sBytes);
+		} else if (privateKey instanceof RSAPrivateKey) {
+			RSAPrivateKey key = (RSAPrivateKey) privateKey;
+			return RSASigner.sign(tbs, key.getModulus(), key.getPrivateExponent());
+		} else {
+			throw new IllegalArgumentException(
+					"Unknown private key type : " + (privateKey == null ? "null" : privateKey.getClass().getName()));
+		}
+	}
 }

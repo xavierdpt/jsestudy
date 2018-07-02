@@ -58,4 +58,10 @@ public class U {
 			}
 		};
 	}
+
+	public static JButton button(String text, Runnable action) {
+		JButton button = new JButton(text);
+		clicked(button, e -> action.run());
+		return button;
+	}
 }

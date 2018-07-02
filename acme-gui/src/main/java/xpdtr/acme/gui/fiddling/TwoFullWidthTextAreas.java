@@ -10,8 +10,8 @@ import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
 public class TwoFullWidthTextAreas extends BasicFrameWithVerticalScroll {
 
 	protected void start() {
-		sessionContainer.add(new JTextField());
-		sessionContainer.add(new JTextField());
+		container.add(new JTextField());
+		container.add(new JTextField());
 	}
 
 	@Override

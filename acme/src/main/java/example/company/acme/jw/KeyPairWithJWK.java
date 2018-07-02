@@ -8,11 +8,15 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.ECGenParameterSpec;
 import java.security.spec.ECParameterSpec;
 import java.security.spec.ECPoint;
 import java.security.spec.ECPrivateKeySpec;
 import java.security.spec.ECPublicKeySpec;
+import java.security.spec.RSAPrivateKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,8 +54,8 @@ public class KeyPairWithJWK {
 
 	public static KeyPairWithJWK fromKeyPair(KeyPair keyPair) {
 
-		Map<String, String> publicJwk = getPublicJWK((ECPublicKey) keyPair.getPublic());
-		Map<String, String> privateJwk = getPrivateJWK((ECPrivateKey) keyPair.getPrivate());
+		Map<String, String> publicJwk = getPublicJWK(keyPair.getPublic());
+		Map<String, String> privateJwk = getPrivateJWK(keyPair.getPrivate());
 
 		return new KeyPairWithJWK(keyPair, publicJwk, privateJwk);
 	}
@@ -75,27 +79,57 @@ public class KeyPairWithJWK {
 		return new KeyPairWithJWK(createKeyPair(jwk), publicProps, privateProps);
 	}
 
-	private static Map<String, String> getPublicJWK(ECPublicKey publicKey) {
-
-		String x64 = JWBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineX()));
-		String y64 = JWBase64.encode(Common.bigIntegerToBytes(publicKey.getW().getAffineY()));
+	private static Map<String, String> getPublicJWK(PublicKey publicKey) {
 
 		Map<String, String> jwk = new HashMap<>();
-		jwk.put("kty", "EC");
-		jwk.put("crv", "P-256");
-		jwk.put("x", x64);
-		jwk.put("y", y64);
+
+		if (publicKey instanceof ECPublicKey) {
+			ECPublicKey key = (ECPublicKey) publicKey;
+			String x64 = JWBase64.encode(Common.bigIntegerToBytes(key.getW().getAffineX()));
+			String y64 = JWBase64.encode(Common.bigIntegerToBytes(key.getW().getAffineY()));
+
+			jwk.put("kty", "EC");
+			jwk.put("crv", "P-256");
+			jwk.put("x", x64);
+			jwk.put("y", y64);
+		} else if (publicKey instanceof RSAPublicKey) {
+
+			RSAPublicKey key = (RSAPublicKey) publicKey;
+
+			String m64 = JWBase64.encode(Common.bigIntegerToBytes(key.getModulus()));
+			String e64 = JWBase64.encode(Common.bigIntegerToBytes(key.getPublicExponent()));
+
+			jwk.put("kty", "RSA");
+			jwk.put("n", m64);
+			jwk.put("e", e64);
+		}
 		return jwk;
 	}
 
-	private static Map<String, String> getPrivateJWK(ECPrivateKey privateKey) {
-
-		String d64 = JWBase64.encode(Common.bigIntegerToBytes(privateKey.getS()));
+	private static Map<String, String> getPrivateJWK(PrivateKey privateKey) {
 
 		Map<String, String> jwk = new HashMap<>();
-		jwk.put("kty", "EC");
-		jwk.put("crv", "P-256");
-		jwk.put("d", d64);
+
+		if (privateKey instanceof ECPrivateKey) {
+
+			ECPrivateKey key = (ECPrivateKey) privateKey;
+
+			String d64 = JWBase64.encode(Common.bigIntegerToBytes(key.getS()));
+
+			jwk.put("kty", "EC");
+			jwk.put("crv", "P-256");
+			jwk.put("d", d64);
+		} else if (privateKey instanceof RSAPrivateKey) {
+			
+			RSAPrivateKey key = (RSAPrivateKey) privateKey;
+
+			String m64 = JWBase64.encode(Common.bigIntegerToBytes(key.getModulus()));
+			String pe64 = JWBase64.encode(Common.bigIntegerToBytes(key.getPrivateExponent()));
+
+			jwk.put("kty", "RSA");
+			jwk.put("d", pe64);
+			jwk.put("n", m64);
+		}
 		return jwk;
 	}
 
@@ -109,19 +143,37 @@ public class KeyPairWithJWK {
 	private static KeyPair createKeyPair(Map<String, String> jwk) throws AcmeException {
 		try {
 
-			BigInteger d = Common.bigInteger(JWBase64.decode(jwk.get("d")));
-			BigInteger x = Common.bigInteger(JWBase64.decode(jwk.get("x")));
-			BigInteger y = Common.bigInteger(JWBase64.decode(jwk.get("y")));
+			if ("EC".equals(jwk.get("kty"))) {
 
-			AlgorithmParameters parametersFactory = AlgorithmParameters.getInstance("EC");
-			parametersFactory.init(new ECGenParameterSpec(ECCurves.NIST_P_256));
-			ECParameterSpec parameters = parametersFactory.getParameterSpec(ECParameterSpec.class);
+				BigInteger d = Common.bigInteger(JWBase64.decode(jwk.get("d")));
+				BigInteger x = Common.bigInteger(JWBase64.decode(jwk.get("x")));
+				BigInteger y = Common.bigInteger(JWBase64.decode(jwk.get("y")));
 
-			KeyFactory keyFactory = KeyFactory.getInstance("EC");
-			PrivateKey generatePrivate = keyFactory.generatePrivate(new ECPrivateKeySpec(d, parameters));
-			PublicKey generatePublic = keyFactory.generatePublic(new ECPublicKeySpec(new ECPoint(x, y), parameters));
+				AlgorithmParameters parametersFactory = AlgorithmParameters.getInstance("EC");
+				parametersFactory.init(new ECGenParameterSpec(ECCurves.NIST_P_256));
+				ECParameterSpec parameters = parametersFactory.getParameterSpec(ECParameterSpec.class);
 
-			return new KeyPair(generatePublic, generatePrivate);
+				KeyFactory keyFactory = KeyFactory.getInstance("EC");
+				PrivateKey generatePrivate = keyFactory.generatePrivate(new ECPrivateKeySpec(d, parameters));
+				PublicKey generatePublic = keyFactory
+						.generatePublic(new ECPublicKeySpec(new ECPoint(x, y), parameters));
+
+				return new KeyPair(generatePublic, generatePrivate);
+			} else if ("RSA".equals(jwk.get("kty"))) {
+				BigInteger modulus = Common.bigInteger(JWBase64.decode(jwk.get("n")));
+				BigInteger privateExponent = Common.bigInteger(JWBase64.decode(jwk.get("d")));
+				BigInteger publicExponent = Common.bigInteger(JWBase64.decode(jwk.get("e")));
+
+				KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+				PrivateKey generatePrivate = keyFactory
+						.generatePrivate(new RSAPrivateKeySpec(modulus, privateExponent));
+				PublicKey generatePublic = keyFactory.generatePublic(new RSAPublicKeySpec(modulus, publicExponent));
+
+				return new KeyPair(generatePublic, generatePrivate);
+			} else {
+				throw new IllegalArgumentException(
+						"Invalid kty : " + (jwk.containsKey("kty") ? jwk.get("kty") : "null"));
+			}
 
 		} catch (Exception ex) {
 			throw new AcmeException(ex);

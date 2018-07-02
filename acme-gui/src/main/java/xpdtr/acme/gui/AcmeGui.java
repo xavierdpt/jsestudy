@@ -49,20 +49,20 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 		contentPane.add(panel, BorderLayout.NORTH);
 
-		kpm = new KeyPairManager(session, sessionContainer, getFrame(), this::updateButtons);
+		kpm = new KeyPairManager(session, container, getFrame(), this::updateButtons);
 
 		interacter = new Interacter(getFrame(), this::autoscroll);
 
-		logger = new UILogger(sessionContainer);
+		logger = new UILogger(container);
 
-		U.setMargins(sessionContainer, 10, 0);
+		U.setMargins(container, 10, 0);
 
 		askForVersion();
 
 	}
 
 	private void askForVersion() {
-		AcmeVersionInteraction.perform(interacter, sessionContainer, logger, (String version) -> {
+		AcmeVersionInteraction.perform(interacter, container, logger, (String version) -> {
 			session.setVersion(version);
 			askForUrl();
 		});
@@ -70,26 +70,26 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void askForUrl() {
-		AcmeUrlInteraction.perform(interacter, sessionContainer, logger, session, (String url) -> {
+		AcmeUrlInteraction.perform(interacter, container, logger, session, (String url) -> {
 			session.setUrl(url);
 			queryDirectory();
 		});
 	}
 
 	private void queryDirectory() {
-		DirectoryInteraction.perform(interacter, sessionContainer, logger, session, (infos) -> {
+		DirectoryInteraction.perform(interacter, container, logger, session, (infos) -> {
 			session.setInfos(infos);
 			updateButtons();
 		});
 	}
 
 	private void nonceClicked() {
-		NonceInteraction.perform(interacter, sessionContainer, logger, session, this::updateButtons);
+		NonceInteraction.perform(interacter, container, logger, session, this::updateButtons);
 
 	}
 
 	private void createKeyPair() {
-		CreateKeyPairInteraction.perform(interacter, sessionContainer, logger, (keyPair) -> {
+		CreateKeyPairInteraction.perform(interacter, container, logger, (keyPair) -> {
 			if (keyPair != null) {
 				session.setKeyPairWithJWK(keyPair);
 			}
@@ -98,7 +98,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void createAccountClicked() {
-		NewAccountInteraction.perform(interacter, sessionContainer, logger, session, (response) -> {
+		NewAccountInteraction.perform(interacter, container, logger, session, (response) -> {
 			if (response != null) {
 				session.setAccount(response.getContent());
 			}
@@ -108,13 +108,13 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void accountDetailsClicked() {
-		AccountDetailsInteraction.perform(interacter, sessionContainer, logger, session, () -> {
+		AccountDetailsInteraction.perform(interacter, container, logger, session, () -> {
 			updateButtons();
 		});
 	}
 
 	private void orderClicked() {
-		NewOrderInteraction.perform(interacter, sessionContainer, logger, session, (order) -> {
+		NewOrderInteraction.perform(interacter, container, logger, session, (order) -> {
 			if (order != null) {
 				session.setOrder(order);
 			}
@@ -123,7 +123,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void authorizationDetailsClicked() {
-		AuthorizationDetailsInteraction.perform(interacter, sessionContainer, logger, session, (authorization) -> {
+		AuthorizationDetailsInteraction.perform(interacter, container, logger, session, (authorization) -> {
 			if (authorization != null) {
 				session.setAuthorization(authorization);
 			}
@@ -133,7 +133,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void challengeClicked() {
-		ChallengeInteraction.perform(interacter, sessionContainer, logger, session, (challenge) -> {
+		ChallengeInteraction.perform(interacter, container, logger, session, (challenge) -> {
 			if (challenge != null) {
 				session.setChallenge(challenge);
 			}
@@ -143,7 +143,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	public void deactivateAccount() {
 
-		AccountDeactivationInteraction.perform(interacter, sessionContainer, logger, session, (deactivated) -> {
+		AccountDeactivationInteraction.perform(interacter, container, logger, session, (deactivated) -> {
 			if (deactivated) {
 				session.setAccount(null);
 				session.setAuthorization(null);
