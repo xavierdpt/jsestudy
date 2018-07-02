@@ -19,14 +19,18 @@ public class JWSBuilder {
 
 	public static Map<String, Object> build(AcmeSession session, Object payload, String url) throws Exception {
 
-		String kid = session.getAccount().getUrl();
 		String nonce = session.getNonce();
 		ObjectMapper om = session.getOm();
 		ECPrivateKey privateKey = (ECPrivateKey) session.getKeyPairWithJWK().getKeyPair().getPrivate();
 
 		Map<String, Object> protekted = new HashMap<>();
 		protekted.put("alg", JWA.ES256);
-		protekted.put("kid", kid);
+		if (session.getAccount() == null) {
+			protekted.put("jwk", session.getKeyPairWithJWK().getPublicJwk());
+		} else {
+			String kid = session.getAccount().getUrl();
+			protekted.put("kid", kid);
+		}
 		protekted.put("nonce", nonce);
 		protekted.put("url", url);
 		String protected64 = JWBase64.encode(om.writeValueAsBytes(protekted));

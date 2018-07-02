@@ -9,8 +9,10 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import example.company.acme.AcmeSession;
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeDirectoryInfos2;
+import example.company.acme.v2.AcmeResponse;
 import example.company.tox.common.Common;
 
 public class Fiddle29 {
@@ -22,9 +24,11 @@ public class Fiddle29 {
 
 		ObjectMapper om = new ObjectMapper();
 
-		AcmeDirectoryInfos2 infos = Acme2.directory(Acme2.ACME_STAGING_V2,om);
+		AcmeSession session = new AcmeSession();
+		AcmeDirectoryInfos2 infos = Acme2.directory(Acme2.ACME_STAGING_V2, om, session).getContent();
 
-		String nonce = Acme2.nonce(infos);
+		AcmeResponse<String> nonce2 = Acme2.nonce(session);
+		String nonce = session.getNonce();
 
 		Assert.assertFalse(StringUtils.isBlank(nonce));
 

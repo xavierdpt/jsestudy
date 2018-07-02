@@ -3,24 +3,20 @@ package example.company.acme.v2;
 public class AcmeResponse<T> {
 
 	private boolean failed;
-	private String nonce;
 	private T content;
 	private String failureDetails;
+	private String responseText;
 
 	public AcmeResponse() {
 	}
 
-	public AcmeResponse(String nonce, T content) {
-		this.nonce = nonce;
+	public AcmeResponse(T content) {
 		this.content = content;
 	}
 
-	public String getNonce() {
-		return nonce;
-	}
-
-	public void setNonce(String nonce) {
-		this.nonce = nonce;
+	public AcmeResponse(Exception e) {
+		failed = true;
+		failureDetails = e.getClass().getName() + " : " + e.getMessage();
 	}
 
 	public T getContent() {
@@ -45,6 +41,14 @@ public class AcmeResponse<T> {
 
 	public void setFailureDetails(String failureDetails) {
 		this.failureDetails = failureDetails;
+	}
+
+	public String getResponseText() {
+		return responseText;
+	}
+
+	public void setResponseText(String responseText) {
+		this.responseText = responseText;
 	}
 
 }

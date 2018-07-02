@@ -4,8 +4,7 @@ import java.util.function.Consumer;
 
 public class Promise<T> {
 
-	private Consumer<T> successHandler;
-	private Consumer<Exception> failureHandler;
+	private Consumer<T> handler;
 	private Thread thread;
 
 	public Promise() {
@@ -25,18 +24,13 @@ public class Promise<T> {
 		});
 	}
 
-	public void then(Consumer<T> successHandler, Consumer<Exception> failureHandler) {
-		this.successHandler = successHandler;
-		this.failureHandler = failureHandler;
+	public void then(Consumer<T> handler) {
+		this.handler = handler;
 		thread.start();
 	}
 
-	public void success(T response) {
-		successHandler.accept(response);
-	}
-
-	public void failure(Exception e) {
-		failureHandler.accept(e);
+	public void done(T response) {
+		handler.accept(response);
 	}
 
 	public Promise<T> setThread(Thread thread) {

@@ -63,7 +63,7 @@ public class AcmeAccountDetails {
 
 	}
 
-	public static AcmeResponse<String> sendRequest(AcmeSession session)
+	public static AcmeResponse<Void> sendRequest(AcmeSession session)
 			throws ClientProtocolException, IOException, AcmeException {
 
 		String url = session.getAccount().getUrl();
@@ -77,7 +77,7 @@ public class AcmeAccountDetails {
 
 		byte[] body = session.getOm().writeValueAsBytes(jws);
 
-		return AcmeNetwork.post(url, body, session.getOm(), String.class, true);
+		return AcmeNetwork.post(url, body, Void.class, session);
 
 	}
 

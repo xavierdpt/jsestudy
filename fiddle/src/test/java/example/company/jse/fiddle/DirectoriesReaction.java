@@ -2,7 +2,6 @@ package example.company.jse.fiddle;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,6 +15,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import example.company.acme.AcmeSession;
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeDirectoryInfos2;
 
@@ -25,16 +25,14 @@ public class DirectoriesReaction implements ActionListener {
 	private JPanel contentPanel;
 	private JFrame f;
 	private ObjectMapper om;
-	private Map<String, Object> map;
 	private JComboBox<String> serversList;
 
 	public DirectoriesReaction(JButton directoriesButton, JPanel contentPanel, JFrame f, ObjectMapper om,
-			Map<String, Object> map, JComboBox<String> serversList) {
+			JComboBox<String> serversList) {
 		this.directoriesButton = directoriesButton;
 		this.contentPanel = contentPanel;
 		this.f = f;
 		this.om = om;
-		this.map = map;
 		this.serversList = serversList;
 	}
 
@@ -51,7 +49,8 @@ public class DirectoriesReaction implements ActionListener {
 
 		AcmeDirectoryInfos2 directories = null;
 		try {
-			directories = Acme2.directory((String) serversList.getSelectedItem(),om);
+			AcmeSession session = new AcmeSession();
+			directories = Acme2.directory((String) serversList.getSelectedItem(), om, session).getContent();
 			directoriesTA.setText(om.writeValueAsString(directories));
 		} catch (Exception e) {
 			directoriesTA.setText(e.getClass().getName() + " : " + e.getMessage());
@@ -62,8 +61,7 @@ public class DirectoriesReaction implements ActionListener {
 		contentPanel.add(new JLabel("Now, the first thing we need to do is get a new nonce"));
 
 		JButton getNonceButton = new JButton("Get a new nonce");
-		NonceButtonListenerFactory nonceButtonListenerFactory = new NonceButtonListenerFactory(contentPanel,
-				directories, f);
+		NonceButtonListenerFactory nonceButtonListenerFactory = new NonceButtonListenerFactory(contentPanel, f);
 		getNonceButton.addActionListener(nonceButtonListenerFactory.getNonceListener());
 		contentPanel.add(getNonceButton);
 

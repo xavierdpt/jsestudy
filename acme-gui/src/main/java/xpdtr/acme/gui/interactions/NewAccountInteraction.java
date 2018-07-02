@@ -6,11 +6,12 @@ import java.util.function.Consumer;
 import javax.swing.JPanel;
 
 import example.company.acme.AcmeSession;
+import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeResponse;
 import example.company.acme.v2.account.AcmeAccount;
-import xpdtr.acme.gui.async.AccountCreationRequest;
 import xpdtr.acme.gui.components.AccountCreationUI;
 import xpdtr.acme.gui.components.UILogger;
+import xpdtr.acme.gui.utils.Promise;
 
 public class NewAccountInteraction extends UIInteraction {
 
@@ -36,8 +37,16 @@ public class NewAccountInteraction extends UIInteraction {
 	private void proceed(String contact) {
 		interacter.perform(() -> {
 			logger.message("Calling account create");
-			AccountCreationRequest.send(session, contact).then(this::success, this::failure);
+			send(session, contact).then(this::handleResponse);
 		});
+	}
+
+	private Promise<AcmeResponse<AcmeAccount>> send(AcmeSession session, String contact) {
+		Promise<AcmeResponse<AcmeAccount>> promise = new Promise<>();
+		promise.setThread(new Thread(() -> {
+			promise.done(Acme2.newAccount(session, contact));
+		}));
+		return promise;
 	}
 
 	private void cancel() {
@@ -48,19 +57,16 @@ public class NewAccountInteraction extends UIInteraction {
 		});
 	}
 
-	private void success(AcmeResponse<AcmeAccount> accountWithNonce) {
+	private void handleResponse(AcmeResponse<AcmeAccount> response) {
 		interacter.perform(() -> {
-			logger.message("New nonce : " + accountWithNonce.getNonce());
-			logger.message(accountWithNonce.getContent().getUrl());
-			logger.endGroup();
-			consumer.accept(accountWithNonce);
-		});
-	}
-
-	private void failure(Exception ex) {
-		interacter.perform(() -> {
-			logger.exception(ex);
-			consumer.accept(null);
+			if (response.isFailed()) {
+				logger.message(response.getFailureDetails());
+				consumer.accept(null);
+			} else {
+				logger.message(response.getResponseText(), true);
+				logger.endGroup();
+				consumer.accept(response);
+			}
 		});
 	}
 

@@ -2,24 +2,26 @@ package xpdtr.acme.gui.async;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import example.company.acme.AcmeSession;
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeDirectoryInfos2;
+import example.company.acme.v2.AcmeResponse;
 import xpdtr.acme.gui.utils.Promise;
 
 public class DirectoryRequest {
 
-	public static Promise<AcmeDirectoryInfos2> send(String url, ObjectMapper om) {
+	public static Promise<AcmeResponse<AcmeDirectoryInfos2>> send(String url, ObjectMapper om, AcmeSession session) {
 
-		Promise<AcmeDirectoryInfos2> promise = new Promise<>();
+		Promise<AcmeResponse<AcmeDirectoryInfos2>> promise = new Promise<>();
 
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					AcmeDirectoryInfos2 infos = Acme2.directory(url, om);
-					promise.success(infos);
+					AcmeResponse<AcmeDirectoryInfos2> response = Acme2.directory(url, om, session);
+					promise.done(response);
 				} catch (Exception e) {
-					promise.failure(e);
+					promise.done(new AcmeResponse<>(e));
 				}
 			}
 		});
@@ -27,5 +29,5 @@ public class DirectoryRequest {
 
 		return promise;
 	}
-	
+
 }

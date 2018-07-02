@@ -23,9 +23,11 @@ import org.junit.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import example.company.acme.AcmeSession;
 import example.company.acme.jw.JWBase64;
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeDirectoryInfos2;
+import example.company.acme.v2.AcmeResponse;
 import example.company.jse.fiddle.acme.AcmeAccount;
 import example.company.jse.fiddle.acme.AcmeNewAccount;
 import example.company.jse.fiddle.acme.AcmeNewOrder;
@@ -42,9 +44,11 @@ public class Fiddle48 {
 		ObjectMapper om = new ObjectMapper();
 		om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
-		AcmeDirectoryInfos2 infos = Acme2.directory(Acme2.ACME_STAGING_V2, om, true);
+		AcmeSession session = new AcmeSession();
+		AcmeDirectoryInfos2 infos = Acme2.directory(Acme2.ACME_STAGING_V2, om, session).getContent();
 
-		String nonce64 = Acme2.nonce(infos, true);
+		AcmeResponse<String> nonce = Acme2.nonce(session);
+		String nonce64 = session.getNonce();
 
 		KeyPair keyPair = newKeyPair();
 

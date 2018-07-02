@@ -13,9 +13,9 @@ public class AccountDeactivationRequest {
 
 		promise.setThread(new Thread(() -> {
 			try {
-				promise.success(Acme2.deactivateAccount(session));
+				promise.done(Acme2.deactivateAccount(session));
 			} catch (Exception e) {
-				promise.failure(e);
+				promise.done(new AcmeResponse<>(e));
 			}
 		}));
 

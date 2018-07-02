@@ -13,8 +13,8 @@ import javax.swing.JPanel;
 
 import example.company.acme.AcmeSession;
 import example.company.acme.v2.Acme2;
+import example.company.acme.v2.AcmeResponse;
 import example.company.acme.v2.Authorization;
-import example.company.acme.v2.Challenge;
 import xpdtr.acme.gui.components.UILogger;
 import xpdtr.acme.gui.interactions.Interacter;
 import xpdtr.acme.gui.interactions.UIInteraction;
@@ -27,22 +27,20 @@ public class AuthorizationDetailsInteraction extends UIInteraction {
 	private AcmeSession session;
 	private Container destination;
 	private List<Component> buttons = new ArrayList<>();
-	private Consumer<Authorization> after;
+	private Consumer<Authorization> consumer;
 
 	public AuthorizationDetailsInteraction(Interacter interacter, JPanel container, UILogger logger,
-			AcmeSession session, Consumer<Authorization> after) {
+			AcmeSession session, Consumer<Authorization> consumer) {
 		super(interacter, container);
 		this.logger = logger;
 		this.session = session;
-		this.after = after;
+		this.consumer = consumer;
 	}
 
 	@Override
 	protected void perform() {
 		logger.beginGroup("Authorization details");
 		destination = logger.getDestination();
-
-		logger.message("Authorization details clicked");
 
 		JPanel authPanel = new JPanel();
 		authPanel.setLayout(new SameWidthLayout(5));
@@ -66,11 +64,10 @@ public class AuthorizationDetailsInteraction extends UIInteraction {
 
 	}
 
-	private void select(String a) {
+	private void select(String authorizationUrl) {
 		interacter.perform(() -> {
 			disable();
-			logger.message("Chosen " + a);
-			getAuthorizationDetails(a);
+			getAuthorizationDetails(authorizationUrl);
 		});
 	}
 
@@ -79,7 +76,7 @@ public class AuthorizationDetailsInteraction extends UIInteraction {
 			disable();
 			logger.message("Cancelled");
 			logger.endGroup();
-			after.accept(null);
+			consumer.accept(null);
 		});
 	}
 
@@ -90,36 +87,28 @@ public class AuthorizationDetailsInteraction extends UIInteraction {
 	}
 
 	private void getAuthorizationDetails(String url) {
-		new Promise<Authorization>((p) -> {
-			try {
-				Authorization r = Acme2.getAuthorization(url, session.getOm());
-				p.success(r);
-			} catch (Exception e1) {
-				p.failure(e1);
-			}
+		new Promise<AcmeResponse<Authorization>>((p) -> {
+			p.done(Acme2.getAuthorization(session, url));
+		}).then(this::handleResponse);
+	}
 
-		}).then((Authorization o) -> {
-			interacter.perform(() -> {
-				logger.message("Success : got response for " + url);
-				session.setAuthorization(o);
-				for (Challenge c : o.getChallenges()) {
-					logger.message(c.getUrl());
-				}
+	private void handleResponse(AcmeResponse<Authorization> response) {
+		interacter.perform(() -> {
+			if (response.isFailed()) {
+				logger.message(response.getFailureDetails());
 				logger.endGroup();
-				after.accept(o);
-			});
-		}, (e) -> {
-			interacter.perform(() -> {
-				logger.exception(e);
+				consumer.accept(null);
+			} else {
+				logger.message(response.getResponseText(), true);
 				logger.endGroup();
-				after.accept(null);
-			});
+				consumer.accept(response.getContent());
+			}
 		});
 	}
 
 	public static void perform(Interacter interacter, JPanel container, UILogger logger, AcmeSession session,
-			Consumer<Authorization> after) {
-		new AuthorizationDetailsInteraction(interacter, container, logger, session, after).start();
+			Consumer<Authorization> consumer) {
+		new AuthorizationDetailsInteraction(interacter, container, logger, session, consumer).start();
 
 	}
 

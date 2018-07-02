@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import example.company.acme.AcmeSession;
 import example.company.acme.v1.Acme1;
 import example.company.acme.v1.AcmeDirectoryInfos1;
 import example.company.acme.v2.Acme2;
@@ -20,7 +21,7 @@ public class Fiddle28 {
 	public void fiddleV1() throws ClientProtocolException, IOException {
 
 		Common.disableHCLogging();
-		
+
 		ObjectMapper om = new ObjectMapper();
 
 		AcmeDirectoryInfos1 infos = Acme1.directory(om);
@@ -36,10 +37,11 @@ public class Fiddle28 {
 	public void fiddleV2() throws ClientProtocolException, IOException {
 
 		Common.disableHCLogging();
-		
+
 		ObjectMapper om = new ObjectMapper();
 
-		AcmeDirectoryInfos2 infos = Acme2.directory(Acme2.ACME_STAGING_V2,om);
+		AcmeSession session = new AcmeSession();
+		AcmeDirectoryInfos2 infos = Acme2.directory(Acme2.ACME_STAGING_V2, om, session).getContent();
 
 		Assert.assertEquals("https://acme-staging-v02.api.letsencrypt.org/acme/key-change", infos.getKeyChange());
 		Assert.assertEquals("https://acme-staging-v02.api.letsencrypt.org/acme/new-acct", infos.getNewAccountURL());

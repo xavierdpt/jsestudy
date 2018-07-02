@@ -17,7 +17,7 @@ public class AcmeSession {
 	private String version;
 	private String url;
 	private AcmeDirectoryInfos2 infos;
-	private String nonce;
+	protected String nonce;
 	private AcmeAccount account;
 	private AcmeOrder order;
 	private Authorization authorization;
@@ -64,7 +64,7 @@ public class AcmeSession {
 		return nonce;
 	}
 
-	public void setNonce(String nonce) {
+	public void setNonce(String nonce, boolean p) {
 		this.nonce = nonce;
 	}
 

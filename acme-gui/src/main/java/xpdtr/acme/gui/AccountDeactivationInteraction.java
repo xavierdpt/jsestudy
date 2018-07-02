@@ -29,26 +29,20 @@ public class AccountDeactivationInteraction extends UIInteraction {
 	protected void perform() {
 		logger.beginGroup("Account deactivation");
 		logger.message("Deactivating account...");
-		AccountDeactivationRequest.send(session).then(this::success, this::failure);
+		AccountDeactivationRequest.send(session).then(this::success);
 	}
 
 	public void success(AcmeResponse<Boolean> response) {
 		interacter.perform(() -> {
-			if (!response.isFailed()) {
-				logger.message("Success");
-			} else {
+			if (response.isFailed()) {
 				logger.message(response.getFailureDetails());
+				logger.endGroup();
+				consumer.accept(false);
+			} else {
+				logger.message("Success");
+				logger.endGroup();
+				consumer.accept(response.getContent());
 			}
-			logger.endGroup();
-			consumer.accept(true);
-		});
-	}
-
-	public void failure(Exception exception) {
-		interacter.perform(() -> {
-			logger.exception(exception);
-			logger.endGroup();
-			consumer.accept(false);
 		});
 	}
 

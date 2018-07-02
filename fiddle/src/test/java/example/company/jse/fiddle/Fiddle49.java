@@ -95,7 +95,7 @@ public class Fiddle49 {
 
 				ServersReaction serversReaction = new ServersReaction(serversList, serversButton, topPanel, f);
 				serversReaction.setDirectoriesReactionFactory(
-						new DirectoriesReactionFactory(contentPanel, f, om, map, serversList));
+						new DirectoriesReactionFactory(contentPanel, f, om, serversList));
 				serversButton.addActionListener(serversReaction);
 				topPanel.add(serversButton);
 

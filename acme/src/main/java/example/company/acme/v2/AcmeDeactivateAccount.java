@@ -30,7 +30,7 @@ public class AcmeDeactivateAccount {
 
 		byte[] body = session.getOm().writeValueAsBytes(jws);
 
-		return AcmeNetwork.post(url, body, session.getOm());
+		return AcmeNetwork.post(url, body, session.getOm(), session);
 	}
 
 }

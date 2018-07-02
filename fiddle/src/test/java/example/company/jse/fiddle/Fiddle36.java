@@ -21,9 +21,11 @@ import org.apache.http.entity.ContentType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import example.company.acme.AcmeSession;
 import example.company.acme.jw.JWBase64;
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeDirectoryInfos2;
+import example.company.acme.v2.AcmeResponse;
 import example.company.acme.v2.account.NewAccountRequest;
 import example.company.acme.v2.account.NewAccountResponse;
 import example.company.jse.fiddle.acme.JWK;
@@ -45,9 +47,11 @@ public class Fiddle36 {
 		ObjectMapper om = new ObjectMapper();
 		om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
-		AcmeDirectoryInfos2 infos = Acme2.directory(Acme2.ACME_STAGING_V2,om);
+		AcmeSession session = new AcmeSession();
+		AcmeDirectoryInfos2 infos = Acme2.directory(Acme2.ACME_STAGING_V2, om, session).getContent();
 
-		String nonce = Acme2.nonce(infos);
+		AcmeResponse<String> nonce2 = Acme2.nonce(session);
+		String nonce = session.getNonce();
 
 		String url = infos.getNewAccountURL();
 

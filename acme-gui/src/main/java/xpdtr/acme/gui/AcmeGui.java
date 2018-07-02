@@ -84,12 +84,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void nonceClicked() {
-		NonceInteraction.perform(interacter, sessionContainer, logger, session, (nonce) -> {
-			if (nonce != null) {
-				session.setNonce(nonce);
-			}
-			updateButtons();
-		});
+		NonceInteraction.perform(interacter, sessionContainer, logger, session, this::updateButtons);
 
 	}
 
@@ -103,11 +98,9 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void createAccountClicked() {
-
-		NewAccountInteraction.perform(interacter, sessionContainer, logger, session, (accountWithNonce) -> {
-			if (accountWithNonce != null) {
-				session.setNonce(accountWithNonce.getNonce());
-				session.setAccount(accountWithNonce.getContent());
+		NewAccountInteraction.perform(interacter, sessionContainer, logger, session, (response) -> {
+			if (response != null) {
+				session.setAccount(response.getContent());
 			}
 			updateButtons();
 		});
@@ -115,31 +108,24 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	}
 
 	private void accountDetailsClicked() {
-		AccountDetailsInteraction.perform(interacter, sessionContainer, logger, session, (response) -> {
-			if (response != null) {
-				if (response.getNonce() != null) {
-					session.setNonce(response.getNonce());
-				}
-			}
+		AccountDetailsInteraction.perform(interacter, sessionContainer, logger, session, () -> {
 			updateButtons();
 		});
 	}
 
 	private void orderClicked() {
-		NewOrderInteraction.perform(interacter, sessionContainer, logger, session, (orderWithNonce) -> {
-			if (orderWithNonce != null) {
-				session.setNonce(orderWithNonce.getNonce());
-				session.setOrder(orderWithNonce.getContent());
+		NewOrderInteraction.perform(interacter, sessionContainer, logger, session, (order) -> {
+			if (order != null) {
+				session.setOrder(order);
 			}
 			updateButtons();
 		});
 	}
 
 	private void authorizationDetailsClicked() {
-
-		AuthorizationDetailsInteraction.perform(interacter, sessionContainer, logger, session, (auth) -> {
-			if (auth != null) {
-				session.setAuthorization(auth);
+		AuthorizationDetailsInteraction.perform(interacter, sessionContainer, logger, session, (authorization) -> {
+			if (authorization != null) {
+				session.setAuthorization(authorization);
 			}
 			updateButtons();
 		});

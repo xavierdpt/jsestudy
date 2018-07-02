@@ -43,8 +43,7 @@ public class ButtonsFactory {
 
 	public Buttons render(Container contentPane) {
 
-		FlowLayout layout = new FlowLayout(FlowLayout.LEFT);
-		JPanel panel = new JPanel(layout);
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
 		for (AcmeGuiActions action : AcmeGuiActions.values()) {
 			JButton button = new JButton(action.getLabel());
@@ -52,7 +51,7 @@ public class ButtonsFactory {
 			buttons.put(action, button);
 			panel.add(button);
 		}
-		
+
 		panel.setMaximumSize(new Dimension(contentPane.getWidth(), Integer.MAX_VALUE));
 
 		contentPane.add(panel, BorderLayout.SOUTH);
