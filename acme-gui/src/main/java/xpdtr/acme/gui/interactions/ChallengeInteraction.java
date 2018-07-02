@@ -119,10 +119,13 @@ public class ChallengeInteraction extends UIInteraction {
 
 	private void next(String url) {
 		logger.message("Sending " + url + "...");
-		new Promise<AcmeResponse<Challenge>>((promise) -> {
-			promise.done(Acme2.challenge(session, url));
-		}).then(this::handleResponse);
+		send(url).then(this::handleResponse);
+	}
 
+	private Promise<AcmeResponse<Challenge>> send(String url) {
+		return new Promise<>(promise -> {
+			promise.done(Acme2.challenge(session, url));
+		});
 	}
 
 	private void handleResponse(AcmeResponse<Challenge> response) {

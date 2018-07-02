@@ -5,10 +5,12 @@ import java.util.function.Consumer;
 import javax.swing.JPanel;
 
 import example.company.acme.AcmeSession;
+import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeResponse;
 import xpdtr.acme.gui.components.UILogger;
 import xpdtr.acme.gui.interactions.Interacter;
 import xpdtr.acme.gui.interactions.UIInteraction;
+import xpdtr.acme.gui.utils.Promise;
 
 public class AccountDeactivationInteraction extends UIInteraction {
 
@@ -29,10 +31,16 @@ public class AccountDeactivationInteraction extends UIInteraction {
 	protected void perform() {
 		logger.beginGroup("Account deactivation");
 		logger.message("Deactivating account...");
-		AccountDeactivationRequest.send(session).then(this::success);
+		send(session).then(this::handleResponse);
 	}
 
-	public void success(AcmeResponse<Boolean> response) {
+	private Promise<AcmeResponse<Boolean>> send(AcmeSession session) {
+		return new Promise<>(promise -> {
+			promise.done(Acme2.deactivateAccount(session));
+		});
+	}
+
+	public void handleResponse(AcmeResponse<Boolean> response) {
 		interacter.perform(() -> {
 			if (response.isFailed()) {
 				logger.message(response.getFailureDetails());

@@ -26,18 +26,16 @@ public class AccountDetailsInteraction extends UIInteraction {
 	protected void perform() {
 		logger.beginGroup("Account details");
 		logger.message("Getting account details...");
-		send(session).then(this::success);
+		send(session).then(this::handleResponse);
 	}
 
-	public Promise<AcmeResponse<Void>> send(AcmeSession session) {
-		Promise<AcmeResponse<Void>> promise = new Promise<>();
-		promise.setThread(new Thread(() -> {
+	private Promise<AcmeResponse<Void>> send(AcmeSession session) {
+		return new Promise<>(promise -> {
 			promise.done(Acme2.accountDetails(session));
-		}));
-		return promise;
+		});
 	}
 
-	private void success(AcmeResponse<Void> response) {
+	private void handleResponse(AcmeResponse<Void> response) {
 		interacter.perform(() -> {
 			if (response.isFailed()) {
 				logger.message(response.getFailureDetails());

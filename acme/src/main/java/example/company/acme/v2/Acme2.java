@@ -1,9 +1,5 @@
 package example.company.acme.v2;
 
-import java.io.IOException;
-
-import org.apache.http.client.ClientProtocolException;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import example.company.acme.AcmeSession;
@@ -18,15 +14,22 @@ public class Acme2 {
 	private static final String DIRECTORY = "/directory";
 	public static final String ACME_STAGING_V2 = "https://acme-staging-v02.api.letsencrypt.org";
 
-	public static AcmeResponse<AcmeDirectoryInfos2> directory(String url, ObjectMapper om, AcmeSession session)
-			throws ClientProtocolException, IOException {
+	public static AcmeResponse<AcmeDirectoryInfos2> directory(String url, ObjectMapper om, AcmeSession session) {
 		String directoryUrl = url + "/" + DIRECTORY;
-		return AcmeNetwork.get(directoryUrl, AcmeDirectoryInfos2.class, session);
+		try {
+			return AcmeNetwork.get(directoryUrl, AcmeDirectoryInfos2.class, session);
+		} catch (Exception e) {
+			return new AcmeResponse<>(e);
+		}
 
 	}
 
-	public static AcmeResponse<String> nonce(AcmeSession session) throws ClientProtocolException, IOException {
-		return AcmeNetwork.nonce(session);
+	public static AcmeResponse<String> nonce(AcmeSession session) {
+		try {
+			return AcmeNetwork.nonce(session);
+		} catch (Exception ex) {
+			return new AcmeResponse<>(ex);
+		}
 	}
 
 	public static AcmeResponse<AcmeAccount> newAccount(AcmeSession session, String contact) {
@@ -70,11 +73,11 @@ public class Acme2 {
 		}
 	}
 
-	public static AcmeResponse<Boolean> deactivateAccount(AcmeSession session) throws AcmeException {
+	public static AcmeResponse<Boolean> deactivateAccount(AcmeSession session) {
 		try {
 			return AcmeDeactivateAccount.sendRequest(session);
 		} catch (Exception e) {
-			throw new AcmeException(e);
+			return new AcmeResponse<>(e);
 		}
 	}
 

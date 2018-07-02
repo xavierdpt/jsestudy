@@ -42,11 +42,9 @@ public class NewAccountInteraction extends UIInteraction {
 	}
 
 	private Promise<AcmeResponse<AcmeAccount>> send(AcmeSession session, String contact) {
-		Promise<AcmeResponse<AcmeAccount>> promise = new Promise<>();
-		promise.setThread(new Thread(() -> {
+		return new Promise<>(promise -> {
 			promise.done(Acme2.newAccount(session, contact));
-		}));
-		return promise;
+		});
 	}
 
 	private void cancel() {

@@ -5,11 +5,14 @@ import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import example.company.acme.AcmeSession;
+import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeDirectoryInfos2;
 import example.company.acme.v2.AcmeResponse;
-import xpdtr.acme.gui.async.DirectoryRequest;
 import xpdtr.acme.gui.components.UILogger;
+import xpdtr.acme.gui.utils.Promise;
 
 public class DirectoryInteraction extends UIInteraction {
 
@@ -29,19 +32,25 @@ public class DirectoryInteraction extends UIInteraction {
 	public void perform() {
 		logger.beginGroup("Getting Directory");
 		logger.message("Getting directory infos... ");
-		DirectoryRequest.send(session.getUrl(), session.getOm(), session).then(this::success);
+		send(session.getUrl(), session.getOm(), session).then(this::handleResponse);
 	}
 
-	private void success(AcmeResponse<AcmeDirectoryInfos2> infos) {
+	private Promise<AcmeResponse<AcmeDirectoryInfos2>> send(String url, ObjectMapper om, AcmeSession session) {
+		return new Promise<>(promise -> {
+			promise.done(Acme2.directory(url, om, session));
+		});
+	}
+
+	private void handleResponse(AcmeResponse<AcmeDirectoryInfos2> response) {
 		interacter.perform(() -> {
-			if (infos.isFailed()) {
-				logger.message(infos.getFailureDetails());
+			if (response.isFailed()) {
+				logger.message(response.getFailureDetails());
 				logger.endGroup();
 				consumer.accept(null);
 			} else {
-				logger.message(infos.getResponseText(), true);
+				logger.message(response.getResponseText(), true);
 				logger.endGroup();
-				consumer.accept(infos.getContent());
+				consumer.accept(response.getContent());
 			}
 
 		});

@@ -87,9 +87,13 @@ public class AuthorizationDetailsInteraction extends UIInteraction {
 	}
 
 	private void getAuthorizationDetails(String url) {
-		new Promise<AcmeResponse<Authorization>>((p) -> {
-			p.done(Acme2.getAuthorization(session, url));
-		}).then(this::handleResponse);
+		send(url).then(this::handleResponse);
+	}
+
+	private Promise<AcmeResponse<Authorization>> send(String url) {
+		return new Promise<>(promise -> {
+			promise.done(Acme2.getAuthorization(session, url));
+		});
 	}
 
 	private void handleResponse(AcmeResponse<Authorization> response) {

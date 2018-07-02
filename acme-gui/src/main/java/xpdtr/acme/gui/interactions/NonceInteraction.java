@@ -3,9 +3,11 @@ package xpdtr.acme.gui.interactions;
 import javax.swing.JPanel;
 
 import example.company.acme.AcmeSession;
+import example.company.acme.v2.Acme2;
+import example.company.acme.v2.AcmeDirectoryInfos2;
 import example.company.acme.v2.AcmeResponse;
-import xpdtr.acme.gui.async.NonceRequest;
 import xpdtr.acme.gui.components.UILogger;
+import xpdtr.acme.gui.utils.Promise;
 
 public class NonceInteraction extends UIInteraction {
 
@@ -24,20 +26,24 @@ public class NonceInteraction extends UIInteraction {
 	public void perform() {
 		logger.beginGroup("New nonce");
 		logger.message("Getting new nonce... ");
-		NonceRequest.send(session.getInfos(), session).then(this::nonceSuccess);
+		send(session.getInfos(), session).then(this::handleResponse);
 	}
 
-	private void nonceSuccess(AcmeResponse<String> nonce) {
+	private Promise<AcmeResponse<String>> send(AcmeDirectoryInfos2 infos, AcmeSession session) {
+		return new Promise<>(promise -> {
+			promise.done(Acme2.nonce(session));
+		});
+	}
+
+	private void handleResponse(AcmeResponse<String> response) {
 		interacter.perform(() -> {
-			if (nonce.isFailed()) {
-				logger.message(nonce.getFailureDetails());
-				logger.endGroup();
-				consumer.run();
+			if (response.isFailed()) {
+				logger.message(response.getFailureDetails());
 			} else {
-				logger.message(nonce.getContent());
-				logger.endGroup();
-				consumer.run();
+				logger.message(response.getContent());
 			}
+			logger.endGroup();
+			consumer.run();
 		});
 	}
 

@@ -38,11 +38,14 @@ public class NewOrderInteraction extends UIInteraction {
 	}
 
 	private void proceed(String site) {
-		Promise<AcmeResponse<AcmeOrder>> promise = new Promise<>();
-		promise.setThread(new Thread(() -> {
+		send(site).then(this::handleResponse);
+	}
+
+	private Promise<AcmeResponse<AcmeOrder>> send(String site) {
+		return new Promise<>(promise -> {
 			promise.done(Acme2.newOrder(session, site));
-		}));
-		promise.then(this::handleResponse);
+		});
+
 	}
 
 	private void cancel() {
