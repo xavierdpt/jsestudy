@@ -18,8 +18,8 @@ public class Acme2 {
 		String directoryUrl = url + "/" + DIRECTORY;
 		try {
 			return AcmeNetwork.get(directoryUrl, AcmeDirectoryInfos2.class, session);
-		} catch (Exception e) {
-			return new AcmeResponse<>(e);
+		} catch (Exception exception) {
+			return new AcmeResponse<>(exception);
 		}
 
 	}
@@ -27,16 +27,16 @@ public class Acme2 {
 	public static AcmeResponse<String> nonce(AcmeSession session) {
 		try {
 			return AcmeNetwork.nonce(session);
-		} catch (Exception ex) {
-			return new AcmeResponse<>(ex);
+		} catch (Exception exception) {
+			return new AcmeResponse<>(exception);
 		}
 	}
 
 	public static AcmeResponse<AcmeAccount> newAccount(AcmeSession session, String contact) {
 		try {
 			return AcmeNewAccount.sendRequest(session, contact);
-		} catch (Exception ex) {
-			return new AcmeResponse<>(ex);
+		} catch (Exception exception) {
+			return new AcmeResponse<>(exception);
 		}
 	}
 
@@ -52,32 +52,40 @@ public class Acme2 {
 	public static AcmeResponse<Authorization> getAuthorization(AcmeSession session, String url) {
 		try {
 			return GetAuthorization.sendRequest(session, url);
-		} catch (Exception ex) {
-			return new AcmeResponse<>(ex);
+		} catch (Exception exception) {
+			return new AcmeResponse<>(exception);
 		}
 	}
 
 	public static AcmeResponse<Challenge> challenge(AcmeSession session, String url) {
 		try {
 			return GetChallenge.sendRequest(session, url);
-		} catch (Exception e) {
-			return new AcmeResponse<>(e);
+		} catch (Exception exception) {
+			return new AcmeResponse<>(exception);
 		}
 	}
 
 	public static AcmeResponse<Void> accountDetails(AcmeSession session) {
 		try {
 			return AcmeAccountDetails.sendRequest(session);
-		} catch (Exception e) {
-			return new AcmeResponse<>(e);
+		} catch (Exception exception) {
+			return new AcmeResponse<>(exception);
 		}
 	}
 
 	public static AcmeResponse<Boolean> deactivateAccount(AcmeSession session) {
 		try {
 			return AcmeDeactivateAccount.sendRequest(session);
-		} catch (Exception e) {
-			return new AcmeResponse<>(e);
+		} catch (Exception exception) {
+			return new AcmeResponse<>(exception);
+		}
+	}
+
+	public static AcmeResponse<Void> respondToChallenge(AcmeSession session) {
+		try {
+			return AcmeRespondToChallenge.sendRequest(session);
+		} catch (Exception exception) {
+			return new AcmeResponse<>(exception);
 		}
 	}
 

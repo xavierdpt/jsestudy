@@ -154,6 +154,10 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		});
 	}
 
+	public void responseToChallengeClicked() {
+		RespondToChallengeInteraction.perform(interacter, container, logger, session, this::updateButtons);
+	}
+
 	private void updateButtons() {
 
 		if (buttons == null) {
@@ -166,7 +170,8 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 			buttonsFactory.setClicked(AcmeGuiActions.ACCOUNT_DETAILS, this::accountDetailsClicked);
 			buttonsFactory.setClicked(AcmeGuiActions.ORDER, this::orderClicked);
 			buttonsFactory.setClicked(AcmeGuiActions.AUTHORIZATION_DETAILS, this::authorizationDetailsClicked);
-			buttonsFactory.setClicked(AcmeGuiActions.CHALLENGE, this::challengeClicked);
+			buttonsFactory.setClicked(AcmeGuiActions.CHALLENGE_DETAIL, this::challengeClicked);
+			buttonsFactory.setClicked(AcmeGuiActions.RESPOND_CHALLENGE, this::responseToChallengeClicked);
 			buttonsFactory.setClicked(AcmeGuiActions.DEACTIVATE_ACCOUNT, this::deactivateAccount);
 
 			buttons = buttonsFactory.render(contentPane);
@@ -181,7 +186,8 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		buttons.setEnabled(AcmeGuiActions.ACCOUNT_DETAILS, session.getAccount() != null);
 		buttons.setEnabled(AcmeGuiActions.ORDER, session.getAccount() != null);
 		buttons.setEnabled(AcmeGuiActions.AUTHORIZATION_DETAILS, session.getOrder() != null);
-		buttons.setEnabled(AcmeGuiActions.CHALLENGE, session.getAuthorization() != null);
+		buttons.setEnabled(AcmeGuiActions.CHALLENGE_DETAIL, session.getAuthorization() != null);
+		buttons.setEnabled(AcmeGuiActions.RESPOND_CHALLENGE, session.getChallenge() != null);
 		buttons.setEnabled(AcmeGuiActions.DEACTIVATE_ACCOUNT, session.getAccount() != null);
 
 		buttons.update();

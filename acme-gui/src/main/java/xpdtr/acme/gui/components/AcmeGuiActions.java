@@ -18,7 +18,9 @@ public enum AcmeGuiActions {
 
 	AUTHORIZATION_DETAILS("Authorization details"),
 
-	CHALLENGE("Challenge"),
+	CHALLENGE_DETAIL("Get challenge detail"),
+
+	RESPOND_CHALLENGE("Respond to challenge"),
 
 	CREATE_KEY_PAIR("Create new key pair"),
 

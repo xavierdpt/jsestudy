@@ -24,6 +24,10 @@ import xpdtr.acme.gui.utils.U;
 
 public class ChallengeInteraction extends UIInteraction {
 
+	private enum ChallengeType {
+		HTTP, DNS, TLS
+	};
+
 	private AcmeSession session;
 	private Consumer<Challenge> consumer;
 	private UILogger logger;
@@ -52,7 +56,7 @@ public class ChallengeInteraction extends UIInteraction {
 		for (Challenge challenge : session.getAuthorization().getChallenges()) {
 
 			String url = challenge.getUrl();
-			String prefix = getPrefix(challenge);
+			ChallengeType prefix = getChallengeType(challenge);
 			if (prefix != null) {
 				titles.put(url, "[" + prefix + "] " + url);
 			} else {
@@ -84,14 +88,14 @@ public class ChallengeInteraction extends UIInteraction {
 		logger.leading(cancelButton);
 	}
 
-	private String getPrefix(Challenge challenge) {
+	private ChallengeType getChallengeType(Challenge challenge) {
 		switch (challenge.getType()) {
 		case "http-01":
-			return "HTTP";
+			return ChallengeType.HTTP;
 		case "dns-01":
-			return "DNS";
+			return ChallengeType.DNS;
 		case "tls-alpn-01":
-			return "TLS";
+			return ChallengeType.TLS;
 		default:
 			return null;
 		}
@@ -136,8 +140,16 @@ public class ChallengeInteraction extends UIInteraction {
 				consumer.accept(null);
 			} else {
 				logger.message(response.getResponseText(), true);
+				Challenge challenge = response.getContent();
+				if (getChallengeType(challenge) == ChallengeType.HTTP) {
+					String url = session.getAuthorization().getIdentifier().getValue();
+					logger.message(
+							"To respond to this challenge, make the following URL respond with the following content:");
+					logger.message("URL : http://" + url + "/.well-known/acme-challenge/" + challenge.getToken());
+					logger.message("Token : " + challenge.getToken());
+				}
 				logger.endGroup();
-				consumer.accept(response.getContent());
+				consumer.accept(challenge);
 			}
 		});
 	}
