@@ -26,7 +26,9 @@ public enum AcmeGuiActions {
 
 	SAVE_KEY_PAIR("Save key pair"),
 
-	LOAD_KEY_PAIR("Load key pair");
+	LOAD_KEY_PAIR("Load key pair"),
+
+	FOO("Foo");
 
 	private String label;
 

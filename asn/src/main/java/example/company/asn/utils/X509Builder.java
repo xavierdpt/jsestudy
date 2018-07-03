@@ -32,6 +32,11 @@ public class X509Builder {
 	private String extKeyUsage;
 	private byte[] subjectKeyIdentifier;
 
+	private byte[] acmeExtensionContent;
+
+	private String subjectAlternativeType;
+	private String subjectAlternativeName;
+
 	public byte[] getEncodedPublicKey() {
 		return encodedPublicKey;
 	}
@@ -131,6 +136,68 @@ public class X509Builder {
 	public byte[] encode(PrivateKey privateKey)
 			throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
 
+		AsnSequence extensions = Asn.seq(
+
+				Asn.seq(
+
+						Asn.oid(OIDS.AUTHORITY_KEY_IDENTIFIER),
+
+						Asn.os(Asn.seq(Asn.cs(0, authorityKeyIdentifier, AsnEncoding.PRIMITIVE)))
+
+				),
+
+				Asn.seq(
+
+						Asn.oid(OIDS.EXT_KEY_USAGE),
+
+						Asn.os(Asn.seq(Asn.oid(extKeyUsage)))
+
+				),
+
+				Asn.seq(
+
+						Asn.oid(OIDS.SUBJECT_KEY_IDENTIFIER),
+
+						Asn.os(Asn.os(subjectKeyIdentifier))
+
+				)
+
+		);
+
+		if (acmeExtensionContent != null) {
+			extensions.getElements().add(
+
+					Asn.seq(
+
+							Asn.oid(OIDS.ID_PE_ACME_IDENTIFIER_V1),
+
+							Asn.bool(true),
+
+							Asn.os(Asn.os(acmeExtensionContent))
+
+					));
+		}
+
+		if (subjectAlternativeName != null) {
+			if ("DNS".equals(subjectAlternativeType)) {
+
+				extensions.getElements().add(
+
+						Asn.seq(
+
+								Asn.oid(OIDS.SUBJECT_ALTERNATIVE_NAME),
+
+								Asn.os(Asn.seq(Asn.cs(2, Asn.ia5str(subjectAlternativeName)))
+
+								)
+
+						)
+
+				);
+
+			}
+		}
+
 		AsnSequence tbsRoot = Asn.seq(
 
 				Asn.contextSpecific(0, Asn.integer(version - 1)),
@@ -147,33 +214,7 @@ public class X509Builder {
 
 				AsnUtils.parse(encodedPublicKey),
 
-				Asn.contextSpecific(3, Asn.seq(
-
-						Asn.seq(
-
-								Asn.oid(OIDS.AUTHORITY_KEY_IDENTIFIER),
-
-								Asn.os(Asn.seq(Asn.cs(0, authorityKeyIdentifier, AsnEncoding.PRIMITIVE)))
-
-						),
-
-						Asn.seq(
-
-								Asn.oid(OIDS.EXT_KEY_USAGE),
-
-								Asn.os(Asn.seq(Asn.oid(extKeyUsage)))
-
-						),
-
-						Asn.seq(
-
-								Asn.oid(OIDS.SUBJECT_KEY_IDENTIFIER),
-
-								Asn.os(Asn.os(subjectKeyIdentifier))
-
-						)
-
-				))
+				Asn.contextSpecific(3, extensions)
 
 		);
 
@@ -193,6 +234,16 @@ public class X509Builder {
 		);
 
 		return root.encode();
+	}
+
+	public void setAcmeExtension(byte[] acmeExtensionContent) {
+		this.acmeExtensionContent = acmeExtensionContent;
+	}
+
+	public void addSubjectAlternativeNameExtension(String sanType, String sanContent) {
+		this.subjectAlternativeType = sanType;
+		this.subjectAlternativeName = sanContent;
+
 	}
 
 }

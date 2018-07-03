@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.nio.charset.Charset;
 
 import example.company.asn.AsnEncoding;
+import example.company.asn.utils.AsnIA5String;
 
 public class Asn {
 
@@ -85,6 +86,14 @@ public class Asn {
 
 	public static AsnBMPString bmpstring(byte[] bytes) {
 		return new AsnBMPString(new String(bytes, Charset.forName("UTF-16")));
+	}
+
+	public static AsnBoolean bool(boolean value) {
+		return new AsnBoolean(value);
+	}
+
+	public static AsnIA5String ia5str(String value) {
+		return new AsnIA5String(value);
 	}
 
 }

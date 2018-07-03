@@ -35,6 +35,9 @@ public class OIDS {
 	public static final String PRIME_256_V1 = "1.2.840.10045.3.1.7";
 	public static final String DSA = "1.2.840.10040.4.1";
 	public static final String DH_KEY_AGREEMENT = "1.2.840.113549.1.3.1";
+	
+	public static final String ID_PE_ACME_IDENTIFIER_V1 = "1.3.6.1.5.5.7.1.30.1"; // as specified in TLS ALPN draft but conflicts in the SMI numbers registry 
+	public static final String SUBJECT_ALTERNATIVE_NAME = "2.5.29.17"; // as specified in TLS ALPN draft but conflicts in the SMI numbers registry 
 
 	private static Map<String, String> oidLabels = new HashMap<>();
 	static {
@@ -68,6 +71,8 @@ public class OIDS {
 		oidLabels.put(PRIME_256_V1, "prime256v1");
 		oidLabels.put(DSA, "DSA");
 		oidLabels.put(DH_KEY_AGREEMENT, "dhKeyAgreement");
+		oidLabels.put(ID_PE_ACME_IDENTIFIER_V1, "id-pe-acmeIdentifier-v1");
+		oidLabels.put(SUBJECT_ALTERNATIVE_NAME, "subjectAlternativeName");
 	}
 
 	public static String getLabel(String oid) {
