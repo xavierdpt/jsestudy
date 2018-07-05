@@ -3,6 +3,8 @@ package xpdtr.acme.gui.interactions;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import example.company.acme.AcmeSession;
+import example.company.acme.jw.JWBase64;
 import example.company.acme.v2.Acme2;
 import example.company.acme.v2.AcmeResponse;
 import example.company.acme.v2.Challenge;
@@ -146,13 +149,29 @@ public class ChallengeInteraction extends UIInteraction {
 					logger.message(
 							"To respond to this challenge, make the following URL respond with the following content:");
 					logger.message("URL : http://" + url + "/.well-known/acme-challenge/" + challenge.getToken());
-					logger.message("Token : " + challenge.getToken());
+					try {
+						logger.message("Token : " + challenge.getToken() + "." + otherPart());
+					} catch (Exception exception) {
+						logger.exception(exception);
+					}
 				}
 				pollOrLeave(challenge);
 				logger.endGroup();
 				consumer.accept(challenge);
 			}
 		});
+	}
+
+	private String otherPart() throws NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		Map<String, String> jwk = session.getKeyPairWithJWK().getPublicJwk();
+		String crv = jwk.get("crv");
+		String kty = jwk.get("kty");
+		String x = jwk.get("x");
+		String y = jwk.get("y");
+// 
+		String s = "{\"crv\":\"" + crv + "\",\"kty\":\"" + kty + "\",\"x\":\"" + x + "\",\"y\":\"" + y + "\"}";
+		return JWBase64.encode(md.digest(s.getBytes()));
 	}
 
 	private void pollOrLeave(Challenge challenge) {
