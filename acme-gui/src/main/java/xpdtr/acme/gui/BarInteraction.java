@@ -4,6 +4,7 @@ import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.SignatureException;
 
 import javax.swing.JPanel;
@@ -69,7 +70,11 @@ public class BarInteraction extends UIInteraction {
 
 	private KeyPair getKeyPair(AcmeSession session2) throws NoSuchAlgorithmException {
 		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-		return kpg.generateKeyPair();
+		kpg.initialize(2048, new SecureRandom());
+		KeyPair keyPair = kpg.generateKeyPair();
+		logger.message("Public key pair bytes : " + Common.bytesToString(keyPair.getPublic().getEncoded()));
+		logger.message("Private key pair bytes : " + Common.bytesToString(keyPair.getPrivate().getEncoded()));
+		return keyPair;
 	}
 
 	private byte[] createCsr(KeyPair keyPair, String site)
