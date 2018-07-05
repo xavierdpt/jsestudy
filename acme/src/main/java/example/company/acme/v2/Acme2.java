@@ -82,8 +82,20 @@ public class Acme2 {
 	}
 
 	public static AcmeResponse<Void> respondToChallenge(AcmeSession session) {
+		return respondToChallenge(session, session.getChallenge());
+	}
+
+	public static AcmeResponse<Void> respondToChallenge(AcmeSession session, Challenge challenge) {
 		try {
-			return AcmeRespondToChallenge.sendRequest(session);
+			return AcmeRespondToChallenge.sendRequest(session,challenge);
+		} catch (Exception exception) {
+			return new AcmeResponse<>(exception);
+		}
+	}
+
+	public static AcmeResponse<Void> finalize(AcmeSession session, byte[] csrBytes) {
+		try {
+			return AcmeFinalize.sendRequest(session, csrBytes);
 		} catch (Exception exception) {
 			return new AcmeResponse<>(exception);
 		}

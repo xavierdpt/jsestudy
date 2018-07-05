@@ -1,5 +1,8 @@
 package example.company.acme.v2;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Challenge {
 
 	private String type;
@@ -38,7 +41,5 @@ public class Challenge {
 	public void setToken(String token) {
 		this.token = token;
 	}
-
-	
 
 }

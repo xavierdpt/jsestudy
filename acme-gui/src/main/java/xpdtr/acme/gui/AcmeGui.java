@@ -162,6 +162,10 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	public void fooClicked() {
 		FooInteraction.perform(interacter, container, logger, session, this::updateButtons);
 	}
+	
+	public void barClicked() {
+		BarInteraction.perform(interacter, container, logger, session, this::updateButtons);
+	}
 
 	private void updateButtons() {
 
@@ -179,6 +183,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 			buttonsFactory.setClicked(AcmeGuiActions.RESPOND_CHALLENGE, this::responseToChallengeClicked);
 			buttonsFactory.setClicked(AcmeGuiActions.DEACTIVATE_ACCOUNT, this::deactivateAccount);
 			buttonsFactory.setClicked(AcmeGuiActions.FOO, this::fooClicked);
+			buttonsFactory.setClicked(AcmeGuiActions.BAR, this::barClicked);
 
 			buttons = buttonsFactory.render(contentPane);
 		}
@@ -196,6 +201,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 		buttons.setEnabled(AcmeGuiActions.RESPOND_CHALLENGE, session.getChallenge() != null);
 		buttons.setEnabled(AcmeGuiActions.DEACTIVATE_ACCOUNT, session.getAccount() != null);
 		buttons.setEnabled(AcmeGuiActions.FOO, true);
+		buttons.setEnabled(AcmeGuiActions.BAR, true);
 
 		buttons.update();
 

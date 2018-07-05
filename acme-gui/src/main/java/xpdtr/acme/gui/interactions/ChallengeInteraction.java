@@ -148,9 +148,58 @@ public class ChallengeInteraction extends UIInteraction {
 					logger.message("URL : http://" + url + "/.well-known/acme-challenge/" + challenge.getToken());
 					logger.message("Token : " + challenge.getToken());
 				}
+				pollOrLeave(challenge);
 				logger.endGroup();
 				consumer.accept(challenge);
 			}
+		});
+	}
+
+	private void pollOrLeave(Challenge challenge) {
+		logger.leading(U.button("Poll", () -> {
+			poll(challenge);
+		}));
+		logger.leading(U.button("Leave", () -> {
+			leave(challenge);
+		}));
+	}
+
+	private void poll(Challenge challenge) {
+		interacter.perform(() -> {
+
+			logger.message("Polling...");
+
+			youpi(challenge).then(response -> {
+				yapla(response, challenge);
+			});
+
+		});
+	}
+
+	private Promise<AcmeResponse<Void>> youpi(Challenge challenge) {
+		return new Promise<AcmeResponse<Void>>(promise -> {
+			promise.done(Acme2.respondToChallenge(session, challenge));
+		});
+	}
+
+	private void yapla(AcmeResponse<Void> response, Challenge challenge) {
+		interacter.perform(() -> {
+			logger.message("Done");
+			if (response.isFailed()) {
+				logger.message(response.getFailureDetails());
+			} else {
+				logger.message(response.getResponseText());
+			}
+			pollOrLeave(challenge);
+		});
+	}
+
+	public void leave(Challenge challenge) {
+		interacter.perform(() -> {
+			logger.message("Leaving");
+			;
+			logger.endGroup();
+			consumer.accept(challenge);
 		});
 	}
 

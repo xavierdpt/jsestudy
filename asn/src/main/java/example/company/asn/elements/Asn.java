@@ -5,6 +5,7 @@ import java.nio.charset.Charset;
 
 import example.company.asn.AsnEncoding;
 import example.company.asn.utils.AsnIA5String;
+import example.company.asn.utils.AsnRaw;
 
 public class Asn {
 
@@ -94,6 +95,10 @@ public class Asn {
 
 	public static AsnIA5String ia5str(String value) {
 		return new AsnIA5String(value);
+	}
+
+	public static AsnRaw raw(byte[] bytes) {
+		return new AsnRaw(bytes);
 	}
 
 }

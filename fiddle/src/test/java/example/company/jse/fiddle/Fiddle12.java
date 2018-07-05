@@ -55,7 +55,7 @@ public class Fiddle12 {
 
 		CSRBuilder csrb = new CSRBuilder();
 		csrb.setVersion(0);
-		csrb.setSubjectDNName(x.getSubjectDN().getName());
+		csrb.setSubjectName(x.getSubjectDN().getName());
 		csrb.setPublickKey(x.getPublicKey());
 		csrb.setSubjectKeyIdentifier(getSubjectKeyIdentifier(x));
 

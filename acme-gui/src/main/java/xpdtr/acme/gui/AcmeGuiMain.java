@@ -8,7 +8,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import xpdtr.acme.gui.fiddling.ExceptionHandler;
 import xpdtr.acme.gui.fiddling.ExceptionType;
 
-public class Main {
+public class AcmeGuiMain {
 
 	public static void show(ExceptionHandler eh) {
 

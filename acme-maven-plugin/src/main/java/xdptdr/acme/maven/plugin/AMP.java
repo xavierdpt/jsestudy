@@ -5,7 +5,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 
-import xpdtr.acme.gui.Main;
+import xpdtr.acme.gui.AcmeGuiMain;
 import xpdtr.acme.gui.fiddling.ExceptionHandler;
 import xpdtr.acme.gui.fiddling.ExceptionType;
 
@@ -14,7 +14,7 @@ public class AMP extends AbstractMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		Main.show(new ExceptionHandler() {
+		AcmeGuiMain.show(new ExceptionHandler() {
 			@Override
 			public void handle(Exception e, ExceptionType et) {
 				switch (et) {

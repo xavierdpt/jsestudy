@@ -28,7 +28,9 @@ public enum AcmeGuiActions {
 
 	LOAD_KEY_PAIR("Load key pair"),
 
-	FOO("Foo");
+	FOO("Foo"),
+
+	BAR("Bar");
 
 	private String label;
 
