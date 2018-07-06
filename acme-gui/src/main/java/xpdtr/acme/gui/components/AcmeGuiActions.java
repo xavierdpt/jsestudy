@@ -2,44 +2,56 @@ package xpdtr.acme.gui.components;
 
 public enum AcmeGuiActions {
 
-	NONCE("New Nonce"),
+	CREATE_KEY_PAIR("Create new key pair", 1),
 
-	CREATE_ACCOUNT("New Account"),
+	LOAD_KEY_PAIR("Load key pair", 1),
 
-	DEACTIVATE_ACCOUNT("Deactivate Account"),
+	SAVE_KEY_PAIR("Save key pair", 1),
 
-	ORDER("New Order"),
+	NONCE("New Nonce", 1),
 
-	CHANGE_KEY("Change Key"),
+	CREATE_ACCOUNT("Create Account", 1),
 
-	REVOKE_CERT("Revoke Cert"),
+	ACCOUNT_DETAILS("Get Account Details", 1),
 
-	ACCOUNT_DETAILS("Account Details"),
+	DEACTIVATE_ACCOUNT("Deactivate Account", 1),
 
-	AUTHORIZATION_DETAILS("Authorization details"),
+	ORDER("Create Order", 1),
 
-	CHALLENGE_DETAIL("Get challenge detail"),
+	AUTHORIZATION_DETAILS("Get authorization", 1),
 
-	RESPOND_CHALLENGE("Respond to challenge"),
+	CHALLENGE_DETAIL("Select challenge", 2),
 
-	CREATE_KEY_PAIR("Create new key pair"),
+	RESPOND_CHALLENGE("Respond to challenge", 2),
 
-	SAVE_KEY_PAIR("Save key pair"),
+	CREATE_CERT_KEY("Create cert key", 2),
 
-	LOAD_KEY_PAIR("Load key pair"),
+	FINALIZE("Finalize", 2),
 
-	FOO("Foo"),
+	RETRIEVE_CERT("Retrive cert", 2),
 
-	BAR("Bar");
+	SAVE_CERT_PRIVATE_KEY("Save cert private key", 2),
+
+	CHANGE_KEY("Change Key", 2),
+
+	REVOKE_CERT("Revoke Cert", 2),
+
+	FOO("Foo", 2);
 
 	private String label;
+	private int row;
 
-	private AcmeGuiActions(String label) {
+	private AcmeGuiActions(String label, int row) {
 		this.label = label;
+		this.row = row;
 	}
 
 	public String getLabel() {
 		return label;
+	}
+
+	public int getRow() {
+		return row;
 	}
 
 }

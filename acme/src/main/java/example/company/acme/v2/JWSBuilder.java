@@ -69,7 +69,7 @@ public class JWSBuilder {
 			ECPrivateKey key = (ECPrivateKey) privateKey;
 
 			BigInteger s = key.getS();
-			ECSignature signature = ECSigner.sign(tbs, ECCurves.NIST_P_256, s);
+			ECSignature signature = ECSigner.sign(tbs, ECCurves.JAVA_NIST_P_256, s);
 
 			byte[] rBytes = Common.bigIntegerToBytes(signature.getR());
 			byte[] sBytes = Common.bigIntegerToBytes(signature.getS());

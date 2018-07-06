@@ -162,9 +162,9 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 	public void fooClicked() {
 		FooInteraction.perform(interacter, container, logger, session, this::updateButtons);
 	}
-	
-	public void barClicked() {
-		BarInteraction.perform(interacter, container, logger, session, this::updateButtons);
+
+	public void finalizeClicked() {
+		FinalizeInteraction.perform(interacter, container, logger, session, this::updateButtons);
 	}
 
 	private void updateButtons() {
@@ -183,25 +183,36 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 			buttonsFactory.setClicked(AcmeGuiActions.RESPOND_CHALLENGE, this::responseToChallengeClicked);
 			buttonsFactory.setClicked(AcmeGuiActions.DEACTIVATE_ACCOUNT, this::deactivateAccount);
 			buttonsFactory.setClicked(AcmeGuiActions.FOO, this::fooClicked);
-			buttonsFactory.setClicked(AcmeGuiActions.BAR, this::barClicked);
+			buttonsFactory.setClicked(AcmeGuiActions.FINALIZE, this::finalizeClicked);
 
 			buttons = buttonsFactory.render(contentPane);
 		}
 
-		buttons.setEnabled(AcmeGuiActions.CREATE_KEY_PAIR, true);
-		buttons.setEnabled(AcmeGuiActions.SAVE_KEY_PAIR, session.getKeyPairWithJWK() != null);
-		buttons.setEnabled(AcmeGuiActions.LOAD_KEY_PAIR, session.getAccount() == null);
-		buttons.setEnabled(AcmeGuiActions.NONCE, session.getUrl() != null);
-		buttons.setEnabled(AcmeGuiActions.CREATE_ACCOUNT,
-				session.getNonce() != null && session.getKeyPairWithJWK() != null);
-		buttons.setEnabled(AcmeGuiActions.ACCOUNT_DETAILS, session.getAccount() != null);
-		buttons.setEnabled(AcmeGuiActions.ORDER, session.getAccount() != null);
-		buttons.setEnabled(AcmeGuiActions.AUTHORIZATION_DETAILS, session.getOrder() != null);
-		buttons.setEnabled(AcmeGuiActions.CHALLENGE_DETAIL, session.getAuthorization() != null);
-		buttons.setEnabled(AcmeGuiActions.RESPOND_CHALLENGE, session.getChallenge() != null);
-		buttons.setEnabled(AcmeGuiActions.DEACTIVATE_ACCOUNT, session.getAccount() != null);
-		buttons.setEnabled(AcmeGuiActions.FOO, true);
-		buttons.setEnabled(AcmeGuiActions.BAR, true);
+		boolean hasInfos = session.getInfos() != null;
+
+		boolean hasNoKeyPair = session.getKeyPairWithJWK() == null;
+		boolean hasKeyPair = session.getKeyPairWithJWK() != null;
+		boolean hasNoNonce = session.getNonce() == null;
+		boolean hasNonce = session.getNonce() != null;
+		boolean hasAccount = session.getAccount() != null;
+		boolean hasOrder = session.getOrder() != null;
+		boolean hasAuthorization = session.getAuthorization() != null;
+		boolean hasChallenge = session.getChallenge() != null;
+		boolean canFinalize = false;
+
+		buttons.setEnabled(AcmeGuiActions.CREATE_KEY_PAIR, hasNoKeyPair);
+		buttons.setEnabled(AcmeGuiActions.SAVE_KEY_PAIR, hasKeyPair);
+		buttons.setEnabled(AcmeGuiActions.LOAD_KEY_PAIR, hasInfos && hasNoKeyPair);
+		buttons.setEnabled(AcmeGuiActions.NONCE, hasInfos && hasNoNonce && hasKeyPair);
+		buttons.setEnabled(AcmeGuiActions.CREATE_ACCOUNT, hasNonce);
+		buttons.setEnabled(AcmeGuiActions.ACCOUNT_DETAILS, hasAccount);
+		buttons.setEnabled(AcmeGuiActions.DEACTIVATE_ACCOUNT, hasAccount);
+		buttons.setEnabled(AcmeGuiActions.ORDER, hasAccount);
+		buttons.setEnabled(AcmeGuiActions.AUTHORIZATION_DETAILS, hasOrder);
+		buttons.setEnabled(AcmeGuiActions.CHALLENGE_DETAIL, hasAuthorization);
+		buttons.setEnabled(AcmeGuiActions.RESPOND_CHALLENGE, hasChallenge);
+		buttons.setEnabled(AcmeGuiActions.FINALIZE, canFinalize);
+		buttons.setEnabled(AcmeGuiActions.FOO, hasInfos);
 
 		buttons.update();
 

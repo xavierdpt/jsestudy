@@ -6,11 +6,15 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.SwingWorker;
+
+import xpdtr.acme.gui.interactions.Interacter;
 
 public class U {
 
@@ -51,6 +55,15 @@ public class U {
 		});
 	}
 
+	public static void clicked(JButton button, Interacter interacter, Runnable runnable) {
+		button.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				interacter.perform(runnable);
+			}
+		});
+	}
+
 	public static Runnable disabler(Component... components) {
 		return () -> {
 			for (Component component : components) {
@@ -59,9 +72,34 @@ public class U {
 		};
 	}
 
+	public static JButton button(String text, Interacter interacter, Runnable action) {
+		JButton button = new JButton(text);
+		clicked(button, interacter, action);
+		return button;
+	}
+
 	public static JButton button(String text, Runnable action) {
 		JButton button = new JButton(text);
 		clicked(button, e -> action.run());
 		return button;
+	}
+
+	public static JButton button(String text) {
+		JButton button = new JButton(text);
+		return button;
+	}
+
+	public static <T> void work(Interacter interacter, Callable<T> work, Consumer<SwingWorker<T, Void>> done) {
+		new SwingWorker<T, Void>() {
+			@Override
+			protected T doInBackground() throws Exception {
+				return work.call();
+			}
+			protected void done() {
+				interacter.perform(() -> {
+					done.accept(this);
+				});
+			};
+		}.execute();
 	}
 }

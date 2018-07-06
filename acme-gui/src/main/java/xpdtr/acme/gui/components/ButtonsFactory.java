@@ -2,13 +2,13 @@ package xpdtr.acme.gui.components;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -43,18 +43,27 @@ public class ButtonsFactory {
 
 	public Buttons render(Container contentPane) {
 
-		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel rows = new JPanel();
+		rows.setLayout(new BoxLayout(rows, BoxLayout.PAGE_AXIS));
+
+		JPanel row1 = new JPanel(new FlowLayout(FlowLayout.LEADING));
+		JPanel row2 = new JPanel(new FlowLayout(FlowLayout.LEADING));
 
 		for (AcmeGuiActions action : AcmeGuiActions.values()) {
 			JButton button = new JButton(action.getLabel());
 			clicked(button, clicked.get(action));
 			buttons.put(action, button);
-			panel.add(button);
+			if (action.getRow() == 1) {
+				row1.add(button);
+			} else {
+				row2.add(button);
+			}
 		}
 
-		panel.setMaximumSize(new Dimension(contentPane.getWidth(), Integer.MAX_VALUE));
+		rows.add(row1);
+		rows.add(row2);
 
-		contentPane.add(panel, BorderLayout.SOUTH);
+		contentPane.add(rows, BorderLayout.SOUTH);
 
 		return new Buttons(buttons);
 	}

@@ -18,13 +18,13 @@ import xpdtr.acme.gui.components.UILogger;
 import xpdtr.acme.gui.interactions.Interacter;
 import xpdtr.acme.gui.interactions.UIInteraction;
 
-public class BarInteraction extends UIInteraction {
+public class FinalizeInteraction extends UIInteraction {
 
 	private UILogger logger;
 	private AcmeSession session;
 	private Runnable after;
 
-	public BarInteraction(Interacter interacter, JPanel container, UILogger logger, AcmeSession session,
+	public FinalizeInteraction(Interacter interacter, JPanel container, UILogger logger, AcmeSession session,
 			Runnable after) {
 		super(interacter, container);
 		this.logger = logger;
@@ -35,8 +35,8 @@ public class BarInteraction extends UIInteraction {
 
 	@Override
 	protected void perform() {
-		logger.beginGroup("Bar");
-		logger.message("Doing something else");
+		logger.beginGroup("Finalize");
+		logger.message("Finalizing");
 
 		try {
 
@@ -89,7 +89,7 @@ public class BarInteraction extends UIInteraction {
 
 	public static void perform(Interacter interacter, JPanel container, UILogger logger, AcmeSession session,
 			Runnable after) {
-		new BarInteraction(interacter, container, logger, session, after).start();
+		new FinalizeInteraction(interacter, container, logger, session, after).start();
 	}
 
 }

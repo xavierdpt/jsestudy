@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -60,9 +61,19 @@ public class UILogger {
 		return destination;
 	}
 
-	public void leading(Component component) {
+	public void leading(Component... components) {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-		panel.add(component);
+		for (Component component : components) {
+			panel.add(component);
+		}
+		destination.add(panel);
+	}
+
+	public void leading(Collection<? extends Component> components) {
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+		for (Component component : components) {
+			panel.add(component);
+		}
 		destination.add(panel);
 	}
 

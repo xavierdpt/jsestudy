@@ -1,22 +1,23 @@
 package xpdtr.acme.gui.interactions;
 
+import java.awt.Component;
 import java.awt.Container;
+import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.SwingWorker;
 
+import example.company.acme.crypto.ECCurves;
 import example.company.acme.crypto.KPG;
 import example.company.acme.jw.KeyPairWithJWK;
-import xpdtr.acme.gui.SameWidthLayout;
+import xpdtr.acme.gui.components.MessageUI;
 import xpdtr.acme.gui.components.UILogger;
 import xpdtr.acme.gui.utils.U;
 
 public class CreateKeyPairInteraction extends UIInteraction {
-
-	private enum Algos {
-		ELLIPTIC, RSA
-	};
 
 	private UILogger logger;
 	private Consumer<KeyPairWithJWK> consumer;
@@ -33,63 +34,164 @@ public class CreateKeyPairInteraction extends UIInteraction {
 
 		logger.beginGroup("Key Pair Creation");
 
-		logger.message("Elliptic or RSA ?");
+		JButton ellipticButton = U.button("Elliptic");
+		JButton rsaButton = U.button("RSA");
+		JButton cancelButton = U.button("Cancel");
 
-		JPanel panel = new JPanel(new SameWidthLayout(5));
-		panel.add(U.button("Elliptic", () -> {
-			proceed(Algos.ELLIPTIC);
-		}));
-		panel.add(U.button("RSA", () -> {
-			proceed(Algos.RSA);
-		}));
-		logger.leading(panel);
+		Runnable disabler = U.disabler(ellipticButton, rsaButton, cancelButton);
 
-		logger.leading(U.button("Cancel", this::cancel));
+		U.clicked(ellipticButton, interacter, () -> {
+			disabler.run();
+			U.setFont(ellipticButton, Font.BOLD);
+			ellipticNext();
+		});
+
+		U.clicked(rsaButton, interacter, () -> {
+			disabler.run();
+			U.setFont(rsaButton, Font.BOLD);
+			rsaNext();
+		});
+
+		U.clicked(cancelButton, interacter, () -> {
+			disabler.run();
+			U.setFont(cancelButton, Font.BOLD);
+			cancel();
+		});
+
+		logger.leading(ellipticButton, rsaButton, cancelButton);
 
 	}
 
-	private void proceed(Algos algo) {
+	private void ellipticNext() {
 
-		interacter.perform(() -> {
+		List<JButton> buttons = new ArrayList<>();
 
-			logger.message("Creating key pair");
+		Runnable disabler = () -> {
+			for (JButton btn : buttons) {
+				btn.setEnabled(false);
+			}
+		};
 
-			new SwingWorker<KeyPairWithJWK, Void>() {
-				@Override
-				protected KeyPairWithJWK doInBackground() throws Exception {
-					switch (algo) {
-					case ELLIPTIC:
-						return KeyPairWithJWK.fromKeyPair(KPG.newECP256KeyPair());
-					case RSA:
-						return KeyPairWithJWK.fromKeyPair(KPG.newRSAKeyPair());
-					default:
-						throw new IllegalArgumentException(algo == null ? "null" : algo.name());
+		for (String javaName : ECCurves.javaNames()) {
+			JButton button = U.button(ECCurves.displayName(javaName));
+			buttons.add(button);
+			U.clicked(button, interacter, () -> {
+				disabler.run();
+				U.setFont(button, Font.BOLD);
+				ellipticCreate(javaName);
+			});
+		}
+
+		JButton cancelButton = U.button("Cancel");
+		U.clicked(cancelButton, interacter, () -> {
+			disabler.run();
+			U.setFont(cancelButton, Font.BOLD);
+			cancel();
+		});
+		buttons.add(cancelButton);
+
+		logger.leading(buttons);
+
+	}
+
+	private void rsaNext() {
+
+		List<Component> components = new ArrayList<>();
+
+		Runnable disabler = () -> {
+			for (Component component : components) {
+				component.setEnabled(false);
+			}
+		};
+
+		components.add(MessageUI.render(" Key size : "));
+
+		JButton best = U.button("Best");
+		components.add(best);
+		U.clicked(best, interacter, () -> {
+			disabler.run();
+			U.setFont(best, Font.BOLD);
+			rsaCreate(2048);
+		});
+
+		for (int keySize : new int[] { 1024, 2048, 4096, 8192 }) {
+			JButton button = U.button(Integer.toString(keySize));
+			components.add(button);
+			U.clicked(button, interacter, () -> {
+				disabler.run();
+				U.setFont(button, Font.BOLD);
+				rsaCreate(keySize);
+			});
+		}
+
+		JButton cancelButton = U.button("Cancel");
+		U.clicked(cancelButton, interacter, () -> {
+			disabler.run();
+			U.setFont(cancelButton, Font.BOLD);
+			cancel();
+		});
+		components.add(cancelButton);
+
+		logger.leading(components);
+
+	}
+
+	private void ellipticCreate(String curve) {
+
+		logger.message("Creating elliptic key pair with curve " + curve);
+
+		U.work(
+
+				interacter,
+
+				() -> KeyPairWithJWK.fromEllipticKeyPair(KPG.newEllipticKeyPair(curve), curve),
+
+				worker -> {
+					KeyPairWithJWK result = null;
+					try {
+						result = worker.get();
+						logger.message("New key pair created");
+					} catch (Exception e) {
+						logger.exception(e);
 					}
+					logger.endGroup();
+					consumer.accept(result);
 				}
 
-				protected void done() {
-					interacter.perform(() -> {
-						KeyPairWithJWK keyPairWithJWK = null;
-						try {
-							keyPairWithJWK = get();
-							logger.message("New key pair created");
-						} catch (Exception e) {
-							logger.exception(e);
-						}
-						logger.endGroup();
-						consumer.accept(keyPairWithJWK);
-					});
-				};
-			}.execute();
-		});
+		);
+
+	}
+
+	private void rsaCreate(int keysize) {
+
+		logger.message("Creating RSA key pair with key size " + keysize);
+
+		U.work(
+
+				interacter,
+
+				() -> KeyPairWithJWK.fromRSAKeyPair(KPG.newRSAKeyPair(keysize), keysize),
+
+				worker -> {
+					KeyPairWithJWK keyPairWithJWK = null;
+					try {
+						keyPairWithJWK = worker.get();
+						logger.message("New key pair created");
+					} catch (Exception e) {
+						logger.exception(e);
+					}
+					logger.endGroup();
+					consumer.accept(keyPairWithJWK);
+				}
+
+		);
+
 	}
 
 	private void cancel() {
-		interacter.perform(() -> {
-			logger.message("Cancelled");
-			logger.endGroup();
-			consumer.accept(null);
-		});
+		logger.message("Cancelled");
+		logger.endGroup();
+		consumer.accept(null);
 	}
 
 	public static void perform(Interacter interacter, JPanel container, UILogger logger,
