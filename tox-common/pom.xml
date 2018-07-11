@@ -10,9 +10,9 @@
 	<artifactId>tox-common</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>example.company.jse</groupId>
-			<artifactId>common</artifactId>
-			<version>${project.version}</version>
+			<groupId>xdptdr</groupId>
+			<artifactId>xdptdr-common</artifactId>
+			<version>${xdptdr-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>

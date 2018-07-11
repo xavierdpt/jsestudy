@@ -41,9 +41,9 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>example.company.jse</groupId>
-			<artifactId>acme</artifactId>
-			<version>${project.version}</version>
+			<groupId>xdptdr</groupId>
+			<artifactId>xdptdr-acme</artifactId>
+			<version>${xdptdr-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fifesoft</groupId>

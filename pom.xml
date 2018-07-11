@@ -9,6 +9,7 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<xdptdr-version>0.0.0</xdptdr-version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -54,12 +55,7 @@
 	<modules>
 		<module>fiddle</module>
 		<module>tox</module>
-		<module>common</module>
-		<module>asn</module>
 		<module>tox-asn</module>
 		<module>tox-common</module>
-		<module>acme</module>
-		<module>acme-maven-plugin</module>
-		<module>acme-gui</module>
 	</modules>
 </project>

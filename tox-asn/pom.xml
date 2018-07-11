@@ -15,9 +15,9 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>example.company.jse</groupId>
-			<artifactId>asn</artifactId>
-			<version>${project.version}</version>
+			<groupId>xdptdr</groupId>
+			<artifactId>xdptdr-asn</artifactId>
+			<version>${xdptdr-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
