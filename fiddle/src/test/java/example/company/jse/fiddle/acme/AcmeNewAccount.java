@@ -26,9 +26,9 @@ import org.apache.http.client.fluent.Request;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import example.company.acme.jw.JWBase64;
-import example.company.acme.v2.AcmeDirectoryInfos2;
 import example.company.tox.common.Common;
+import xdptdr.acme.jw.JWBase64;
+import xdptdr.acme.v2.AcmeDirectoryInfos2;
 
 public class AcmeNewAccount {
 

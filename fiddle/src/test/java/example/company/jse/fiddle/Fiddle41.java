@@ -14,8 +14,8 @@ import javax.crypto.spec.SecretKeySpec;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.acme.jw.JWBase64;
 import example.company.tox.common.Common;
+import xdptdr.acme.jw.JWBase64;
 
 /** RFC 7516 A.3.3 **/
 

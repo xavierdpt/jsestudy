@@ -9,11 +9,11 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import example.company.acme.AcmeSession;
-import example.company.acme.v2.Acme2;
-import example.company.acme.v2.AcmeDirectoryInfos2;
-import example.company.acme.v2.AcmeResponse;
 import example.company.tox.common.Common;
+import xdptdr.acme.v2.Acme2;
+import xdptdr.acme.v2.AcmeDirectoryInfos2;
+import xdptdr.acme.v2.AcmeResponse;
+import xdptdr.acme.v2.AcmeSession;
 
 public class Fiddle29 {
 

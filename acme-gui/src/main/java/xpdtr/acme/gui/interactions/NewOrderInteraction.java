@@ -5,10 +5,10 @@ import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 
-import example.company.acme.AcmeSession;
-import example.company.acme.v2.Acme2;
-import example.company.acme.v2.AcmeOrder;
-import example.company.acme.v2.AcmeResponse;
+import xdptdr.acme.v2.Acme2;
+import xdptdr.acme.v2.AcmeOrder;
+import xdptdr.acme.v2.AcmeResponse;
+import xdptdr.acme.v2.AcmeSession;
 import xpdtr.acme.gui.components.OrderCreationUI;
 import xpdtr.acme.gui.components.UILogger;
 import xpdtr.acme.gui.utils.Promise;

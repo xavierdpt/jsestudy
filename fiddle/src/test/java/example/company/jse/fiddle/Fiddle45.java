@@ -19,8 +19,8 @@ import javax.crypto.NoSuchPaddingException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.acme.jw.JWBase64;
 import example.company.tox.common.Common;
+import xdptdr.acme.jw.JWBase64;
 
 public class Fiddle45 {
 

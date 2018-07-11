@@ -24,8 +24,8 @@ import org.junit.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import example.company.acme.v1.Acme1;
-import example.company.acme.v2.Acme2;
+import xdptdr.acme.v1.Acme1;
+import xdptdr.acme.v2.Acme2;
 
 public class Fiddle49 {
 

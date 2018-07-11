@@ -7,8 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import example.company.acme.AcmeSession;
-import example.company.acme.v1.AcmeUrls;
+import xdptdr.acme.AcmeUrls;
+import xdptdr.acme.v2.AcmeSession;
 import xpdtr.acme.gui.interactions.Interacter;
 import xpdtr.acme.gui.interactions.UIInteraction;
 import xpdtr.acme.gui.utils.U;

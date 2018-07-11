@@ -9,12 +9,12 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-import example.company.acme.AcmeSession;
-import example.company.acme.v2.AcmeDirectoryInfos2;
-import example.company.acme.v2.AcmeIdentifier;
-import example.company.acme.v2.AcmeOrder;
-import example.company.acme.v2.Authorization;
-import example.company.acme.v2.Challenge;
+import xdptdr.acme.v2.AcmeAuthorization;
+import xdptdr.acme.v2.AcmeChallenge;
+import xdptdr.acme.v2.AcmeDirectoryInfos2;
+import xdptdr.acme.v2.AcmeIdentifier;
+import xdptdr.acme.v2.AcmeOrder;
+import xdptdr.acme.v2.AcmeSession;
 import xpdtr.acme.gui.utils.U;
 
 public class SessionUI {
@@ -65,15 +65,15 @@ public class SessionUI {
 		}
 		if (session.getAuthorization() != null) {
 			JPanel authorizationPanel = titledVPanel("Authorization");
-			Authorization a = session.getAuthorization();
-			List<Challenge> challenges = a.getChallenges();
+			AcmeAuthorization a = session.getAuthorization();
+			List<AcmeChallenge> challenges = a.getChallenges();
 
 			AcmeIdentifier identifier = a.getIdentifier();
 			U.addM(authorizationPanel,
 					MessageUI.render("Authorization : " + identifier.getType() + " " + identifier.getValue()));
 			U.addM(authorizationPanel, MessageUI.render("Status: " + a.getStatus()));
 			U.addM(authorizationPanel, MessageUI.render("Expires: " + a.getExpires()));
-			for (Challenge challenge : challenges) {
+			for (AcmeChallenge challenge : challenges) {
 				JPanel challengePanel = titledVPanel("Challenge");
 				U.addM(challengePanel, MessageUI.render("URL : " + challenge.getUrl()));
 				U.addM(challengePanel, MessageUI.render("Type : " + challenge.getType()));

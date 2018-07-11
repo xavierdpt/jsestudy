@@ -10,9 +10,9 @@ import java.util.function.Consumer;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import example.company.acme.crypto.ECCurves;
-import example.company.acme.crypto.KPG;
-import example.company.acme.jw.KeyPairWithJWK;
+import xdptdr.acme.crypto.ECCurves;
+import xdptdr.acme.crypto.XKeyPairGenerator;
+import xdptdr.acme.jw.KeyPairWithJWK;
 import xpdtr.acme.gui.components.MessageUI;
 import xpdtr.acme.gui.components.UILogger;
 import xpdtr.acme.gui.utils.U;
@@ -144,7 +144,7 @@ public class CreateKeyPairInteraction extends UIInteraction {
 
 				interacter,
 
-				() -> KeyPairWithJWK.fromEllipticKeyPair(KPG.newEllipticKeyPair(curve), curve),
+				() -> KeyPairWithJWK.fromEllipticKeyPair(XKeyPairGenerator.newEllipticKeyPair(curve), curve),
 
 				worker -> {
 					KeyPairWithJWK result = null;
@@ -170,7 +170,7 @@ public class CreateKeyPairInteraction extends UIInteraction {
 
 				interacter,
 
-				() -> KeyPairWithJWK.fromRSAKeyPair(KPG.newRSAKeyPair(keysize), keysize),
+				() -> KeyPairWithJWK.fromRSAKeyPair(XKeyPairGenerator.newRSAKeyPair(keysize), keysize),
 
 				worker -> {
 					KeyPairWithJWK keyPairWithJWK = null;

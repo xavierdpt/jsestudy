@@ -7,7 +7,7 @@ import java.awt.LayoutManager;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import example.company.acme.AcmeSession;
+import xdptdr.acme.v2.AcmeSession;
 import xpdtr.acme.gui.components.AcmeGuiActions;
 import xpdtr.acme.gui.components.AcmeUrlInteraction;
 import xpdtr.acme.gui.components.AcmeVersionInteraction;

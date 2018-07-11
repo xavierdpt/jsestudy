@@ -11,10 +11,10 @@ import java.util.function.Consumer;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import example.company.acme.AcmeSession;
-import example.company.acme.v2.Acme2;
-import example.company.acme.v2.AcmeResponse;
-import example.company.acme.v2.Authorization;
+import xdptdr.acme.v2.Acme2;
+import xdptdr.acme.v2.AcmeAuthorization;
+import xdptdr.acme.v2.AcmeResponse;
+import xdptdr.acme.v2.AcmeSession;
 import xpdtr.acme.gui.components.UILogger;
 import xpdtr.acme.gui.interactions.Interacter;
 import xpdtr.acme.gui.interactions.UIInteraction;
@@ -27,10 +27,10 @@ public class AuthorizationDetailsInteraction extends UIInteraction {
 	private AcmeSession session;
 	private Container destination;
 	private List<Component> buttons = new ArrayList<>();
-	private Consumer<Authorization> consumer;
+	private Consumer<AcmeAuthorization> consumer;
 
 	public AuthorizationDetailsInteraction(Interacter interacter, JPanel container, UILogger logger,
-			AcmeSession session, Consumer<Authorization> consumer) {
+			AcmeSession session, Consumer<AcmeAuthorization> consumer) {
 		super(interacter, container);
 		this.logger = logger;
 		this.session = session;
@@ -90,13 +90,13 @@ public class AuthorizationDetailsInteraction extends UIInteraction {
 		send(url).then(this::handleResponse);
 	}
 
-	private Promise<AcmeResponse<Authorization>> send(String url) {
+	private Promise<AcmeResponse<AcmeAuthorization>> send(String url) {
 		return new Promise<>(promise -> {
 			promise.done(Acme2.getAuthorization(session, url));
 		});
 	}
 
-	private void handleResponse(AcmeResponse<Authorization> response) {
+	private void handleResponse(AcmeResponse<AcmeAuthorization> response) {
 		interacter.perform(() -> {
 			if (response.isFailed()) {
 				logger.message(response.getFailureDetails());
@@ -111,7 +111,7 @@ public class AuthorizationDetailsInteraction extends UIInteraction {
 	}
 
 	public static void perform(Interacter interacter, JPanel container, UILogger logger, AcmeSession session,
-			Consumer<Authorization> consumer) {
+			Consumer<AcmeAuthorization> consumer) {
 		new AuthorizationDetailsInteraction(interacter, container, logger, session, consumer).start();
 
 	}

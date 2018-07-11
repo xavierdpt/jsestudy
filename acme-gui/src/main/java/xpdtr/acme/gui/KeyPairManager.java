@@ -13,8 +13,8 @@ import javax.swing.JFrame;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import example.company.acme.AcmeSession;
-import example.company.acme.jw.KeyPairWithJWK;
+import xdptdr.acme.jw.KeyPairWithJWK;
+import xdptdr.acme.v2.AcmeSession;
 import xpdtr.acme.gui.components.ExceptionUI;
 import xpdtr.acme.gui.components.MessageUI;
 import xpdtr.acme.gui.utils.U;

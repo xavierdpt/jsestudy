@@ -21,17 +21,17 @@ import org.apache.http.entity.ContentType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import example.company.acme.AcmeSession;
-import example.company.acme.jw.JWBase64;
-import example.company.acme.v2.Acme2;
-import example.company.acme.v2.AcmeDirectoryInfos2;
-import example.company.acme.v2.AcmeResponse;
-import example.company.acme.v2.account.NewAccountRequest;
-import example.company.acme.v2.account.NewAccountResponse;
 import example.company.jse.fiddle.acme.JWK;
 import example.company.jse.fiddle.acme.JWKProtected;
 import example.company.jse.fiddle.acme.Payload;
 import example.company.tox.common.Common;
+import xdptdr.acme.jw.JWBase64;
+import xdptdr.acme.v2.Acme2;
+import xdptdr.acme.v2.AcmeDirectoryInfos2;
+import xdptdr.acme.v2.AcmeResponse;
+import xdptdr.acme.v2.AcmeSession;
+import xdptdr.acme.v2.account.NewAccountRequest;
+import xdptdr.acme.v2.account.NewAccountResponse;
 
 public class Fiddle36 {
 

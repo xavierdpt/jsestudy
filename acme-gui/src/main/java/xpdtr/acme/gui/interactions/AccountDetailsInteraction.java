@@ -2,9 +2,9 @@ package xpdtr.acme.gui.interactions;
 
 import javax.swing.JPanel;
 
-import example.company.acme.AcmeSession;
-import example.company.acme.v2.Acme2;
-import example.company.acme.v2.AcmeResponse;
+import xdptdr.acme.v2.Acme2;
+import xdptdr.acme.v2.AcmeResponse;
+import xdptdr.acme.v2.AcmeSession;
 import xpdtr.acme.gui.components.UILogger;
 import xpdtr.acme.gui.utils.Promise;
 

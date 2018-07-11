@@ -23,16 +23,16 @@ import org.junit.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import example.company.acme.AcmeSession;
-import example.company.acme.jw.JWBase64;
-import example.company.acme.v2.Acme2;
-import example.company.acme.v2.AcmeDirectoryInfos2;
-import example.company.acme.v2.AcmeResponse;
 import example.company.jse.fiddle.acme.AcmeAccount;
 import example.company.jse.fiddle.acme.AcmeNewAccount;
 import example.company.jse.fiddle.acme.AcmeNewOrder;
 import example.company.jse.fiddle.acme.ECCurves;
 import example.company.tox.common.Common;
+import xdptdr.acme.jw.JWBase64;
+import xdptdr.acme.v2.Acme2;
+import xdptdr.acme.v2.AcmeDirectoryInfos2;
+import xdptdr.acme.v2.AcmeResponse;
+import xdptdr.acme.v2.AcmeSession;
 
 public class Fiddle48 {
 

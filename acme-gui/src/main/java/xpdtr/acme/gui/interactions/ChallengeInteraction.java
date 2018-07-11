@@ -15,11 +15,11 @@ import java.util.function.Consumer;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import example.company.acme.AcmeSession;
-import example.company.acme.jw.JWBase64;
-import example.company.acme.v2.Acme2;
-import example.company.acme.v2.AcmeResponse;
-import example.company.acme.v2.Challenge;
+import xdptdr.acme.jw.JWBase64;
+import xdptdr.acme.v2.Acme2;
+import xdptdr.acme.v2.AcmeChallenge;
+import xdptdr.acme.v2.AcmeResponse;
+import xdptdr.acme.v2.AcmeSession;
 import xpdtr.acme.gui.SameWidthLayout;
 import xpdtr.acme.gui.components.UILogger;
 import xpdtr.acme.gui.utils.Promise;
@@ -32,13 +32,13 @@ public class ChallengeInteraction extends UIInteraction {
 	};
 
 	private AcmeSession session;
-	private Consumer<Challenge> consumer;
+	private Consumer<AcmeChallenge> consumer;
 	private UILogger logger;
 	private Container destination;
 	private List<Component> buttons = new ArrayList<>();
 
 	public ChallengeInteraction(Interacter interacter, Container container, UILogger logger, AcmeSession session,
-			Consumer<Challenge> finished) {
+			Consumer<AcmeChallenge> finished) {
 		super(interacter, container);
 		this.logger = logger;
 		this.session = session;
@@ -56,7 +56,7 @@ public class ChallengeInteraction extends UIInteraction {
 
 		Map<String, String> titles = new HashMap<>();
 
-		for (Challenge challenge : session.getAuthorization().getChallenges()) {
+		for (AcmeChallenge challenge : session.getAuthorization().getChallenges()) {
 
 			String url = challenge.getUrl();
 			ChallengeType prefix = getChallengeType(challenge);
@@ -91,7 +91,7 @@ public class ChallengeInteraction extends UIInteraction {
 		logger.leading(cancelButton);
 	}
 
-	private ChallengeType getChallengeType(Challenge challenge) {
+	private ChallengeType getChallengeType(AcmeChallenge challenge) {
 		switch (challenge.getType()) {
 		case "http-01":
 			return ChallengeType.HTTP;
@@ -129,13 +129,13 @@ public class ChallengeInteraction extends UIInteraction {
 		send(url).then(this::handleResponse);
 	}
 
-	private Promise<AcmeResponse<Challenge>> send(String url) {
+	private Promise<AcmeResponse<AcmeChallenge>> send(String url) {
 		return new Promise<>(promise -> {
 			promise.done(Acme2.challenge(session, url));
 		});
 	}
 
-	private void handleResponse(AcmeResponse<Challenge> response) {
+	private void handleResponse(AcmeResponse<AcmeChallenge> response) {
 		interacter.perform(() -> {
 			if (response.isFailed()) {
 				logger.message(response.getFailureDetails());
@@ -143,7 +143,7 @@ public class ChallengeInteraction extends UIInteraction {
 				consumer.accept(null);
 			} else {
 				logger.message(response.getResponseText(), true);
-				Challenge challenge = response.getContent();
+				AcmeChallenge challenge = response.getContent();
 				if (getChallengeType(challenge) == ChallengeType.HTTP) {
 					String url = session.getAuthorization().getIdentifier().getValue();
 					logger.message(
@@ -174,7 +174,7 @@ public class ChallengeInteraction extends UIInteraction {
 		return JWBase64.encode(md.digest(s.getBytes()));
 	}
 
-	private void pollOrLeave(Challenge challenge) {
+	private void pollOrLeave(AcmeChallenge challenge) {
 		logger.leading(U.button("Poll", () -> {
 			poll(challenge);
 		}));
@@ -183,7 +183,7 @@ public class ChallengeInteraction extends UIInteraction {
 		}));
 	}
 
-	private void poll(Challenge challenge) {
+	private void poll(AcmeChallenge challenge) {
 		interacter.perform(() -> {
 
 			logger.message("Polling...");
@@ -195,13 +195,13 @@ public class ChallengeInteraction extends UIInteraction {
 		});
 	}
 
-	private Promise<AcmeResponse<Void>> youpi(Challenge challenge) {
+	private Promise<AcmeResponse<Void>> youpi(AcmeChallenge challenge) {
 		return new Promise<AcmeResponse<Void>>(promise -> {
 			promise.done(Acme2.respondToChallenge(session, challenge));
 		});
 	}
 
-	private void yapla(AcmeResponse<Void> response, Challenge challenge) {
+	private void yapla(AcmeResponse<Void> response, AcmeChallenge challenge) {
 		interacter.perform(() -> {
 			logger.message("Done");
 			if (response.isFailed()) {
@@ -213,7 +213,7 @@ public class ChallengeInteraction extends UIInteraction {
 		});
 	}
 
-	public void leave(Challenge challenge) {
+	public void leave(AcmeChallenge challenge) {
 		interacter.perform(() -> {
 			logger.message("Leaving");
 			;
@@ -223,7 +223,7 @@ public class ChallengeInteraction extends UIInteraction {
 	}
 
 	public static void perform(Interacter interacter, JPanel container, UILogger logger, AcmeSession session,
-			Consumer<Challenge> consumer) {
+			Consumer<AcmeChallenge> consumer) {
 		new ChallengeInteraction(interacter, container, logger, session, consumer).start();
 
 	}
