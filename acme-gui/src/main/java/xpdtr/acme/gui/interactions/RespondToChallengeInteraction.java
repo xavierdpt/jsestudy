@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.interactions;
 
 import javax.swing.JPanel;
 

@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.interactions;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -16,8 +16,7 @@ import xdptdr.acme.v2.AcmeAuthorization;
 import xdptdr.acme.v2.AcmeResponse;
 import xdptdr.acme.v2.AcmeSession;
 import xpdtr.acme.gui.components.UILogger;
-import xpdtr.acme.gui.interactions.Interacter;
-import xpdtr.acme.gui.interactions.UIInteraction;
+import xpdtr.acme.gui.layout.SameWidthLayout;
 import xpdtr.acme.gui.utils.Promise;
 import xpdtr.acme.gui.utils.U;
 

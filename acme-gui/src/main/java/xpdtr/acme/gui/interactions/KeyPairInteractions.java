@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.interactions;
 
 import java.awt.Container;
 import java.io.File;
@@ -19,14 +19,14 @@ import xpdtr.acme.gui.components.ExceptionUI;
 import xpdtr.acme.gui.components.MessageUI;
 import xpdtr.acme.gui.utils.U;
 
-public class KeyPairManager {
+public class KeyPairInteractions {
 
 	private AcmeSession session;
 	private Container sessionContainer;
 	private JFrame frame;
 	private Runnable after;
 
-	public KeyPairManager(AcmeSession session, Container sessionContainer, JFrame frame, Runnable after) {
+	public KeyPairInteractions(AcmeSession session, Container sessionContainer, JFrame frame, Runnable after) {
 		this.session = session;
 		this.sessionContainer = sessionContainer;
 		this.frame = frame;

@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.fiddling;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;

@@ -5,8 +5,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import xpdtr.acme.gui.fiddling.ExceptionHandler;
-import xpdtr.acme.gui.fiddling.ExceptionType;
+import xpdtr.acme.gui.misc.ExceptionType;
+import xpdtr.acme.misc.ExceptionHandler;
 
 public class AcmeGuiMain {
 

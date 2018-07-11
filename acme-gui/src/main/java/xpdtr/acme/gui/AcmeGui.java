@@ -12,17 +12,24 @@ import xpdtr.acme.gui.components.AcmeGuiActions;
 import xpdtr.acme.gui.components.AcmeUrlInteraction;
 import xpdtr.acme.gui.components.AcmeVersionInteraction;
 import xpdtr.acme.gui.components.BasicFrameWithVerticalScroll;
+import xpdtr.acme.gui.components.Buttons;
 import xpdtr.acme.gui.components.ButtonsFactory;
 import xpdtr.acme.gui.components.Title;
 import xpdtr.acme.gui.components.UILogger;
+import xpdtr.acme.gui.interactions.AccountDeactivationInteraction;
 import xpdtr.acme.gui.interactions.AccountDetailsInteraction;
+import xpdtr.acme.gui.interactions.AuthorizationDetailsInteraction;
 import xpdtr.acme.gui.interactions.ChallengeInteraction;
 import xpdtr.acme.gui.interactions.CreateKeyPairInteraction;
 import xpdtr.acme.gui.interactions.DirectoryInteraction;
+import xpdtr.acme.gui.interactions.FinalizeInteraction;
+import xpdtr.acme.gui.interactions.FooInteraction;
 import xpdtr.acme.gui.interactions.Interacter;
+import xpdtr.acme.gui.interactions.KeyPairInteractions;
 import xpdtr.acme.gui.interactions.NewAccountInteraction;
 import xpdtr.acme.gui.interactions.NewOrderInteraction;
 import xpdtr.acme.gui.interactions.NonceInteraction;
+import xpdtr.acme.gui.interactions.RespondToChallengeInteraction;
 import xpdtr.acme.gui.layout.StackedLayout;
 import xpdtr.acme.gui.utils.U;
 
@@ -30,7 +37,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 	private AcmeSession session = new AcmeSession();
 
-	private KeyPairManager kpm;
+	private KeyPairInteractions kpm;
 
 	private Interacter interacter;
 
@@ -49,7 +56,7 @@ public class AcmeGui extends BasicFrameWithVerticalScroll {
 
 		contentPane.add(panel, BorderLayout.NORTH);
 
-		kpm = new KeyPairManager(session, container, getFrame(), this::updateButtons);
+		kpm = new KeyPairInteractions(session, container, getFrame(), this::updateButtons);
 
 		interacter = new Interacter(getFrame(), this::autoscroll);
 

@@ -12,8 +12,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import xpdtr.acme.gui.Buttons;
-
 public class ButtonsFactory {
 
 	Map<AcmeGuiActions, Runnable> clicked = new HashMap<>();

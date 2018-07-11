@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.fiddling;
 
 import java.io.IOException;
 import java.security.KeyManagementException;

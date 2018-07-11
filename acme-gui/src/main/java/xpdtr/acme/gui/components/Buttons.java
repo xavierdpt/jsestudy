@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.components;
 
 import java.util.HashMap;
 import java.util.Map;

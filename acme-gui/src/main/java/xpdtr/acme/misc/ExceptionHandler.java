@@ -1,4 +1,6 @@
-package xpdtr.acme.gui.fiddling;
+package xpdtr.acme.misc;
+
+import xpdtr.acme.gui.misc.ExceptionType;
 
 public interface ExceptionHandler {
 

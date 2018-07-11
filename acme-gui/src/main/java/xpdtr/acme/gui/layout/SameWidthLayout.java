@@ -1,4 +1,4 @@
-package xpdtr.acme.gui;
+package xpdtr.acme.gui.layout;
 
 import java.awt.Component;
 import java.awt.Container;
