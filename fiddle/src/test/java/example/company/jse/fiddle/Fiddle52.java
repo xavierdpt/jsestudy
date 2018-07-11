@@ -5,11 +5,11 @@ import java.util.Base64;
 
 import org.junit.Test;
 
-import example.company.asn.elements.AsnElement;
-import example.company.asn.utils.AsnUtils;
 import example.company.tox.asn.AsnTox;
-import example.company.tox.common.Common;
 import example.company.tox.common.Tox;
+import xdptdr.asn.elements.AsnElement;
+import xdptdr.asn.utils.AsnUtils;
+import xdptdr.common.Common;
 
 public class Fiddle52 {
 

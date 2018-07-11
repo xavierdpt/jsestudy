@@ -11,8 +11,8 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import example.company.tox.common.Common;
 import xdptdr.acme.jw.JWBase64;
+import xdptdr.common.Common;
 
 public class JWSGenerator {
 

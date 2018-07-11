@@ -17,11 +17,10 @@ import java.security.spec.ECPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 
-import example.company.asn.elements.Asn;
-import example.company.asn.elements.AsnElement;
-import example.company.asn.elements.AsnSequence;
-import example.company.asn.utils.AsnUtils;
-import xdptdr.acme.crypto.ECSignature;
+import xdptdr.asn.Asn;
+import xdptdr.asn.elements.AsnElement;
+import xdptdr.asn.elements.AsnSequence;
+import xdptdr.asn.utils.AsnUtils;
 
 public class ECSigner {
 	public static ECSignature sign(byte[] bytes, String curve, BigInteger d) throws NoSuchAlgorithmException,

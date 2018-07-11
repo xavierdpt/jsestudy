@@ -9,14 +9,12 @@ import java.security.SignatureException;
 
 import javax.swing.JPanel;
 
-import example.company.asn.utils.CSRBuilder;
-import example.company.tox.common.Common;
 import xdptdr.acme.v2.Acme2;
 import xdptdr.acme.v2.AcmeResponse;
 import xdptdr.acme.v2.AcmeSession;
+import xdptdr.asn.builders.CSRBuilder;
+import xdptdr.common.Common;
 import xpdtr.acme.gui.components.UILogger;
-import xpdtr.acme.gui.interactions.Interacter;
-import xpdtr.acme.gui.interactions.UIInteraction;
 
 public class FinalizeInteraction extends UIInteraction {
 

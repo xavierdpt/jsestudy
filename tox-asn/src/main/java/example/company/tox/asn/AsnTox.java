@@ -3,21 +3,21 @@ package example.company.tox.asn;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import example.company.asn.elements.AsnBMPString;
-import example.company.asn.elements.AsnBitString;
-import example.company.asn.elements.AsnContextSpecific;
-import example.company.asn.elements.AsnElement;
-import example.company.asn.elements.AsnInteger;
-import example.company.asn.elements.AsnNull;
-import example.company.asn.elements.AsnObjectIdentifier;
-import example.company.asn.elements.AsnOctetString;
-import example.company.asn.elements.AsnPrintableString;
-import example.company.asn.elements.AsnSequence;
-import example.company.asn.elements.AsnSet;
-import example.company.asn.elements.AsnSubjectIdentifier;
-import example.company.asn.elements.AsnUtcTime;
 import example.company.tox.common.Tox;
 import example.company.tox.common.ToxTox;
+import xdptdr.asn.elements.AsnBMPString;
+import xdptdr.asn.elements.AsnBitString;
+import xdptdr.asn.elements.AsnContextSpecific;
+import xdptdr.asn.elements.AsnElement;
+import xdptdr.asn.elements.AsnInteger;
+import xdptdr.asn.elements.AsnNull;
+import xdptdr.asn.elements.AsnObjectIdentifier;
+import xdptdr.asn.elements.AsnOctetString;
+import xdptdr.asn.elements.AsnPrintableString;
+import xdptdr.asn.elements.AsnSequence;
+import xdptdr.asn.elements.AsnSet;
+import xdptdr.asn.elements.AsnUtcTime;
+import xdptdr.asn.elements.ext.AsnSubjectIdentifier;
 
 public class AsnTox extends ToxTox<AsnElement> {
 

@@ -19,13 +19,11 @@ import javax.swing.SwingWorker;
 
 import org.apache.commons.io.IOUtils;
 
-import example.company.asn.utils.OIDS;
-import example.company.asn.utils.X509Builder;
-import example.company.tox.common.Common;
 import xdptdr.acme.v2.AcmeSession;
+import xdptdr.asn.OIDS;
+import xdptdr.asn.builders.X509Builder;
+import xdptdr.common.Common;
 import xpdtr.acme.gui.components.UILogger;
-import xpdtr.acme.gui.interactions.Interacter;
-import xpdtr.acme.gui.interactions.UIInteraction;
 import xpdtr.acme.gui.utils.U;
 
 public class FooInteraction extends UIInteraction {

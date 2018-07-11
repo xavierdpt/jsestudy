@@ -9,12 +9,12 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import example.company.tox.common.Common;
 import xdptdr.acme.crypto.ECCurves;
 import xdptdr.acme.crypto.ECSignature;
 import xdptdr.acme.crypto.ECSigner;
 import xdptdr.acme.crypto.RSASigner;
 import xdptdr.acme.v2.AcmeSession;
+import xdptdr.common.Common;
 
 public class JWSBuilder {
 

@@ -23,8 +23,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.junit.Assert;
 
-import example.company.tox.common.Common;
 import xdptdr.acme.jw.JWBase64;
+import xdptdr.common.Common;
 
 public class JWEProcessorForTest {
 

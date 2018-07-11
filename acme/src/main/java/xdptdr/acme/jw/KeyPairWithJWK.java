@@ -20,10 +20,9 @@ import java.security.spec.RSAPublicKeySpec;
 import java.util.HashMap;
 import java.util.Map;
 
-import example.company.tox.common.Common;
 import xdptdr.acme.AcmeException;
 import xdptdr.acme.crypto.ECCurves;
-import xdptdr.acme.jw.JWBase64;
+import xdptdr.common.Common;
 
 public class KeyPairWithJWK {
 

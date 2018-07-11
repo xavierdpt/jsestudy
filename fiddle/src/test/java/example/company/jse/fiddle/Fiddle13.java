@@ -20,8 +20,8 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.asn.elements.AsnElement;
-import example.company.asn.utils.AsnUtils;
+import xdptdr.asn.elements.AsnElement;
+import xdptdr.asn.utils.AsnUtils;
 
 public class Fiddle13 {
 	

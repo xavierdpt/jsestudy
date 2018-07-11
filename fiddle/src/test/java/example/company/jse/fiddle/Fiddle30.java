@@ -1,7 +1,6 @@
 package example.company.jse.fiddle;
 
 import java.math.BigInteger;
-import java.nio.charset.Charset;
 import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -12,33 +11,26 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
-import java.security.spec.ECField;
-import java.security.spec.ECFieldFp;
 import java.security.spec.ECGenParameterSpec;
 import java.security.spec.ECParameterSpec;
 import java.security.spec.ECPoint;
 import java.security.spec.ECPrivateKeySpec;
 import java.security.spec.ECPublicKeySpec;
-import java.security.spec.EllipticCurve;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
-import java.util.Base64;
-import java.util.Base64.Decoder;
-import java.util.Base64.Encoder;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import example.company.asn.elements.AsnElement;
-import example.company.asn.utils.AsnUtils;
 import example.company.tox.asn.AsnTox;
-import example.company.tox.common.Common;
 import example.company.tox.common.Tox;
 import xdptdr.acme.jw.JWBase64;
+import xdptdr.asn.elements.AsnElement;
+import xdptdr.asn.utils.AsnUtils;
+import xdptdr.common.Common;
 
 public class Fiddle30 {
 
@@ -84,32 +76,6 @@ public class Fiddle30 {
 		public void setRoot(boolean root) {
 			this.root = root;
 		}
-
-	}
-
-	private String getContent() throws JsonProcessingException {
-		F f = new F();
-		ObjectMapper om = new ObjectMapper();
-		String s = om.writeValueAsString(f);
-		System.out.println(s);
-		Encoder e = Base64.getEncoder();
-		String b = e.encodeToString(s.getBytes());
-		System.out.println(b);
-		Assert.assertEquals("eyJhbGciOiJFUzI1NiJ9", b);
-		String v = om.writeValueAsString(new P());
-		System.out.println(v);
-		System.out.println(e.encodeToString(v.getBytes()));
-
-		Decoder d = Base64.getDecoder();
-		String o = "eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ";
-		byte[] r = d.decode(o);
-		System.out.println(new String(r, Charset.forName("UTF-8")));
-
-		v = o;
-
-		String c = b + "." + v;
-
-		return c;
 
 	}
 
@@ -181,25 +147,6 @@ public class Fiddle30 {
 			return "NIST " + crv;
 		}
 		return crv;
-	}
-
-	private ECParameterSpec getSpec(String xEncoded, String yEncoded) {
-
-		byte[] xBytes = JWBase64.decode(xEncoded);
-		byte[] yBytes = JWBase64.decode(yEncoded);
-
-		BigInteger p = new BigInteger("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F", 16);
-		ECField field = new ECFieldFp(p);
-		BigInteger a = new BigInteger("0", 16);
-		BigInteger b = new BigInteger("7", 16);
-		EllipticCurve curve = new EllipticCurve(field, a, b);
-		BigInteger x = new BigInteger(Common.bytesToString(xBytes), 16);
-		BigInteger y = new BigInteger(Common.bytesToString(yBytes), 16);
-		ECPoint g = new ECPoint(x, y);
-
-		BigInteger n = new BigInteger("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", 16);
-		int h = 1;
-		return new ECParameterSpec(curve, g, n, h);
 	}
 
 	private KeyPair getECKeyPair(String name, BigInteger s, BigInteger x, BigInteger y) throws NoSuchAlgorithmException,

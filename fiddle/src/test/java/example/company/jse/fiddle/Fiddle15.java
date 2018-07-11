@@ -19,7 +19,7 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.asn.utils.CertificateCreator;
+import xdptdr.asn.builders.CertificateCreator;
 
 public class Fiddle15 {
 

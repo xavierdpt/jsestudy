@@ -5,6 +5,8 @@ import java.math.BigInteger;
 import org.junit.Assert;
 import org.junit.Test;
 
+import xdptdr.common.Common;
+
 public class CommonTest {
 
 	@Test

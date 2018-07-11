@@ -9,7 +9,7 @@ import org.apache.http.client.fluent.Request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import example.company.tox.common.JsonUtils;
+import xdptdr.common.JsonUtils;
 
 public class Acme1 {
 

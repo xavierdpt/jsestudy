@@ -10,7 +10,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Policy;
 import java.security.SecureRandom;
-import java.security.Signature;
 import java.security.cert.CertPathBuilder;
 import java.security.cert.CertPathValidator;
 import java.security.cert.CertStore;
@@ -35,16 +34,12 @@ import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
 
 import org.junit.Test;
 
-import example.company.tox.common.Common;
+import xdptdr.common.Common;
 
 public class Fiddle31 {
 
 	private static final String DOM = "DOM";
 	private static final String PKIX = "PKIX";
-	private static final String ECDSA = "ECDSA";
-	private static final String NONE = "NONE";
-	private static final String AND2 = "and";
-	private static final String WITH2 = "with";
 	private static final String PBKDF2 = "PBKDF2";
 	private static final String MD2 = "MD2";
 	private static final String ECDH = "ECDH";
@@ -330,31 +325,6 @@ public class Fiddle31 {
 
 		System.out.println(sha512output.length * 8);
 		System.out.println(Common.bytesToString(sha512output));
-	}
-
-	@Test
-	public void fiddle1() throws NoSuchAlgorithmException {
-
-		Signature md2rsa = Signature.getInstance(MD2 + WITH2 + RSA);
-		Signature md5sha1rsa = Signature.getInstance(MD5 + AND2 + SHA1 + WITH2 + RSA);
-		Signature md5rsa = Signature.getInstance(MD5 + WITH2 + RSA);
-		Signature dsa = Signature.getInstance(NONE + WITH2 + DSA);
-		Signature ecdsa = Signature.getInstance(NONE + WITH2 + ECDSA);
-		Signature rsa = Signature.getInstance(NONE + WITH2 + RSA);
-		Signature sha1dsa = Signature.getInstance(SHA1 + WITH2 + DSA);
-		Signature sha1ecdsa = Signature.getInstance(SHA1 + WITH2 + ECDSA);
-		Signature sha1rsa = Signature.getInstance(SHA1 + WITH2 + RSA);
-		Signature sha224dsa = Signature.getInstance(SHA + _224 + WITH2 + DSA);
-		Signature sha224ecdsa = Signature.getInstance(SHA + _224 + WITH2 + ECDSA);
-		Signature sha224rsa = Signature.getInstance(SHA + _224 + WITH2 + RSA);
-		Signature sha256dsa = Signature.getInstance(SHA + _256 + WITH2 + DSA);
-		Signature sha256ecdsa = Signature.getInstance(SHA + _256 + WITH2 + ECDSA);
-		Signature sha256rsa = Signature.getInstance(SHA + _256 + WITH2 + RSA);
-		Signature sha384ecdsa = Signature.getInstance(SHA + _384 + WITH2 + ECDSA);
-		Signature sha384rsa = Signature.getInstance(SHA + _384 + WITH2 + RSA);
-		Signature sha512ecdsa = Signature.getInstance(SHA + _512 + WITH2 + ECDSA);
-		Signature sha512rsa = Signature.getInstance(SHA + _512 + WITH2 + RSA);
-
 	}
 
 }

@@ -12,11 +12,11 @@ import java.text.ParseException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.asn.elements.AsnElement;
-import example.company.asn.elements.AsnSequence;
-import example.company.asn.utils.AsnX509Interpretation;
-import example.company.asn.utils.AsnX509InterpretationType;
-import example.company.asn.utils.AsnUtils;
+import xdptdr.asn.elements.AsnElement;
+import xdptdr.asn.elements.AsnSequence;
+import xdptdr.asn.interpretations.AsnX509Interpretation;
+import xdptdr.asn.interpretations.AsnX509InterpretationType;
+import xdptdr.asn.utils.AsnUtils;
 
 public class Fiddle07 {
 

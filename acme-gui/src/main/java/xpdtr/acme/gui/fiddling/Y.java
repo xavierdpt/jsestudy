@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
 
-import example.company.tox.common.Common;
+import xdptdr.common.Common;
 
 public class Y {
 	public static void main(String[] args) throws IOException {

@@ -14,14 +14,14 @@ import java.security.cert.X509Certificate;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.asn.elements.AsnElement;
-import example.company.asn.utils.AsnUtils;
-import example.company.asn.utils.AsnX509Interpretation;
-import example.company.asn.utils.AsnX509InterpretationType;
-import example.company.asn.utils.OIDS;
 import example.company.tox.asn.AsnTox;
-import example.company.tox.common.Common;
 import example.company.tox.common.Tox;
+import xdptdr.asn.OIDS;
+import xdptdr.asn.elements.AsnElement;
+import xdptdr.asn.interpretations.AsnX509Interpretation;
+import xdptdr.asn.interpretations.AsnX509InterpretationType;
+import xdptdr.asn.utils.AsnUtils;
+import xdptdr.common.Common;
 
 public class Fiddle14 {
 
@@ -115,7 +115,6 @@ public class Fiddle14 {
 
 		Assert.assertArrayEquals(crtTbsI.getSignature(), actualSignature);
 
-		// TODO (next Fiddle) : generate this certificate from the others
 
 	}
 

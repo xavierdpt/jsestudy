@@ -3,9 +3,11 @@ package example.company.asn.elements;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.asn.utils.AsnUtils;
-import example.company.tox.common.Bytes;
-import example.company.tox.common.Common;
+import xdptdr.asn.elements.AsnContextSpecific;
+import xdptdr.asn.elements.AsnNull;
+import xdptdr.asn.utils.AsnUtils;
+import xdptdr.common.Bytes;
+import xdptdr.common.Common;
 
 public class AsnContextSpecificTest {
 

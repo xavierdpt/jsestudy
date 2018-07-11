@@ -16,8 +16,8 @@ import javax.crypto.spec.SecretKeySpec;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.tox.common.Common;
 import xdptdr.acme.jw.JWBase64;
+import xdptdr.common.Common;
 
 public class Fiddle37 {
 
@@ -36,10 +36,6 @@ public class Fiddle37 {
 	private void example_AES_128_CBC_HMAC_SHA_256_Computation() throws NoSuchAlgorithmException, NoSuchPaddingException,
 			InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 
-		byte[] macAndEncKey = Common.bytes(4, 211, 31, 197, 84, 157, 252, 254, 11, 100, 157, 250, 63, 170, 106, 206,
-				107, 124, 212, 45, 111, 107, 9, 219, 200, 177, 0, 240, 143, 156, 44, 207);
-
-		byte[] macKey = Common.bytes(4, 211, 31, 197, 84, 157, 252, 254, 11, 100, 157, 250, 63, 170, 106, 206);
 		byte[] encKey = Common.bytes(107, 124, 212, 45, 111, 107, 9, 219, 200, 177, 0, 240, 143, 156, 44, 207);
 
 		byte[] plainTextBytes = Common.bytes(76, 105, 118, 101, 32, 108, 111, 110, 103, 32, 97, 110, 100, 32, 112, 114,

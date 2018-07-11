@@ -6,9 +6,10 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.asn.utils.AsnUtils;
-import example.company.tox.common.Bytes;
-import example.company.tox.common.Common;
+import xdptdr.asn.elements.AsnObjectIdentifier;
+import xdptdr.asn.utils.AsnUtils;
+import xdptdr.common.Bytes;
+import xdptdr.common.Common;
 
 public class AsnObjectIdentifierTest {
 

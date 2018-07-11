@@ -11,9 +11,9 @@ import java.security.cert.X509Certificate;
 
 import org.junit.Test;
 
-import example.company.asn.utils.AsnUtils;
 import example.company.tox.asn.AsnTox;
 import example.company.tox.common.Tox;
+import xdptdr.asn.utils.AsnUtils;
 
 public class Fiddle24 {
 

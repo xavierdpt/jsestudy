@@ -12,6 +12,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
+import xdptdr.common.Common;
+
 public class Tox {
 
 	public static Document createDocument(String name) {

@@ -3,9 +3,9 @@ package example.company.tox.asn;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import example.company.asn.elements.AsnBitString;
 import example.company.tox.common.Tox;
 import example.company.tox.common.ToxTox;
+import xdptdr.asn.elements.AsnBitString;
 
 public class AsnBitStringTox extends ToxTox<AsnBitString> {
 

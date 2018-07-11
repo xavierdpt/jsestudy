@@ -13,8 +13,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import example.company.tox.common.Common;
 import xdptdr.acme.jw.JWBase64;
+import xdptdr.common.Common;
 
 public class JWSValidator {
 

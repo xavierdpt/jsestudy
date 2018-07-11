@@ -21,13 +21,13 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.asn.elements.AsnContextSpecific;
-import example.company.asn.elements.AsnElement;
-import example.company.asn.elements.AsnSequence;
-import example.company.asn.utils.AsnUtils;
-import example.company.asn.utils.AsnX509Interpretation;
-import example.company.asn.utils.AsnX509InterpretationType;
-import example.company.asn.utils.CSRBuilder;
+import xdptdr.asn.builders.CSRBuilder;
+import xdptdr.asn.elements.AsnContextSpecific;
+import xdptdr.asn.elements.AsnElement;
+import xdptdr.asn.elements.AsnSequence;
+import xdptdr.asn.interpretations.AsnX509Interpretation;
+import xdptdr.asn.interpretations.AsnX509InterpretationType;
+import xdptdr.asn.utils.AsnUtils;
 
 public class Fiddle12 {
 

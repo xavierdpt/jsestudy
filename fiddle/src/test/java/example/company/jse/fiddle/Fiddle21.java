@@ -25,9 +25,9 @@ import javax.crypto.spec.PBEParameterSpec;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.asn.pkcs12.PKCS12Builder;
-import example.company.asn.utils.AsnUtils;
-import example.company.asn.utils.OIDS;
+import xdptdr.asn.OIDS;
+import xdptdr.asn.pkcs12.PKCS12Builder;
+import xdptdr.asn.utils.AsnUtils;
 
 public class Fiddle21 {
 

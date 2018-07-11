@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import example.company.jse.fiddle.jwe.Header;
 import example.company.jse.fiddle.jwe.InputForTest;
 import example.company.jse.fiddle.jwe.JWEProcessorForTest;
-import example.company.tox.common.Common;
+import xdptdr.common.Common;
 
 public class Fiddle46 {
 

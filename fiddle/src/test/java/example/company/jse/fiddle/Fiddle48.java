@@ -27,12 +27,11 @@ import example.company.jse.fiddle.acme.AcmeAccount;
 import example.company.jse.fiddle.acme.AcmeNewAccount;
 import example.company.jse.fiddle.acme.AcmeNewOrder;
 import example.company.jse.fiddle.acme.ECCurves;
-import example.company.tox.common.Common;
 import xdptdr.acme.jw.JWBase64;
 import xdptdr.acme.v2.Acme2;
 import xdptdr.acme.v2.AcmeDirectoryInfos2;
-import xdptdr.acme.v2.AcmeResponse;
 import xdptdr.acme.v2.AcmeSession;
+import xdptdr.common.Common;
 
 public class Fiddle48 {
 
@@ -47,7 +46,6 @@ public class Fiddle48 {
 		AcmeSession session = new AcmeSession();
 		AcmeDirectoryInfos2 infos = Acme2.directory(Acme2.ACME_STAGING_V2, om, session).getContent();
 
-		AcmeResponse<String> nonce = Acme2.nonce(session);
 		String nonce64 = session.getNonce();
 
 		KeyPair keyPair = newKeyPair();
@@ -62,7 +60,6 @@ public class Fiddle48 {
 		System.out.println("Invoking new account ....");
 
 		AcmeAccount account = AcmeNewAccount.newAccount(infos, newAccountJWS, om);
-		long kid = account.getId();
 
 		String kids = getKid(infos, account.getId());
 		System.out.println(kids);

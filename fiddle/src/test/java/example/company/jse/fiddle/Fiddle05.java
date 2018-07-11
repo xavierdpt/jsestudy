@@ -16,9 +16,9 @@ import java.security.cert.X509Certificate;
 import org.junit.Assert;
 import org.junit.Test;
 
-import example.company.asn.elements.AsnElement;
-import example.company.asn.utils.AsnUtils;
-import example.company.tox.common.Bytes;
+import xdptdr.asn.elements.AsnElement;
+import xdptdr.asn.utils.AsnUtils;
+import xdptdr.common.Bytes;
 
 public class Fiddle05 {
 

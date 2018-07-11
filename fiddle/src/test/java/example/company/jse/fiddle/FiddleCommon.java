@@ -17,9 +17,9 @@ import java.util.Base64;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 
-import example.company.asn.pkcs12.PKCS12Builder;
-import example.company.asn.utils.OIDS;
-import example.company.tox.common.Common;
+import xdptdr.asn.OIDS;
+import xdptdr.asn.pkcs12.PKCS12Builder;
+import xdptdr.common.Common;
 
 public class FiddleCommon {
 

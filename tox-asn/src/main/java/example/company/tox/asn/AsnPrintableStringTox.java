@@ -3,8 +3,8 @@ package example.company.tox.asn;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import example.company.asn.elements.AsnPrintableString;
 import example.company.tox.common.Tox;
+import xdptdr.asn.elements.AsnPrintableString;
 
 public class AsnPrintableStringTox {
 

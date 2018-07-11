@@ -16,10 +16,11 @@ import java.security.spec.ECPrivateKeySpec;
 import java.security.spec.ECPublicKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
-import example.company.asn.elements.Asn;
-import example.company.asn.elements.AsnElement;
-import example.company.asn.elements.AsnSequence;
-import example.company.asn.utils.AsnUtils;
+
+import xdptdr.asn.Asn;
+import xdptdr.asn.elements.AsnElement;
+import xdptdr.asn.elements.AsnSequence;
+import xdptdr.asn.utils.AsnUtils;
 
 public class ECSigner {
 

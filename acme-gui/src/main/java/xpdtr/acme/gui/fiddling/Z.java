@@ -2,7 +2,7 @@ package xpdtr.acme.gui.fiddling;
 
 import java.util.Base64;
 
-import example.company.tox.common.Common;
+import xdptdr.common.Common;
 
 public class Z {
 	public static void main(String[] args) {

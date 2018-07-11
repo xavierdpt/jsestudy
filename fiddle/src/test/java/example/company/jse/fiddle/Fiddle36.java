@@ -24,14 +24,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import example.company.jse.fiddle.acme.JWK;
 import example.company.jse.fiddle.acme.JWKProtected;
 import example.company.jse.fiddle.acme.Payload;
-import example.company.tox.common.Common;
 import xdptdr.acme.jw.JWBase64;
 import xdptdr.acme.v2.Acme2;
 import xdptdr.acme.v2.AcmeDirectoryInfos2;
-import xdptdr.acme.v2.AcmeResponse;
 import xdptdr.acme.v2.AcmeSession;
 import xdptdr.acme.v2.account.NewAccountRequest;
 import xdptdr.acme.v2.account.NewAccountResponse;
+import xdptdr.common.Common;
 
 public class Fiddle36 {
 
@@ -50,7 +49,6 @@ public class Fiddle36 {
 		AcmeSession session = new AcmeSession();
 		AcmeDirectoryInfos2 infos = Acme2.directory(Acme2.ACME_STAGING_V2, om, session).getContent();
 
-		AcmeResponse<String> nonce2 = Acme2.nonce(session);
 		String nonce = session.getNonce();
 
 		String url = infos.getNewAccountURL();
