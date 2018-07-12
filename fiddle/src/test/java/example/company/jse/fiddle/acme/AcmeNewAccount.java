@@ -27,7 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import xdptdr.acme.jw.JWBase64;
-import xdptdr.acme.v2.AcmeDirectoryInfos2;
+import xdptdr.acme.v2.model.AcmeDirectoryInfos2;
 import xdptdr.common.Common;
 
 public class AcmeNewAccount {

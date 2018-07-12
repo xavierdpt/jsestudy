@@ -29,8 +29,8 @@ import example.company.jse.fiddle.acme.AcmeNewOrder;
 import example.company.jse.fiddle.acme.ECCurves;
 import xdptdr.acme.jw.JWBase64;
 import xdptdr.acme.v2.Acme2;
-import xdptdr.acme.v2.AcmeDirectoryInfos2;
 import xdptdr.acme.v2.AcmeSession;
+import xdptdr.acme.v2.model.AcmeDirectoryInfos2;
 import xdptdr.common.Common;
 
 public class Fiddle48 {

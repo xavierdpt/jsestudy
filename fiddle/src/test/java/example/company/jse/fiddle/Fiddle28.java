@@ -11,8 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import xdptdr.acme.v1.Acme1;
 import xdptdr.acme.v1.AcmeDirectoryInfos1;
 import xdptdr.acme.v2.Acme2;
-import xdptdr.acme.v2.AcmeDirectoryInfos2;
 import xdptdr.acme.v2.AcmeSession;
+import xdptdr.acme.v2.model.AcmeDirectoryInfos2;
 import xdptdr.common.Common;
 
 public class Fiddle28 {

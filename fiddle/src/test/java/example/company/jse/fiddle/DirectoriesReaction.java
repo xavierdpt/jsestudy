@@ -16,8 +16,8 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import xdptdr.acme.v2.Acme2;
-import xdptdr.acme.v2.AcmeDirectoryInfos2;
 import xdptdr.acme.v2.AcmeSession;
+import xdptdr.acme.v2.model.AcmeDirectoryInfos2;
 
 public class DirectoriesReaction implements ActionListener {
 

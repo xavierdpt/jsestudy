@@ -8,8 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import xdptdr.acme.v2.Acme2;
-import xdptdr.acme.v2.AcmeResponse;
 import xdptdr.acme.v2.AcmeSession;
+import xdptdr.acme.v2.net.AcmeResponse;
 
 public class NonceButtonListener implements ActionListener {
 
