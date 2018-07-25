@@ -16,6 +16,8 @@ import java.security.cert.X509Certificate;
 
 import org.junit.Test;
 
+import xdptdr.asn.pem.PEMUtils;
+
 public class Fiddle16 {
 
 	/** Verify client.crt with ca public key automatically and manually **/
@@ -28,7 +30,7 @@ public class Fiddle16 {
 
 		X509Certificate caCertificate = FiddleCommon.getCertificate(keyStore, "clientCA");
 
-		byte[] expectedBytes = FiddleCommon.getCertificateBytes(FiddleCommon.CLIENT_CRT_4);
+		byte[] expectedBytes = PEMUtils.getCertificateBytes(FiddleCommon.getInputStream(FiddleCommon.CLIENT_CRT_4));
 
 		X509Certificate x = (X509Certificate) CertificateFactory.getInstance("X.509")
 				.generateCertificate(new ByteArrayInputStream(expectedBytes));

@@ -1,5 +1,8 @@
 package example.company.jse.fiddle;
 
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNot.not;
+
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -9,10 +12,10 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.core.IsNot.not;
 import org.junit.Assert;
 import org.junit.Test;
+
+import xdptdr.asn.pem.PEMUtils;
 
 public class Fiddle18 {
 
@@ -36,7 +39,7 @@ public class Fiddle18 {
 		PrivateKey cpk6 = FiddleCommon.getPrivateKey(ks6, "client", "password");
 		PrivateKey capk6 = FiddleCommon.getPrivateKey(ks6, "clientCA", "password");
 
-		byte[] crt = FiddleCommon.getCertificateBytes(FiddleCommon.CLIENT_CRT_6);
+		byte[] crt = PEMUtils.getCertificateBytes(FiddleCommon.getInputStream(FiddleCommon.CLIENT_CRT_6));
 
 		// Private keys did not change
 		Assert.assertArrayEquals(cpk5.getEncoded(), cpk6.getEncoded());

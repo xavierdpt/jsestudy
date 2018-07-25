@@ -10,6 +10,8 @@ import java.security.cert.X509Certificate;
 import org.junit.Assert;
 import org.junit.Test;
 
+import xdptdr.asn.pem.PEMUtils;
+
 public class Fiddle17 {
 
 	/**
@@ -24,7 +26,7 @@ public class Fiddle17 {
 		X509Certificate cax = FiddleCommon.getCertificate(keyStore, "clientCA");
 		Assert.assertNotNull(cax);
 
-		byte[] bytes = FiddleCommon.getCertificateBytes(FiddleCommon.CLIENTCA_CRT_5);
+		byte[] bytes = PEMUtils.getCertificateBytes(FiddleCommon.getInputStream(FiddleCommon.CLIENTCA_CRT_5));
 
 		Assert.assertArrayEquals(cax.getEncoded(), bytes);
 

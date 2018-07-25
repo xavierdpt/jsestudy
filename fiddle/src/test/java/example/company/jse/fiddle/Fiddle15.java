@@ -2,7 +2,6 @@ package example.company.jse.fiddle;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -13,13 +12,13 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.Base64;
 import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import xdptdr.asn.builders.CertificateCreator;
+import xdptdr.asn.pem.PEMUtils;
 
 public class Fiddle15 {
 
@@ -67,7 +66,7 @@ public class Fiddle15 {
 
 	private InputAndExpectedOutput getInputAndExpectedOutput() throws IOException, CertificateException {
 
-		byte[] expectedBytes = FiddleCommon.getCertificateBytes("/genclient/step4/client.crt");
+		byte[] expectedBytes = PEMUtils.getCertificateBytes(FiddleCommon.getInputStream("/genclient/step4/client.crt"));
 
 		X509Certificate x = (X509Certificate) CertificateFactory.getInstance("X.509")
 				.generateCertificate(new ByteArrayInputStream(expectedBytes));
@@ -81,25 +80,13 @@ public class Fiddle15 {
 	}
 
 	private void testB64(byte[] actualCrtBytes) throws IOException {
+		
+		
 		String expectedCrtString = FiddleCommon.getResourceContent("/genclient/step4/client.crt");
 
-		String b64 = Base64.getEncoder().encodeToString(actualCrtBytes);
-
-		StringWriter sw = new StringWriter();
-		sw.append("-----BEGIN CERTIFICATE-----");
-		sw.append("\r\n");
-		for (int i = 0; i < b64.length(); i += 64) {
-			int e = i + 64;
-			if (e > b64.length()) {
-				e = b64.length();
-			}
-			sw.append(b64.substring(i, e));
-			sw.append("\r\n");
-		}
-		sw.append("-----END CERTIFICATE-----");
-		sw.append("\r\n");
-
-		String actualCrtString = sw.toString();
+		
+		PEMUtils.getCertificatePEM(actualCrtBytes);
+		String actualCrtString = PEMUtils.getCertificatePEM(actualCrtBytes);
 
 		Assert.assertEquals(expectedCrtString, actualCrtString);
 	}

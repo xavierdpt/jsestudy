@@ -20,6 +20,7 @@ import xdptdr.asn.OIDS;
 import xdptdr.asn.elements.AsnElement;
 import xdptdr.asn.interpretations.AsnX509Interpretation;
 import xdptdr.asn.interpretations.AsnX509InterpretationType;
+import xdptdr.asn.pem.PEMUtils;
 import xdptdr.asn.utils.AsnUtils;
 import xdptdr.common.Common;
 
@@ -39,10 +40,11 @@ public class Fiddle14 {
 		AsnX509Interpretation cxi = new AsnX509Interpretation(cxFullAsn, AsnX509InterpretationType.FULL);
 		AsnX509Interpretation caxi = new AsnX509Interpretation(caxFullAsn, AsnX509InterpretationType.FULL);
 
-		byte[] csrBytes = FiddleCommon.getCertificateSigningRequestBytes("/genclient/step4/client.crq");
+		byte[] csrBytes = PEMUtils
+				.getCertificateSigningRequestBytes(FiddleCommon.getInputStream("/genclient/step4/client.crq"));
 		AsnElement csrAsn = AsnUtils.parse(csrBytes);
 
-		byte[] crtBytes = FiddleCommon.getCertificateBytes("/genclient/step4/client.crt");
+		byte[] crtBytes = PEMUtils.getCertificateBytes(FiddleCommon.getInputStream("/genclient/step4/client.crt"));
 		AsnElement crtAsn = AsnUtils.parse(crtBytes);
 
 		Signature sig = Signature.getInstance(cx.getSigAlgName());
@@ -114,7 +116,6 @@ public class Fiddle14 {
 		byte[] actualSignature = s.sign();
 
 		Assert.assertArrayEquals(crtTbsI.getSignature(), actualSignature);
-
 
 	}
 
