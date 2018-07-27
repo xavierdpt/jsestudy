@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.interfaces.DSAParams;
 import java.security.interfaces.DSAPrivateKey;
 import java.security.interfaces.DSAPublicKey;
 import java.security.interfaces.ECPrivateKey;
@@ -17,25 +18,27 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.DSAPrivateKeySpec;
 import java.security.spec.DSAPublicKeySpec;
-import java.security.spec.ECField;
-import java.security.spec.ECFieldFp;
 import java.security.spec.ECParameterSpec;
 import java.security.spec.ECPoint;
 import java.security.spec.ECPrivateKeySpec;
 import java.security.spec.ECPublicKeySpec;
-import java.security.spec.EllipticCurve;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAMultiPrimePrivateCrtKeySpec;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.crypto.interfaces.DHPrivateKey;
+import javax.crypto.interfaces.DHPublicKey;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.DESedeKeySpec;
+import javax.crypto.spec.DHParameterSpec;
 import javax.crypto.spec.DHPrivateKeySpec;
 import javax.crypto.spec.DHPublicKeySpec;
 import javax.crypto.spec.PBEKeySpec;
@@ -85,177 +88,266 @@ public class Fiddle54 {
 	}
 
 	@Test
-	public void keyFactories() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
+	public void dsa() throws NoSuchAlgorithmException, InvalidKeySpecException {
 
-		Class<?>[] classes = new Class<?>[] { DESedeKeySpec.class, DESKeySpec.class, EncodedKeySpec.class,
-				PBEKeySpec.class, RSAMultiPrimePrivateCrtKeySpec.class, SecretKeySpec.class };
+		// Generate a DSA key pair
+		KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA");
+		KeyPair pair = kpg.generateKeyPair();
+		DSAPublicKey generatedPublicKey = (DSAPublicKey) pair.getPublic();
+		DSAPrivateKey generatedPrivateKey = (DSAPrivateKey) pair.getPrivate();
 
-		/*-
-		com.sun.crypto.provider.DHPrivateKey
-		com.sun.crypto.provider.DHPublicKey
-		java.io.Serializable
-		java.lang.Object
-		
-		java.security.interfaces.RSAPrivateCrtKey
-		
-		java.security.Key
-		javax.crypto.interfaces.DHKey
-		javax.crypto.interfaces.DHPrivateKey
-		javax.crypto.interfaces.DHPublicKey
-		javax.security.auth.Destroyable
-		sun.security.ec.ECPrivateKeyImpl
-		sun.security.ec.ECPublicKeyImpl
-		sun.security.mscapi.Key
-		sun.security.mscapi.RSAPrivateKey
-		sun.security.mscapi.RSAPublicKey
-		sun.security.pkcs.PKCS8Key
-		sun.security.provider.DSAPrivateKey
-		sun.security.provider.DSAPublicKey
-		sun.security.provider.DSAPublicKeyImpl
-		sun.security.rsa.RSAPrivateCrtKeyImpl
-		sun.security.rsa.RSAPublicKeyImpl
-		sun.security.util.Length
-		sun.security.x509.X509Key
-		
-		 */
+		// Extract key specifications
+		DSAParams publicKeyParams = generatedPublicKey.getParams();
+		DSAParams privateKeyParams = generatedPrivateKey.getParams();
 
-		/*-
-		KeyPairGenerator
-		- DSA: SUN, 
-		- DiffieHellman: SunJCE, 
-		- EC: SunEC, 
-		- RSA: SunRsaSign, SunJSSE, SunMSCAPI,
-		 */
+		BigInteger publicY = generatedPublicKey.getY();
+		BigInteger publicP = publicKeyParams.getP();
+		BigInteger publicQ = publicKeyParams.getQ();
+		BigInteger publicG = publicKeyParams.getG();
 
-		KeyPairGenerator dsakpg = KeyPairGenerator.getInstance("DSA");
-		KeyPair dsakp = dsakpg.generateKeyPair();
-		DSAPrivateKey dsapr = (DSAPrivateKey) dsakp.getPrivate();
-		DSAPublicKey dsapu = (DSAPublicKey) dsakp.getPublic();
+		BigInteger privateX = generatedPrivateKey.getX();
+		BigInteger privateP = privateKeyParams.getP();
+		BigInteger privateQ = privateKeyParams.getQ();
+		BigInteger privateG = privateKeyParams.getG();
 
-		KeyPairGenerator dhkpg = KeyPairGenerator.getInstance("DiffieHellman");
-		KeyPair dhkp = dhkpg.generateKeyPair();
+		Assert.assertEquals(publicP, privateP);
+		Assert.assertEquals(publicQ, privateQ);
+		Assert.assertEquals(publicG, privateG);
 
-		KeyPairGenerator eckpg = KeyPairGenerator.getInstance("EC");
-		KeyPair eckp = eckpg.generateKeyPair();
-		ECPrivateKey ecpr = (ECPrivateKey) eckp.getPrivate();
-		ECPublicKey ecpu = (ECPublicKey) eckp.getPublic();
+		DSAPublicKeySpec publicKeySpec = new DSAPublicKeySpec(publicY, publicP, publicQ, publicG);
+		DSAPrivateKeySpec privateKeySpec = new DSAPrivateKeySpec(privateX, privateP, privateQ, privateG);
 
-		KeyPairGenerator rsakpg = KeyPairGenerator.getInstance("RSA", "SunRsaSign");
-		KeyPair rsakp = rsakpg.generateKeyPair();
-		RSAPrivateKey rsapr = (RSAPrivateKey) rsakp.getPrivate();
-		RSAPublicKey rsapu = (RSAPublicKey) rsakp.getPublic();
+		// Create keys from specifications
+		KeyFactory kf = KeyFactory.getInstance("DSA");
+		PublicKey publicKey = kf.generatePublic(publicKeySpec);
+		PrivateKey privateKey = kf.generatePrivate(privateKeySpec);
 
-		KeyPairGenerator rsajssekpg = KeyPairGenerator.getInstance("RSA", "SunJSSE");
-		KeyPair rsajssekp = rsajssekpg.generateKeyPair();
-		RSAPrivateKey rsajssepr = (RSAPrivateKey) rsajssekp.getPrivate();
-		RSAPublicKey rsajssepu = (RSAPublicKey) rsajssekp.getPublic();
+		Assert.assertArrayEquals(generatedPublicKey.getEncoded(), publicKey.getEncoded());
+		Assert.assertArrayEquals(generatedPrivateKey.getEncoded(), privateKey.getEncoded());
 
-		KeyPairGenerator rsamskpg = KeyPairGenerator.getInstance("RSA", "SunMSCAPI");
-		KeyPair rsamskp = rsamskpg.generateKeyPair();
-		RSAPrivateKey rsamspr = (RSAPrivateKey) rsamskp.getPrivate();
-		RSAPublicKey rsamspu = (RSAPublicKey) rsamskp.getPublic();
+		// Create keys from encoded
 
-		for (KeyPair yata : new KeyPair[] { dsakp, dhkp, eckp, rsakp, rsajssekp, rsamskp }) {
-			detail(yata.getPublic().getClass());
-			detail(yata.getPrivate().getClass());
-		}
+		X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(generatedPublicKey.getEncoded());
+		PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(generatedPrivateKey.getEncoded());
 
-		if (System.currentTimeMillis() > 0)
-			return;
+		PublicKey publicKeyFromEncoded = kf.generatePublic(x509KeySpec);
+		PrivateKey privateKeyFromEncoded = kf.generatePrivate(pkcs8KeySpec);
 
-		KeyFactory dsa = KeyFactory.getInstance("DSA");
+		Assert.assertArrayEquals(generatedPublicKey.getEncoded(), publicKeyFromEncoded.getEncoded());
+		Assert.assertArrayEquals(generatedPrivateKey.getEncoded(), privateKeyFromEncoded.getEncoded());
+	}
+
+	@Test
+	public void dh() throws NoSuchAlgorithmException, InvalidKeySpecException {
+
+		// Generate a DH key pair
+		KeyPairGenerator kpg = KeyPairGenerator.getInstance("DiffieHellman");
+		KeyPair pair = kpg.generateKeyPair();
+		DHPublicKey generatedPublicKey = (DHPublicKey) pair.getPublic();
+		DHPrivateKey generatedPrivateKey = (DHPrivateKey) pair.getPrivate();
+
+		// Extract key specifications
+
+		DHParameterSpec publicParams = generatedPublicKey.getParams();
+		DHParameterSpec privateParams = generatedPrivateKey.getParams();
+
+		BigInteger publicY = generatedPublicKey.getY();
+		BigInteger publicP = publicParams.getP();
+		BigInteger publicG = publicParams.getG();
+		int publicL = publicParams.getL();
+
+		BigInteger privateX = generatedPrivateKey.getX();
+		BigInteger privateP = privateParams.getP();
+		BigInteger privateG = privateParams.getG();
+		int privateL = privateParams.getL();
+
+		Assert.assertEquals(publicP, privateP);
+		Assert.assertEquals(publicG, privateG);
+		Assert.assertEquals(publicL, privateL);
+
+		DHPublicKeySpec publicKeySpec = new DHPublicKeySpec(publicY, publicP, publicG);
+		DHPrivateKeySpec privateKeySpec = new DHPrivateKeySpec(privateX, privateP, privateG);
+
+		// Create keys from specifications
+		KeyFactory kf = KeyFactory.getInstance("DiffieHellman");
+
+		PublicKey publicKey = kf.generatePublic(publicKeySpec);
+		PrivateKey privateKey = kf.generatePrivate(privateKeySpec);
+
+		// This currently fails because the value of L matters
+		boolean failed = false;
 		try {
-			BigInteger y = null;
-			BigInteger p = null;
-			BigInteger q = null;
-			BigInteger g = null;
-			KeySpec dsaPublicKeySpec = new DSAPublicKeySpec(y, p, q, g);
-			PublicKey dsaPublic = dsa.generatePublic(dsaPublicKeySpec);
-		} catch (Exception ex) {
-			youpi(ex);
+			Assert.assertArrayEquals(generatedPublicKey.getEncoded(), publicKey.getEncoded());
+			Assert.assertArrayEquals(generatedPrivateKey.getEncoded(), privateKey.getEncoded());
+		} catch (AssertionError error) {
+			failed = true;
 		}
-		try {
-			BigInteger x = null;
-			BigInteger p = null;
-			BigInteger q = null;
-			BigInteger g = null;
-			KeySpec dsaPrivateKeySpec = new DSAPrivateKeySpec(x, p, q, g);
-			PrivateKey dsaPrivate = dsa.generatePrivate(dsaPrivateKeySpec);
-		} catch (Exception ex) {
-			youpi(ex);
-		}
+		Assert.assertTrue(failed);
 
-		KeyFactory dh = KeyFactory.getInstance("DiffieHellman");
-		try {
-			BigInteger y = null;
-			BigInteger p = null;
-			BigInteger g = null;
-			KeySpec dhPublicKeySpec = new DHPublicKeySpec(y, p, g);
-			PublicKey dhPublic = dh.generatePublic(dhPublicKeySpec);
-		} catch (Exception ex) {
-			youpi(ex);
-		}
-		try {
-			BigInteger x = null;
-			BigInteger p = null;
-			BigInteger g = null;
-			KeySpec dhPrivateKeySpec = new DHPrivateKeySpec(x, p, g);
-			PrivateKey dhPrivate = dh.generatePrivate(dhPrivateKeySpec);
-		} catch (Exception ex) {
-			youpi(ex);
-		}
-		{
-			BigInteger x = null;
-			BigInteger y = null;
-			BigInteger n = null;
-			BigInteger a = null;
-			BigInteger b = null;
-			byte[] seed = new byte[] {};
-			ECPoint g = new ECPoint(x, y);
-			BigInteger p = null;
-			ECField field = new ECFieldFp(p);
-			int h = 0;
-			EllipticCurve curve = new EllipticCurve(field, a, b, seed);
-			ECParameterSpec params = new ECParameterSpec(curve, g, n, h);
+		// Create keys from encoded
 
-			KeyFactory ec = KeyFactory.getInstance("EC");
-			try {
-				ECPoint w = new ECPoint(x, y);
-				KeySpec ecPublicKeySpec = new ECPublicKeySpec(w, params); // also X509EncodedKeySpec
-				PublicKey ecPublic = ec.generatePublic(ecPublicKeySpec);
-			} catch (Exception ex) {
-				youpi(ex);
-			}
-			try {
-				BigInteger s = null;
-				KeySpec ecPrivateKeySpec = new ECPrivateKeySpec(s, params); // also PKCS8EncodedKeySpec
-				PrivateKey ecPrivate = ec.generatePrivate(ecPrivateKeySpec);
-			} catch (Exception ex) {
-				youpi(ex);
-			}
-		}
+		X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(generatedPublicKey.getEncoded());
+		PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(generatedPrivateKey.getEncoded());
 
-		KeyFactory rsa = KeyFactory.getInstance("RSA");
-		try {
-			BigInteger modulus = null;
-			BigInteger publicExponent = null;
-			KeySpec rsaPublicKeySpec = new RSAPublicKeySpec(modulus, publicExponent); // also X509EncodedKeySpec
-			PublicKey rsaPublic = rsa.generatePublic(rsaPublicKeySpec);
-		} catch (Exception ex) {
-			youpi(ex);
-		}
-		try {
-			BigInteger modulus = null;
-			BigInteger privateExponent = null;
-			KeySpec rsaPrivateKeySpec = new RSAPrivateKeySpec(modulus, privateExponent); // also PKCS8EncodedKeySpec and
-																							// RSAPrivateCrtKeySpec
-			PrivateKey rsaPrivate = rsa.generatePrivate(rsaPrivateKeySpec);
-		} catch (Exception ex) {
-			youpi(ex);
-		}
+		PublicKey publicKeyFromEncoded = kf.generatePublic(x509KeySpec);
+		PrivateKey privateKeyFromEncoded = kf.generatePrivate(pkcs8KeySpec);
+
+		Assert.assertArrayEquals(generatedPublicKey.getEncoded(), publicKeyFromEncoded.getEncoded());
+		Assert.assertArrayEquals(generatedPrivateKey.getEncoded(), privateKeyFromEncoded.getEncoded());
 
 	}
 
+	@Test
+	public void ec() throws NoSuchAlgorithmException, InvalidKeySpecException {
+
+		// Generate an EC key pair
+		KeyPairGenerator kpg = KeyPairGenerator.getInstance("EC");
+		KeyPair pair = kpg.generateKeyPair();
+		ECPublicKey generatedPublicKey = (ECPublicKey) pair.getPublic();
+		ECPrivateKey generatedPrivateKey = (ECPrivateKey) pair.getPrivate();
+
+		// Extract key specifications
+
+		ECParameterSpec params = generatedPublicKey.getParams();
+
+		ECPoint w = generatedPublicKey.getW();
+		BigInteger s = generatedPrivateKey.getS();
+
+		Assert.assertEquals(params, generatedPrivateKey.getParams());
+
+		ECPublicKeySpec publicKeySpec = new ECPublicKeySpec(w, params);
+		ECPrivateKeySpec privateKeySpec = new ECPrivateKeySpec(s, params);
+
+		// Create keys from specifications
+		KeyFactory kf = KeyFactory.getInstance("EC");
+
+		PublicKey publicKey = kf.generatePublic(publicKeySpec);
+		PrivateKey privateKey = kf.generatePrivate(privateKeySpec);
+
+		Assert.assertArrayEquals(generatedPublicKey.getEncoded(), publicKey.getEncoded());
+		Assert.assertArrayEquals(generatedPrivateKey.getEncoded(), privateKey.getEncoded());
+
+		// Create keys from encoded
+
+		X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(generatedPublicKey.getEncoded());
+		PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(generatedPrivateKey.getEncoded());
+
+		PublicKey publicKeyFromEncoded = kf.generatePublic(x509KeySpec);
+		PrivateKey privateKeyFromEncoded = kf.generatePrivate(pkcs8KeySpec);
+
+		Assert.assertArrayEquals(generatedPublicKey.getEncoded(), publicKeyFromEncoded.getEncoded());
+		Assert.assertArrayEquals(generatedPrivateKey.getEncoded(), privateKeyFromEncoded.getEncoded());
+
+	}
+
+	@Test
+	public void rsasrs() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
+
+		/*-
+		RSA: SunRsaSign, SunJSSE, 
+		 */
+
+		// Generate a RSA key pair from SunRsaSign
+		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", "SunRsaSign");
+		KeyPair pair = kpg.generateKeyPair();
+		RSAPublicKey generatedPublicKey = (RSAPublicKey) pair.getPublic();
+		RSAPrivateKey generatedPrivateKey = (RSAPrivateKey) pair.getPrivate();
+
+		// Extract key specifications
+		BigInteger modulus = generatedPublicKey.getModulus();
+		BigInteger publicExponent = generatedPublicKey.getPublicExponent();
+		BigInteger privateExponent = generatedPrivateKey.getPrivateExponent();
+
+		Assert.assertEquals(modulus, generatedPrivateKey.getModulus());
+
+		RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(modulus, publicExponent);
+		RSAPrivateKeySpec privateKeySpec = new RSAPrivateKeySpec(modulus, privateExponent);
+
+		// Create keys from specifications
+		KeyFactory kf = KeyFactory.getInstance("RSA", "SunRsaSign");
+
+		PublicKey publicKey = kf.generatePublic(publicKeySpec);
+		PrivateKey privateKey = kf.generatePrivate(privateKeySpec);
+
+		// This currently for some reason
+		boolean failed = false;
+		try {
+			Assert.assertArrayEquals(generatedPublicKey.getEncoded(), publicKey.getEncoded());
+			Assert.assertArrayEquals(generatedPrivateKey.getEncoded(), privateKey.getEncoded());
+		} catch (AssertionError error) {
+			failed = true;
+		}
+		Assert.assertTrue(failed);
+
+		// Create keys from encoded
+
+		X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(generatedPublicKey.getEncoded());
+		PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(generatedPrivateKey.getEncoded());
+
+		PublicKey publicKeyFromEncoded = kf.generatePublic(x509KeySpec);
+		PrivateKey privateKeyFromEncoded = kf.generatePrivate(pkcs8KeySpec);
+
+		Assert.assertArrayEquals(generatedPublicKey.getEncoded(), publicKeyFromEncoded.getEncoded());
+		Assert.assertArrayEquals(generatedPrivateKey.getEncoded(), privateKeyFromEncoded.getEncoded());
+
+	}
+
+	@Test
+	public void rsajsse() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
+
+		// Generate a RSA key pair from SunJSSE
+		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", "SunJSSE");
+		KeyPair pair = kpg.generateKeyPair();
+		RSAPublicKey generatedPublicKey = (RSAPublicKey) pair.getPublic();
+		RSAPrivateKey generatedPrivateKey = (RSAPrivateKey) pair.getPrivate();
+
+		// Extract key specifications
+		BigInteger modulus = generatedPublicKey.getModulus();
+		BigInteger publicExponent = generatedPublicKey.getPublicExponent();
+		BigInteger privateExponent = generatedPrivateKey.getPrivateExponent();
+
+		Assert.assertEquals(modulus, generatedPrivateKey.getModulus());
+
+		RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(modulus, publicExponent);
+		RSAPrivateKeySpec privateKeySpec = new RSAPrivateKeySpec(modulus, privateExponent);
+
+		// Create keys from specifications
+		KeyFactory kf = KeyFactory.getInstance("RSA", "SunJSSE");
+
+		PublicKey publicKey = kf.generatePublic(publicKeySpec);
+		PrivateKey privateKey = kf.generatePrivate(privateKeySpec);
+
+		// This currently for some reason
+		boolean failed = false;
+		try {
+			Assert.assertArrayEquals(generatedPublicKey.getEncoded(), publicKey.getEncoded());
+			Assert.assertArrayEquals(generatedPrivateKey.getEncoded(), privateKey.getEncoded());
+		} catch (AssertionError error) {
+			failed = true;
+		}
+		Assert.assertTrue(failed);
+
+		// Create keys from encoded
+
+		X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(generatedPublicKey.getEncoded());
+		PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(generatedPrivateKey.getEncoded());
+
+		PublicKey publicKeyFromEncoded = kf.generatePublic(x509KeySpec);
+		PrivateKey privateKeyFromEncoded = kf.generatePrivate(pkcs8KeySpec);
+
+		Assert.assertArrayEquals(generatedPublicKey.getEncoded(), publicKeyFromEncoded.getEncoded());
+		Assert.assertArrayEquals(generatedPrivateKey.getEncoded(), privateKeyFromEncoded.getEncoded());
+
+	}
+
+	@Test
+	public void rsams() throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
+
+		// TODO : RSA with SunMSCAPI provider
+
+	}
+
+	@SuppressWarnings("unused")
 	private void detail(Class<?> o) {
 		System.out.println(o.getName());
 		if (o.getSuperclass() != null) {
@@ -266,6 +358,7 @@ public class Fiddle54 {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void youpi(Exception ex) {
 		System.out.println(ex.getClass().getName() + " : " + ex.getMessage());
 
